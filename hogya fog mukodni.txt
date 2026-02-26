@@ -1,0 +1,57 @@
+hogya fog mukodni
+    1. Ut:
+        tobb savos is lehet az ut
+        3 ut van:   
+            sima    jo
+            kis_ho    jo
+                kis ho -> sok auto -> jeges ut
+            mely_ho -> elakad az auto (járhatatlan savos)
+                ha a szomszedos sav jo akkor arra tovább tud menni az elakadt auto
+            jeges (ra esett ho a jeget vastagitja) -> csuszik az auto
+                autok össze csuszhatnak -> járhatatlan sav
+                x ido utan járhato lesz a sav
+            feltort_jeges -> sima jeges csak eltakaritahto
+        hid - alagut: az ut állapotát nem befolyásolja
+        kersztezodes: akar 4 nel tobb ut
+
+    2. autok:
+        lakas munkahely között legrovidebb uton
+    
+    3. hokotro (jatekos):
+            egy sav takarit
+        3.1 sopro_fej:
+            mindig kulso savba tolja -> ha nincs ut szele
+            kis havat es mely havat tud takaritani, jeget nem
+        3.2 hanyo_fej:
+            mindig ut szele
+            kis havat es mely havat tud takaritani, jeget nem
+        3.3 jegtoro_fej:
+            jeges -> feltort_jeges
+            jeget tor fel, de havat nem takarit
+        3.4 soszoro_fej (so):
+            x ido utan (vastagsagtol fugg) -> sima ut
+            x ido ig sima ut marad (nem esik ra ho stb)
+            elfogy a municio -> haszanlhatatlan a fej
+        3.5 sarkany_fej (biokerozin):
+            barmiylen ut -> sima ut
+            elfogy a municio -> haszanlhatatlan a fej
+    4. penz:
+        hokotro nem sima ut -> sima ut -> x penz
+        penz -> segedeszkoz (fejek), municio (so, biokerozin), hokotro (legdargabb)
+
+    5. busz (jatekos):
+        ket pont között mennek
+        cel -> minel többször
+        karambol -> x ido mozgas képtelen
+
+        
+
+
+
+
+
+        
+            
+
+
+    
