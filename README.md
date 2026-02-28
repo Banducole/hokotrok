@@ -59,8 +59,3 @@ git pull
 
 ```
 
----
-
-**💡 Extra tipp a közös munkához neked (Adminnak):** Mivel megbeszéltük, hogy a `main` ágba ne toljon senki közvetlenül kódot, érdemes ezt a GitHubon le is védeni (ezt hívják **Branch Protection**-nek). Így a rendszer fizikailag sem engedi a `main`-re pusholást, csak Pull Requesteken (PR) keresztül.
-
-Szeretnéd, hogy megmutassam, hol tudod bekapcsolni ezt a védelmet a repó beállításaiban? Ez életmentő egy ekkora projektnél!
