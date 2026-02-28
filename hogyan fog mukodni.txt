@@ -9,10 +9,11 @@ hogyan fog mukodni
                 ha a szomszedos sav jo akkor arra tovább tud menni az elakadt auto
             jeges (ra esett ho a jeget vastagitja) -> csuszik az auto
                 autok össze csuszhatnak -> járhatatlan sav
+                ha a szomszedos sav jo akkor arra tovább tud menni az auto
                 x ido utan járhato lesz a sav
             feltort_jeges -> sima jeges csak eltakaritahto
         hid - alagut: az ut állapotát nem befolyásolja
-        kersztezodes: akar 4 nel tobb ut
+        kersztezodes: akar 4 nel tobb ut, nem kell kulon takaritani
 
     2. autok:
         lakas munkahely között legrovidebb uton
@@ -21,6 +22,7 @@ hogyan fog mukodni
             egy sav takarit
         3.1 sopro_fej:
             mindig kulso savba tolja -> ha nincs ut szele
+            szomszed savban a hovastagsagot az elsoport mennyiseggel noveli
             kis havat es mely havat tud takaritani, jeget nem
         3.2 hanyo_fej:
             mindig ut szele
@@ -34,25 +36,25 @@ hogyan fog mukodni
             elfogy a municio -> haszanlhatatlan a fej
         3.5 sarkany_fej (biokerozin):
             barmiylen ut -> sima ut
+            azonnal olvaszt
             elfogy a municio -> haszanlhatatlan a fej
     4. penz:
+        a tervezesi fazisnal a kor elejen hozzaadodik a szamlahoz
         hokotro nem sima ut -> sima ut -> x penz
-        penz -> segedeszkoz (fejek), municio (so, biokerozin), hokotro (legdargabb)
+        penz -> segedeszkoz (fejek), municio (so, biokerozin), hokotro (legdargabb), azonnal feltoltodik, nincs toltoallomas
 
     5. busz (jatekos):
         ket pont között mennek
         cel -> minel többször
-        karambol -> x ido mozgas képtelen
-
-        
-
-
-
-
-
-        
-            
-
-
-    
-
+        osszecsuszas -> jarhatatlan sav  es x ido mozgas képtelen
+        mellette van szabad sav, akkor tud valtani
+    6. korokre osztott jatek:
+        6.1. eloszor tervezesi fazis:
+            penz jovairasa
+            hokotrok lepnek
+            buszok lepnek, kivalsztjak merre szeretnenek tovabb menni
+        6.2 vegrehajtasi fazis:
+            hokotrok lepnek
+            autok es buszok lepnek
+            x mennyisegu ho esik az utra,
+            ezutan elakadasok es osszecsuszasok megtortennek
