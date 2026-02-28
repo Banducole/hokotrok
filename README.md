@@ -58,4 +58,27 @@ git checkout main
 git pull
 
 ```
+---
 
+## 🛠 Hogyan küldj be kódot? (Pull Request Kisokos)
+
+Mivel a `main` águnk védve van, közvetlenül oda nem tudsz pusholni. Minden új funkciót vagy javítást **Pull Request (PR)** formájában kell beküldeni, amit egy másik csapattagnak jóvá kell hagynia!
+
+### 1. Kód beküldése (Pull Request nyitása)
+1. Miután a terminálban megcsináltad a `git push origin <saját-ág-neved>` parancsot, menj fel a projekt GitHub oldalára.
+2. Felül, sárgás háttérrel meg fog jelenni egy gomb: **"Compare & pull request"**. Kattints rá! *(Ha nem látod, menj a **Pull requests** fülre, és kattints a zöld **New pull request** gombra, majd válaszd ki az ágad).*
+3. Adj neki egy beszédes címet (pl. *"Kész a bejelentkezés gomb"*), és röviden írd le, mit csináltál.
+4. Kattints a zöld **Create pull request** gombra.
+
+### 2. Kód átnézése és jóváhagyása (Review)
+**Ezt sosem az csinálja, aki a kódot írta, hanem egy másik csapattag!**
+1. Menj a GitHubon a **Pull requests** fülre, és nyisd meg a nyitott PR-t.
+2. Kattints a **Files changed** fülre (itt látod pirossal, amit töröltek, és zölddel, amit hozzáadtak).
+3. Nézd át a kódot. Ha minden király, kattints a jobb felső sarokban a zöld **Review changes** gombra.
+4. Válaszd az **Approve** (Jóváhagyás) opciót, írhatsz egy dicsérő kommentet (pl. *"Faszán néz ki, mehet be"*), majd nyomj a **Submit review** gombra.
+
+### 3. Összevonás (Merge)
+1. Amint megvan az 1 darab jóváhagyás (zöld pipa), a PR alján zölddé válik a **Merge pull request** gomb.
+2. Kattints rá, majd nyomj a **Confirm merge**-re.
+3. Kész is! A kódod bekerült a `main` ágba, mindenki számára elérhető lett. 
+*(Ezután a saját ágad akár törölheted is a "Delete branch" gombbal, hogy tiszta maradjon a repó).*
