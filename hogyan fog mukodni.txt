@@ -1,4 +1,4 @@
-hogya fog mukodni
+hogyan fog mukodni
     1. Ut:
         tobb savos is lehet az ut
         3 ut van:   
@@ -55,3 +55,4 @@ hogya fog mukodni
 
 
     
+
