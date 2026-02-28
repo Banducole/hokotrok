@@ -3,7 +3,7 @@ hogyan fog mukodni
         tobb savos is lehet az ut
         3 ut van:   
             sima    jo
-            kis_ho    jo
+            kis_ho     jo
                 kis ho -> sok auto -> jeges ut
             mely_ho -> elakad az auto (járhatatlan savos)
                 ha a szomszedos sav jo akkor arra tovább tud menni az elakadt auto
