@@ -1,7 +1,7 @@
 # hokotrok
 
 ## 📝 Dokumentációk
-* [templ_02_0 google docs linkje:]
+** templ_02_0 google docs linkje:
  https://docs.google.com/document/d/1aJOzo8bXO5q7WdpFAm290eykW0iiMC50QNJk3B2h_eQ/edit?usp=sharing
 
 ### 🚀 Git Gyorstalpaló a Projektkhez
