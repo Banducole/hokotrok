@@ -16,7 +16,7 @@ hogyan fog mukodni
         kersztezodes: akar 4 nel tobb ut, nem kell kulon takaritani
 
     2. autok:
-        lakas munkahely között legrovidebb uton
+        lakas munkahely között legrovidebb jarhato uton
     
     3. hokotro (jatekos):
             egy sav takarit
