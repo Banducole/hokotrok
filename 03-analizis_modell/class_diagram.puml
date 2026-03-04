@@ -1,0 +1,324 @@
+@startuml ZuzmaraVaros_ClassDiagram
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+skinparam classHeaderBackgroundColor #D5E8F0
+skinparam classBorderColor #2E75B6
+skinparam arrowColor #1F3864
+skinparam backgroundColor #FFFFFF
+skinparam groupInheritance 2
+
+' ─────────────────────────────────────────
+'  GAME / CORE
+' ─────────────────────────────────────────
+
+class Game {
+  - city: City
+  - players: List<Player>
+  - roundNumber: int
+  +Start(playerCount: int, playerTypes: List<PlayerType>): void
+  +NextRound(): void
+  +ExecuteDecisionPhase(): void
+  +ExecuteExecutionPhase(): void
+  +IsGameOver(): boolean
+}
+
+' ─────────────────────────────────────────
+'  MAP / TOPOLOGY
+' ─────────────────────────────────────────
+
+class City {
+  - intersections: List<Intersection>
+  - roads: List<Road>
+  +GetShortestPath(from: Node, to: Node): List<Lane>
+  +ApplySnowfall(amount: int): void
+  +GetNeighborRoads(node: Node): List<Road>
+  +GetAllLanes(): List<Lane>
+}
+
+abstract class Node {
+  +GetConnectedRoads(): List<Road>
+}
+
+class Intersection extends Node {
+  - connectedRoads: List<Road>
+  +AddRoad(road: Road): void
+  +GetConnectedRoads(): List<Road>
+}
+
+class Terminal extends Node {
+  +GetConnectedRoads(): List<Road>
+  +NotifyArrival(bus: Bus): void
+}
+
+class Home extends Node {
+  +GetConnectedRoads(): List<Road>
+}
+
+class Workplace extends Node {
+  +GetConnectedRoads(): List<Road>
+}
+
+class Road {
+  - from: Node
+  - to: Node
+  - lanes: List<Lane>
+  +GetLanes(): List<Lane>
+  +GetLane(index: int): Lane
+  +GetOtherEnd(node: Node): Node
+  +ApplySnow(amount: int): void
+  +GetPassableLanes(): List<Lane>
+}
+
+class Lane {
+  - state: LaneState
+  - vehicles: List<Vehicle>
+  - snowPlow: SnowPlow
+  - saltCountdown: int
+  - passageCount: int
+  - road: Road
+  +Accept(v: Vehicle): void
+  +Accept(s: SnowPlow): void
+  +AddSnow(amount: int): void
+  +ApplySalt(): void
+  +FormIce(): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +GetState(): LaneState
+  +GetNeighborLane(direction: Direction): Lane
+  +RegisterPassage(v: Vehicle): void
+  +CleanWith(head: CleanerHead, plow: SnowPlow): void
+  +SetBlocked(turns: int): void
+}
+
+' ─────────────────────────────────────────
+'  LANE STATES  (State pattern)
+' ─────────────────────────────────────────
+
+abstract class LaneState {
+  +OnSnowAdded(lane: Lane, amount: int): void
+  +OnSaltApplied(lane: Lane): void
+  +OnIceFormed(lane: Lane): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +CanBePushed(): boolean
+}
+
+class ClearState extends LaneState {
+  +OnSnowAdded(lane: Lane, amount: int): void
+  +OnSaltApplied(lane: Lane): void
+  +OnIceFormed(lane: Lane): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +CanBePushed(): boolean
+}
+
+class ThinSnowState extends LaneState {
+  - snowThickness: int
+  +OnSnowAdded(lane: Lane, amount: int): void
+  +OnSaltApplied(lane: Lane): void
+  +OnIceFormed(lane: Lane): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +CanBePushed(): boolean
+}
+
+class ThickSnowState extends LaneState {
+  - snowThickness: int
+  +OnSnowAdded(lane: Lane, amount: int): void
+  +OnSaltApplied(lane: Lane): void
+  +OnIceFormed(lane: Lane): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +CanBePushed(): boolean
+}
+
+class IcyState extends LaneState {
+  +OnSnowAdded(lane: Lane, amount: int): void
+  +OnSaltApplied(lane: Lane): void
+  +OnIceFormed(lane: Lane): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +CanBePushed(): boolean
+}
+
+class BrokenIceState extends LaneState {
+  - iceThickness: int
+  +OnSnowAdded(lane: Lane, amount: int): void
+  +OnSaltApplied(lane: Lane): void
+  +OnIceFormed(lane: Lane): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +CanBePushed(): boolean
+}
+
+' ─────────────────────────────────────────
+'  VEHICLES  (double dispatch)
+' ─────────────────────────────────────────
+
+abstract class Vehicle {
+  - currentLane: Lane
+  - blockedTurns: int
+  +MeetVehicle(v: Vehicle): void
+  +MeetSnowPlow(s: SnowPlow): void
+  +IsBlocked(): boolean
+  +GetCurrentLane(): Lane
+  +DecrementBlock(): void
+}
+
+class Car extends Vehicle {
+  - home: Home
+  - workplace: Workplace
+  - destination: Node
+  +Step(city: City): void
+  +MeetVehicle(v: Vehicle): void
+  +MeetSnowPlow(s: SnowPlow): void
+  +GetCurrentLane(): Lane
+  +SwitchLane(road: Road): boolean
+}
+
+class Bus extends Vehicle {
+  - terminalA: Terminal
+  - terminalB: Terminal
+  - completedRounds: int
+  +Move(lane: Lane): void
+  +MeetVehicle(v: Vehicle): void
+  +MeetSnowPlow(s: SnowPlow): void
+  +ArrivedAtTerminal(): void
+  +IsBlocked(): boolean
+  +GetCurrentLane(): Lane
+}
+
+' ─────────────────────────────────────────
+'  SNOW PLOW
+' ─────────────────────────────────────────
+
+class SnowPlow {
+  - currentLane: Lane
+  - head: CleanerHead
+  - owner: CleanerPlayer
+  +MoveTo(lane: Lane): void
+  +ChangeHead(newHead: CleanerHead): void
+  +GetCurrentLane(): Lane
+  +GetHead(): CleanerHead
+}
+
+' ─────────────────────────────────────────
+'  CLEANER HEADS  (Strategy pattern)
+' ─────────────────────────────────────────
+
+abstract class CleanerHead {
+  +Clean(lane: Lane, plow: SnowPlow): void
+  +IsOperational(): boolean
+}
+
+class SweepHead extends CleanerHead {
+  +Clean(lane: Lane, plow: SnowPlow): void
+  +IsOperational(): boolean
+}
+
+class ThrowHead extends CleanerHead {
+  +Clean(lane: Lane, plow: SnowPlow): void
+  +IsOperational(): boolean
+}
+
+class IceBreakerHead extends CleanerHead {
+  +Clean(lane: Lane, plow: SnowPlow): void
+  +IsOperational(): boolean
+}
+
+class SaltHead extends CleanerHead {
+  - salt: int
+  +Clean(lane: Lane, plow: SnowPlow): void
+  +IsOperational(): boolean
+  +Refuel(amount: int): void
+}
+
+class DragonHead extends CleanerHead {
+  - kerosene: int
+  +Clean(lane: Lane, plow: SnowPlow): void
+  +IsOperational(): boolean
+  +Refuel(amount: int): void
+}
+
+' ─────────────────────────────────────────
+'  PLAYERS
+' ─────────────────────────────────────────
+
+abstract class Player {
+  - name: String
+  +TakeTurn(): void
+  +GetName(): String
+}
+
+class BusDriver extends Player {
+  - bus: Bus
+  +TakeTurn(): void
+}
+
+class CleanerPlayer extends Player {
+  - balance: int
+  - plows: List<SnowPlow>
+  +TakeTurn(): void
+  +DirectPlow(plow: SnowPlow, lane: Lane): void
+  +BuyHead(plow: SnowPlow, head: CleanerHead): void
+  +BuyFuel(plow: SnowPlow, fuelType: FuelType, amount: int): void
+  +BuyNewPlow(): void
+  +ReceivePayment(amount: int): void
+  +GetBalance(): int
+}
+
+' ─────────────────────────────────────────
+'  ENUMS
+' ─────────────────────────────────────────
+
+enum FuelType {
+  SALT
+  KEROSENE
+}
+
+enum Direction {
+  LEFT
+  RIGHT
+}
+
+enum PlayerType {
+  BUS_DRIVER
+  CLEANER
+}
+
+' ─────────────────────────────────────────
+'  RELATIONSHIPS
+' ─────────────────────────────────────────
+
+' Game
+Game "1" *--> "1" City
+Game "1" *--> "1..*" Player
+
+' City / topology
+City "1" *--> "1..*" Road
+City "1" *--> "1..*" Node
+Road "1" *--> "1..*" Lane
+Road "1" --> "2" Node : from/to
+Lane "1" --> "1" LaneState
+Lane "0..*" --> "0..*" Vehicle : contains
+Lane "0..1" --> "0..1" SnowPlow : contains
+
+' Vehicles
+Car "1" --> "1" Home
+Car "1" --> "1" Workplace
+Bus "1" --> "2" Terminal : terminalA/B
+
+' SnowPlow
+SnowPlow "1" --> "1" CleanerHead
+CleanerPlayer "1" --> "1..*" SnowPlow
+BusDriver "1" --> "1" Bus
+
+' FuelType used by
+SaltHead ..> FuelType
+DragonHead ..> FuelType
+CleanerPlayer ..> FuelType
+
+' Direction used by
+Lane ..> Direction
+
+@enduml
