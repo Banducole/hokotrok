@@ -7,6 +7,8 @@ https://docs.google.com/document/d/1aJOzo8bXO5q7WdpFAm290eykW0iiMC50QNJk3B2h_eQ/
 **templ_03_0 google docs linkje:**
 https://docs.google.com/document/d/1O4nuOhmquTkafkhZjxJQf5FT4inXc05isAQNsJajowc/edit?usp=sharing
 
+**analízis_modell google docs linkje:**
+https://docs.google.com/document/d/1cKdO6pWwHp85M1i4od_ecHC4KT6kfeVSipmKAY6Aw44/edit?tab=t.0
 ### 🚀 Git Gyorstalpaló a Projektkhez
 
 Szevasztok! Mivel be lettetek állítva a GitHub repóba, itt vannak a legfontosabb parancsok, amikkel dolgozni fogunk.
