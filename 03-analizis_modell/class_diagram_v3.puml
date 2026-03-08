@@ -1,0 +1,276 @@
+@startuml ZuzmaraVaros_ClassDiagram_v3
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+skinparam classHeaderBackgroundColor #D5E8F0
+skinparam classBorderColor #2E75B6
+skinparam arrowColor #1F3864
+skinparam backgroundColor #FFFFFF
+skinparam groupInheritance 2
+
+' ─────────────────────────────────────────
+'  GAME / CORE
+' ─────────────────────────────────────────
+
+class Game {
+  - city: City
+  - players: List<Player>
+  - roundNumber: int
+  +Start(playerCount: int, playerTypes: List<PlayerType>): void
+  +NextRound(): void
+  +IsGameOver(): boolean
+}
+
+' ─────────────────────────────────────────
+'  MAP / TOPOLOGY
+'  City.ExecuteStep() csak koordinátor:
+'  meghívja vehicle.Step()-et és snowPlow.Step()-et,
+'  saját léptetési logikát nem tartalmaz
+' ─────────────────────────────────────────
+
+class City {
+  - intersections: List<Intersection>
+  - roads: List<Road>
+  +ExecuteStep(): void
+  +ApplySnowfall(amount: int): void
+  +GetRoads(): List<Road>
+}
+
+' ─────────────────────────────────────────
+'  PATH FINDER  (Single Responsibility)
+'  Csak az útvonalkereső logikát tartalmazza.
+'  Car példányosítja és használja navigációhoz.
+' ─────────────────────────────────────────
+
+class PathFinder {
+  - city: City
+  +GetShortestPath(from: Node, to: Node): List<Lane>
+  +GetNeighborLane(road: Road, lane: Lane, direction: Direction): Lane
+  +GetOtherEnd(road: Road, node: Node): Node
+  +GetPassableLanes(road: Road): List<Lane>
+}
+
+abstract class Node {
+  +GetConnectedRoads(): List<Road>
+}
+
+class Intersection extends Node {
+  - connectedRoads: List<Road>
+  +AddRoad(road: Road): void
+}
+
+class Terminal extends Node {
+  +NotifyArrival(bus: Bus): void
+}
+
+class Home extends Node {}
+
+class Workplace extends Node {}
+
+class Road {
+  - from: Node
+  - to: Node
+  - lanes: List<Lane>
+  +GetLanes(): List<Lane>
+  +ApplySnow(amount: int): void
+}
+
+class Lane {
+  - state: LaneState
+  - vehicles: List<Vehicle>
+  - snowPlow: SnowPlow
+  - saltCountdown: int
+  - passageCount: int
+  +Accept(v: Vehicle): void
+  +Accept(s: SnowPlow): void
+  +AddSnow(amount: int): void
+  +ApplySalt(): void
+  +FormIce(): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +GetState(): LaneState
+  +RegisterPassage(v: Vehicle): void
+  +CleanWith(plow: SnowPlow): void
+  +SetBlocked(turns: int): void
+}
+
+' ─────────────────────────────────────────
+'  LANE STATES  (State pattern)
+' ─────────────────────────────────────────
+
+abstract class LaneState {
+  +OnSnowAdded(lane: Lane, amount: int): void
+  +OnSaltApplied(lane: Lane): void
+  +OnIceFormed(lane: Lane): void
+  +IsPassable(): boolean
+  +IsSlippery(): boolean
+  +CanBePushed(): boolean
+}
+
+class ClearState extends LaneState {}
+class ThinSnowState extends LaneState {
+  - snowThickness: int
+}
+class ThickSnowState extends LaneState {
+  - snowThickness: int
+}
+class IcyState extends LaneState {}
+class BrokenIceState extends LaneState {
+  - iceThickness: int
+}
+
+' ─────────────────────────────────────────
+'  VEHICLES
+' ─────────────────────────────────────────
+
+abstract class Vehicle {
+  - currentLane: Lane
+  - blockedTurns: int
+  +Step(): void
+  +MeetVehicle(v: Vehicle): void
+  +IsBlocked(): boolean
+  +GetCurrentLane(): Lane
+  +DecrementBlock(): void
+}
+
+class Car extends Vehicle {
+  - home: Home
+  - workplace: Workplace
+  - pathFinder: PathFinder
+  +GetNextLane(): Lane
+  +SwitchLane(road: Road): boolean
+}
+
+class Bus extends Vehicle {
+  - terminalStart: Terminal
+  - terminalEnd: Terminal
+  - completedRounds: int
+  +ArrivedAtTerminal(): void
+  +GetCompletedRounds(): int
+  +IsRouteComplete(): boolean
+}
+
+' ─────────────────────────────────────────
+'  SNOW PLOW
+' ─────────────────────────────────────────
+
+class SnowPlow {
+  - currentLane: Lane
+  - head: CleanerHead
+  - owner: CleanerPlayer
+  +Step(): void
+  +MoveTo(lane: Lane): void
+  +ChangeHead(newHead: CleanerHead): void
+  +GetCurrentLane(): Lane
+  +GetHead(): CleanerHead
+  +ExecuteClean(): void
+}
+
+' ─────────────────────────────────────────
+'  CLEANER HEADS  (Strategy pattern)
+' ─────────────────────────────────────────
+
+abstract class CleanerHead {
+  +Clean(lane: Lane): void
+  +IsOperational(): boolean
+}
+
+class SweepHead extends CleanerHead {}
+class ThrowHead extends CleanerHead {}
+class IceBreakerHead extends CleanerHead {}
+
+class SaltHead extends CleanerHead {
+  - salt: int
+  +Refuel(amount: int): void
+}
+
+class DragonHead extends CleanerHead {
+  - kerosene: int
+  +Refuel(amount: int): void
+}
+
+' ─────────────────────────────────────────
+'  PLAYERS
+' ─────────────────────────────────────────
+
+abstract class Player {
+  - name: String
+  +TakeTurn(): void
+  +GetName(): String
+}
+
+class BusDriver extends Player {
+  - bus: Bus
+}
+
+class CleanerPlayer extends Player {
+  - balance: int
+  - plows: List<SnowPlow>
+  +DirectPlow(plow: SnowPlow, lane: Lane): void
+  +BuyHead(plow: SnowPlow, head: CleanerHead): void
+  +BuyFuel(plow: SnowPlow, fuelType: FuelType, amount: int): void
+  +BuyNewPlow(): void
+  +ReceivePayment(amount: int): void
+  +GetBalance(): int
+}
+
+' ─────────────────────────────────────────
+'  ENUMS
+' ─────────────────────────────────────────
+
+enum FuelType {
+  SALT
+  KEROSENE
+}
+
+enum Direction {
+  LEFT
+  RIGHT
+}
+
+enum PlayerType {
+  BUS_DRIVER
+  CLEANER
+}
+
+' ─────────────────────────────────────────
+'  RELATIONSHIPS
+' ─────────────────────────────────────────
+
+' Game
+Game "1" *--> "1" City
+Game "1" *--> "1..*" Player
+
+' City / topology
+'  ExecuteStep(): City.GetRoads() -> Road.GetLanes() -> Lane vehicles/snowplow -> Step()
+'  ApplySnowfall(): City.GetRoads() -> Road.ApplySnow()
+City "1" *--> "1..*" Road
+City "1" *--> "1..*" Node
+Road "1" *--> "1..*" Lane
+Road "1" --> "2" Node
+Lane "1" --> "1" LaneState
+Lane "0..1" --> "0..*" Vehicle
+Lane "0..1" --> "0..1" SnowPlow
+
+' PathFinder - Car használja
+PathFinder "1" --> "1" City
+Car "1" *--> "1" PathFinder
+
+' Vehicles
+Car "1" --> "1" Home
+Car "1" --> "1" Workplace
+Bus "1" --> "2" Terminal
+
+' SnowPlow
+SnowPlow "1" --> "1" CleanerHead
+CleanerPlayer "1" --> "1..*" SnowPlow
+BusDriver "1" --> "1" Bus
+
+' FuelType
+SaltHead ..> FuelType
+DragonHead ..> FuelType
+CleanerPlayer ..> FuelType
+
+' Direction
+Road ..> Direction
+
+@enduml
