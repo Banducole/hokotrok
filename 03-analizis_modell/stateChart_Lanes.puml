@@ -1,0 +1,30 @@
+@startuml Lane_StateChart
+
+skinparam state {
+  BackgroundColor #D5E8F0
+  BorderColor #2E75B6
+  ArrowColor #1F3864
+  FontSize 20
+}
+
+[*] --> ClearState
+
+ClearState --> ThinSnowState : AddSnow(amount)
+
+ThinSnowState --> ThickSnowState : AddSnow(amount)\n[snowThickness eléri a határt]
+ThinSnowState --> IcyState : FormIce()\n[passageCount eléri a határt]
+ThinSnowState --> ClearState : ApplySalt()
+
+ThickSnowState --> ThinSnowState : ApplySalt()\n[vastag hó részben olvad]
+ThickSnowState --> ClearState : ApplySalt()\n[vékony hó is olvad]
+ThickSnowState --> ThickSnowState : AddSnow(amount)\n[snowThickness nő]
+
+IcyState --> ClearState : ApplySalt()
+IcyState --> BrokenIceState : CleanWith(IceBreakerHead)
+IcyState --> IcyState : AddSnow(amount)\n[jégréteg vastagodik]
+
+BrokenIceState --> ClearState : CleanWith(SweepHead)\nor CleanWith(ThrowHead)
+BrokenIceState --> ClearState : ApplySalt()
+BrokenIceState --> BrokenIceState : AddSnow(amount)\n[jégréteg vastagodik]
+
+@enduml
