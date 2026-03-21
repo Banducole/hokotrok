@@ -9,6 +9,10 @@ https://docs.google.com/document/d/1O4nuOhmquTkafkhZjxJQf5FT4inXc05isAQNsJajowc/
 
 **analízis_modell google docs linkje:**
 https://docs.google.com/document/d/1Fx7AKixJzVyYqkKjyrcX-lUUaG8O62bfxhrTVJ95DoA/edit?tab=t.0
+
+**Skeleton terv google docs linkje**
+https://docs.google.com/document/d/1pxRIwrsELMsBIPfNmQ1nUWM1OTJcYdhEJ5IscE60GbU/edit?usp=sharing
+
 ### 🚀 Git Gyorstalpaló a Projektkhez
 
 Szevasztok! Mivel be lettetek állítva a GitHub repóba, itt vannak a legfontosabb parancsok, amikkel dolgozni fogunk.
