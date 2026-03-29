@@ -1,6 +1,6 @@
 package skeleton;
 
-public class CleanerPlayer {
+public class CleanerPlayer extends Player {
     // KIVÉVE: private int balance = 500;
 
     public void takeTurn(SnowPlow sp, Lane targetLane) {

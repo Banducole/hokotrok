@@ -1,5 +1,6 @@
 package skeleton;
 
-public class Salt {
-    
+public class Salt implements FuelType {
+    // NINCS belső állapot
+    // NINCS konstruktor
 }
