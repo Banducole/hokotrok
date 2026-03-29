@@ -16,7 +16,7 @@ public class CleanerPlayer {
         SkeletonHelper.exitMethod("CleanerPlayer.ReceivePayment(amount)");
     }
 
-    public void buyHead(SnowPlow sp, Head newHead) {
+    public void buyHead(SnowPlow sp, CleanerHead newHead) {
         SkeletonHelper.enterMethod("CleanerPlayer.BuyHead(SnowPlow, Head)");
         boolean hasEnoughBalance = SkeletonHelper.askQuestion("Van elegendő egyenleg az új fejre?");
         if (hasEnoughBalance) {
@@ -30,7 +30,7 @@ public class CleanerPlayer {
         SkeletonHelper.enterMethod("CleanerPlayer.BuyFuel(SnowPlow, amount)");
         boolean hasEnoughBalance = SkeletonHelper.askQuestion("Van elegendő egyenleg az üzemanyagra?");
         if (hasEnoughBalance) {
-            Head currentHead = sp.getHead();
+            CleanerHead currentHead = sp.getHead();
             System.out.println("  [LOG] Egyenleg csökkent.");
             currentHead.refuel(amount); 
         }

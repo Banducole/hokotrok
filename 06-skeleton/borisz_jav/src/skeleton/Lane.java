@@ -45,7 +45,7 @@ public class Lane {
     public void cleanWith(SnowPlow sp) {
         SkeletonHelper.enterMethod("Lane.CleanWith(SnowPlow)");
         
-        Head head = sp.getHead();
+        CleanerHead head = sp.getHead();
         if (head.isOperational()) {
             head.clean(this);
             

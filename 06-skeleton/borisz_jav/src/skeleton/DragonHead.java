@@ -1,6 +1,6 @@
 package skeleton;
 
-public class DragonHead implements Head {
+public class DragonHead implements CleanerHead {
     // KIVÉVE: private int kerosene = 5;
 
     @Override

@@ -1,6 +1,6 @@
 package skeleton;
 
-public class SaltHead implements Head {
+public class SaltHead implements CleanerHead {
     // KIVÉVE: private int salt = 5;
 
     @Override

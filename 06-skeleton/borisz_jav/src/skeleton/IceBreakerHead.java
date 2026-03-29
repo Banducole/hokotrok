@@ -3,7 +3,7 @@ package skeleton;
 /**
  * A jégtörő fej a jeget töri fel, de nem takarítja el azt.
  */
-public class IceBreakerHead implements Head {
+public class IceBreakerHead implements CleanerHead {
     @Override
     public boolean isOperational() {
         SkeletonHelper.enterMethod("IceBreakerHead.IsOperational()");

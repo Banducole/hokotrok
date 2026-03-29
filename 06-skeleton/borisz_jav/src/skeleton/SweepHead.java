@@ -3,7 +3,7 @@ package skeleton;
 /**
  * A söprő fej oldalra tolja a havat, közvetlenül a hókotró nyomvonala mellé.
  */
-public class SweepHead implements Head {
+public class SweepHead implements CleanerHead {
     @Override
     public boolean isOperational() {
         SkeletonHelper.enterMethod("SweepHead.IsOperational()");
