@@ -172,7 +172,7 @@ public class Lane {
             LaneState dummyState = this.getState();
             dummyState.onSnowAdded(this, amount);
         } else {
-            System.out.println("  [LOG] A só felolvasztotta a havat, az állapot nem változott.");
+            System.out.println("  [LOG] A só felolvasztotta a havat, az állapot nem változott. SaltCountdown csökken.");
         }
         
         SkeletonHelper.exitMethod("Lane.AddSnow(" + amount + ")");

@@ -35,16 +35,14 @@ public class SnowPlow {
      */
     public void step() {
         SkeletonHelper.enterMethod("SnowPlow.Step()");
+        Lane dummyLane = new Lane();
+        boolean passable = dummyLane.isPassable(); 
         
-        boolean passable = targetLane.isPassable();
-        // A hókotró abban az esetben is ráléphet a sávra, ha az autók számára járhatatlan.
-        // A tesztelő dönti el, hogy a Use-Case alapján a szkeleton hogyan fusson le.
         boolean entersAnyway = SkeletonHelper.askQuestion("A hókotró rálép a sávra?");
-        
         if (entersAnyway) {
-            targetLane.accept(this);
+            dummyLane.accept(this);
+            dummyLane.cleanWith(this);
         }
-        
         SkeletonHelper.exitMethod("SnowPlow.Step()");
     }
 
