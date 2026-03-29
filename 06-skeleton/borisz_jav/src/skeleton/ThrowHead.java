@@ -3,7 +3,7 @@ package skeleton;
 /**
  * A hányó fej oldalra, de messzire szórja a havat.
  */
-public class ThrowHead implements Head {
+public class ThrowHead implements CleanerHead {
     
     @Override
     public boolean isOperational() {

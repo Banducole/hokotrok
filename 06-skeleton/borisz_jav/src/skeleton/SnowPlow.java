@@ -21,7 +21,7 @@ public class SnowPlow {
         SkeletonHelper.exitMethod("SnowPlow.Step()");
     }
 
-    public Head getHead() {
+    public CleanerHead getHead() {
         SkeletonHelper.enterMethod("SnowPlow.GetHead()");
         SkeletonHelper.exitMethod("SnowPlow.GetHead()");
         return new ThrowHead(); 
@@ -33,7 +33,7 @@ public class SnowPlow {
         return new CleanerPlayer(); 
     }
     
-    public void changeHead(Head newHead) {
+    public void changeHead(CleanerHead newHead) {
         SkeletonHelper.enterMethod("SnowPlow.ChangeHead(Head)");
         System.out.println("  [LOG] Hókotró feje lecserélve.");
         SkeletonHelper.exitMethod("SnowPlow.ChangeHead(Head)");
