@@ -13,6 +13,9 @@ https://docs.google.com/document/d/1Fx7AKixJzVyYqkKjyrcX-lUUaG8O62bfxhrTVJ95DoA/
 **Skeleton terv google docs linkje**
 https://docs.google.com/document/d/1pxRIwrsELMsBIPfNmQ1nUWM1OTJcYdhEJ5IscE60GbU/edit?usp=sharing
 
+**Skeleton google docs linkje**
+https://docs.google.com/document/d/17QLfc6As8kJSuFKoRmHRfHuk1QQCHnmaRMhaIviNXvY/edit?tab=t.0
+
 ### 🚀 Git Gyorstalpaló a Projektkhez
 
 Szevasztok! Mivel be lettetek állítva a GitHub repóba, itt vannak a legfontosabb parancsok, amikkel dolgozni fogunk.
