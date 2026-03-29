@@ -14,11 +14,11 @@ public class IceBreakerHead implements CleanerHead {
     @Override
     public void clean(Lane lane) {
         SkeletonHelper.enterMethod("IceBreakerHead.Clean(Lane)");
-        lane.getState();
         
-        boolean isSlippery = SkeletonHelper.askQuestion("A sáv jeges állapotban van?");
-        if(isSlippery) {
-            boolean canBePushed = SkeletonHelper.askQuestion("Tolható a tartalom?"); // A jeget nem tudja tolni [cite: 495, 496]
+        LaneState currentState = lane.getState();
+        
+        if(currentState.getClass().getSimpleName().equals("IcyState")) {
+            boolean canBePushed = SkeletonHelper.askQuestion("Tolható a tartalom?"); 
             if(!canBePushed) {
                 lane.setState(new BrokenIceState());
             }
