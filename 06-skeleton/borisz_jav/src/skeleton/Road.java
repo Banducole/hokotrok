@@ -14,7 +14,7 @@ public class Road {
      */
     public void applySnow(int amount) {
         SkeletonHelper.enterMethod("Road.ApplySnow(" + amount + ")");
-        Lane dummyLane = new Lane(); // Üres konstruktorral hívjuk
+        Lane dummyLane = new Lane();
         dummyLane.addSnow(amount);
         SkeletonHelper.exitMethod("Road.ApplySnow(" + amount + ")");
     }
