@@ -18,7 +18,7 @@ public class BusDriver extends Player {
         PathFinder dummyPf = new PathFinder();
         Lane dummyLane = new Lane();
         
-        dummyBus.step(dummyPf, dummyLane);
+        dummyBus.step();
         
         SkeletonHelper.exitMethod("BusDriver.TakeTurn()");
     }

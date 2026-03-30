@@ -93,9 +93,7 @@ public class Main {
     private static void runUC01() {
         System.out.println("\n[FUTTATÁS] UC-01: Autó mozog - normál eset");
         Car car1 = new Car();
-        Lane lane1 = new Lane();
-        PathFinder pf1 = new PathFinder();
-        car1.step(pf1, lane1);
+        car1.step();
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
@@ -103,21 +101,7 @@ public class Main {
     private static void runUC02() {
         System.out.println("\n[FUTTATÁS] UC-02: Jármű elakad - nincs járható szomszéd");
         Car car1 = new Car();
-        PathFinder pf1 = new PathFinder();
-        Home home1 = new Home();
-        Workplace wp1 = new Workplace();
-        
-        boolean blocked = car1.isBlocked();
-        if (!blocked) {
-            Lane nextLane = pf1.getShortestPath(car1, home1, wp1); 
-            boolean passable = nextLane.isPassable();
-            if (!passable) {
-                boolean switched = pf1.switchPassableLane(nextLane);
-                if (!switched) {
-                    car1.setBlocked(1);
-                }
-            }
-        }
+        car1.step();
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
@@ -125,9 +109,7 @@ public class Main {
     private static void runUC03() {
         System.out.println("\n[FUTTATÁS] UC-03: Jármű megcsúszik és ütközik");
         Car car1 = new Car();
-        Lane lane1 = new Lane();
-        PathFinder pf1 = new PathFinder();
-        car1.step(pf1, lane1); 
+        car1.step(); 
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
@@ -270,9 +252,7 @@ public class Main {
     private static void runUC17() {
         System.out.println("\n[FUTTATÁS] UC-17: Busz végállomásra érkezik");
         Bus bus1 = new Bus();
-        Lane lane1 = new Lane();
-        PathFinder pf1 = new PathFinder();
-        bus1.step(pf1, lane1); 
+        bus1.step(); 
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
@@ -291,22 +271,7 @@ public class Main {
     private static void runUC19() {
         System.out.println("\n[FUTTATÁS] UC-19: Jármű átvált szomszéd sávra");
         Car car1 = new Car();
-        PathFinder pf1 = new PathFinder();
-        Home home1 = new Home();
-        Workplace wp1 = new Workplace();
-        
-        boolean blocked = car1.isBlocked(); 
-        if (!blocked) {
-            Lane nextLane = pf1.getShortestPath(car1, home1, wp1); 
-            boolean passable = nextLane.isPassable(); 
-            if (!passable) {
-                boolean switched = pf1.switchPassableLane(nextLane); 
-                if (switched) {
-                    Lane neighbor = new Lane();
-                    neighbor.accept(car1);
-                }
-            }
-        }
+        car1.step();
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 

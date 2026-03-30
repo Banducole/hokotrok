@@ -9,14 +9,13 @@ public class Bus extends Vehicle {
     /**
      * A busz léptetése egy szimulációs körben.
      * Megkeresi a következő sávot a végállomása felé, és megpróbál rálépni.
-     * @param pf Az útvonalkereső (PathFinder) objektum.
-     * @param currentLane A sáv, amelyen a busz jelenleg áll.
      */
-    public void step(PathFinder pf, Lane currentLane) {
+    public void step() {
         SkeletonHelper.enterMethod("Bus.Step()");
         
         boolean blocked = isBlocked();
         if (!blocked) {
+            PathFinder pf = new PathFinder(); 
             Terminal dummyStart = new Terminal();
             Terminal dummyEnd = new Terminal();
             
@@ -24,10 +23,8 @@ public class Bus extends Vehicle {
             if (nextLane != null) {
                 boolean passable = nextLane.isPassable();
                 if (passable) {
-                    // Az accept() metódus önmagában lekezeli a csúszás és ütközés kérdését!
                     nextLane.accept(this); 
                     
-                    // Így itt már csak azt vizsgáljuk, hogy a végállomásra ért-e.
                     boolean routeComplete = isRouteComplete();
                     if (routeComplete) {
                         dummyEnd.notifyArrival(this);

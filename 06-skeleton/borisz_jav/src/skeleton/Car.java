@@ -7,24 +7,34 @@ package skeleton;
 public class Car extends Vehicle {
 
     /**
-     * Az autó léptetése egy szimulációs körben.
-     * Megkeresi a legrövidebb utat a célja felé, és ha a következő sáv járható, rálép.
-     * * @param pf Az útvonalkereső (PathFinder) objektum.
-     * @param currentLane A sáv, amelyen az autó jelenleg áll.
+     * Végrehajtja az autó egy szimulációs lépését (körét).
+     * A metódus először ellenőrzi, hogy a jármű blokkolva van-e. Ha nincs,
+     * lekéri a legrövidebb útvonal következő sávját a PathFinder segítségével.
+     * Ha a célzott sáv járható, az autó rálép. Ha nem járható (pl. vastag hó miatt), 
+     * az útvonaltervező megpróbál sávot váltani egy járható szomszédos sávra. 
+     * Ha minden irány blokkolva van (nincs alternatíva), a jármű elakad.
      */
-    public void step(PathFinder pf, Lane currentLane) {
+    public void step() {
         SkeletonHelper.enterMethod("Car.Step()");
         
-        boolean blocked = isBlocked();
-        if (!blocked) {
-            Home dummyHome = new Home();
-            Workplace dummyWork = new Workplace();
-            
-            Lane nextLane = pf.getShortestPath(this, dummyHome, dummyWork); 
-            if (nextLane != null) {
-                boolean passable = nextLane.isPassable();
-                if (passable) {
-                    nextLane.accept(this);
+        if (this.isBlocked()) {
+            SkeletonHelper.exitMethod("Car.Step()");
+            return;
+        }
+        
+        PathFinder pf = new PathFinder();
+        Lane nextLane = pf.getShortestPath(this, new Home(), new Workplace());
+        
+        if (nextLane != null) {
+            if (nextLane.isPassable()) {
+                nextLane.accept(this);
+            } else {
+                boolean hasAlternative = pf.switchPassableLane(nextLane);
+                if (hasAlternative) {
+                    Lane alternativeLane = new Lane();
+                    alternativeLane.accept(this);
+                } else {
+                    this.setBlocked(1);
                 }
             }
         }
