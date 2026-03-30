@@ -1,15 +1,27 @@
 package skeleton;
 
+/**
+ * A hókotró járművet reprezentáló osztály.
+ * A hókotrókat a takarító játékosok (CleanerPlayer) irányítják. 
+ * Képesek különböző takarítófejekkel (CleanerHead) megtisztítani a sávokat.
+ */
 public class SnowPlow {
-    // NINCS belső változó
-    // NINCS paraméteres konstruktor (töröltük a public SnowPlow(Head head, CleanerPlayer owner) részt)
+    
     private CleanerHead currentHead = new ThrowHead();
 
+    /**
+     * Beállítja a hókotró célját (melyik sáv felé haladjon).
+     * @param lane A célzott sáv.
+     */
     public void setTargetLane(Lane lane) {
         SkeletonHelper.enterMethod("SnowPlow.SetTargetLane(Lane)");
         SkeletonHelper.exitMethod("SnowPlow.SetTargetLane(Lane)");
     }
 
+    /**
+     * A hókotró léptetése egy körben.
+     * Megpróbál rálépni a célzott sávra, és ha rálépett, azonnal el is kezdi a takarítást.
+     */
     public void step() {
         SkeletonHelper.enterMethod("SnowPlow.Step()");
         Lane dummyLane = new Lane();
@@ -23,6 +35,11 @@ public class SnowPlow {
         SkeletonHelper.exitMethod("SnowPlow.Step()");
     }
 
+    /**
+     * Visszaadja a hókotrón jelenleg lévő takarítófejet.
+     * A szkeleton fázisban ez a metódus megkérdezi a tesztelőt, hogy milyen fejet szimuláljon.
+     * @return Az aktuális takarítófej (CleanerHead) objektuma.
+     */
     public CleanerHead getHead() {
         SkeletonHelper.enterMethod("SnowPlow.GetHead()");
         
@@ -57,18 +74,30 @@ public class SnowPlow {
         return dummyHead;
     }
 
+    /**
+     * Visszaadja a hókotrót birtokló és irányító játékost.
+     * @return A tulajdonos játékos (CleanerPlayer) objektuma.
+     */
     public CleanerPlayer getOwner() {
         SkeletonHelper.enterMethod("SnowPlow.GetOwner()");
         SkeletonHelper.exitMethod("SnowPlow.GetOwner()");
         return new CleanerPlayer(); 
     }
     
+    /**
+     * Lecseréli a hókotró jelenlegi fejét egy új fejre.
+     * @param newHead Az új takarítófej.
+     */
     public void changeHead(CleanerHead newHead) {
         SkeletonHelper.enterMethod("SnowPlow.ChangeHead(Head)");
         System.out.println("  [LOG] Hókotró feje lecserélve.");
         SkeletonHelper.exitMethod("SnowPlow.ChangeHead(Head)");
     }
 
+    /**
+     * Visszaadja azt a sávot, amelyen a hókotró jelenleg tartózkodik.
+     * @return Az aktuális sáv (Lane).
+     */
     public Lane getCurrentLane() {
         SkeletonHelper.enterMethod("SnowPlow.GetCurrentLane()");
         SkeletonHelper.exitMethod("SnowPlow.GetCurrentLane()");

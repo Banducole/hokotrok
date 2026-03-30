@@ -6,5 +6,4 @@ package skeleton;
  */
 public abstract class Node {
     // A szkeleton fázisban elegendő az üres ősosztály, 
-    // később ide kerülhetnek a közös csomóponti logikák (pl. szomszédos utak listája).
 }

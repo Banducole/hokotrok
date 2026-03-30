@@ -4,9 +4,14 @@ import java.util.Scanner;
 
 /**
  * A szkeleton program belépési pontja és menükezelője.
- * Indításkor a program egy számozott menüből kínálja fel a futtatható use-case-eket.
+ * Indításkor a program egy számozott menüből kínálja fel a futtatható use-case-eket (szekvenciákat).
  */
 public class Main {
+    
+    /**
+     * A program fő metódusa, amely elindítja a konzolos menürendszert.
+     * @param args Parancssori argumentumok (nem használt).
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
@@ -73,6 +78,7 @@ public class Main {
         }
     }
 
+    /** Futtatja a(z) UC-00: Skeleton inicializáció (Alapállapot) szekvenciát. */
     private static void runUC00() {
         System.out.println("\n[FUTTATÁS] UC-00: Skeleton inicializáció");
         SkeletonHelper.enterMethod("Main.runUC00()");
@@ -83,6 +89,7 @@ public class Main {
         SkeletonHelper.exitMethod("Main.runUC00()");
     }
 
+    /** Futtatja a(z) UC-01: Autó mozog - normál eset szekvenciát. */
     private static void runUC01() {
         System.out.println("\n[FUTTATÁS] UC-01: Autó mozog - normál eset");
         Car car1 = new Car();
@@ -92,6 +99,7 @@ public class Main {
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-02: Jármű elakad - nincs járható szomszéd szekvenciát. */
     private static void runUC02() {
         System.out.println("\n[FUTTATÁS] UC-02: Jármű elakad - nincs járható szomszéd");
         Car car1 = new Car();
@@ -113,6 +121,7 @@ public class Main {
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-03: Jármű megcsúszik és ütközik szekvenciát. */
     private static void runUC03() {
         System.out.println("\n[FUTTATÁS] UC-03: Jármű megcsúszik és ütközik");
         Car car1 = new Car();
@@ -122,42 +131,47 @@ public class Main {
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-04: Hókotró takarít - sáv már tiszta szekvenciát. */
     private static void runUC04() {
         System.out.println("\n[FUTTATÁS] UC-04: Hókotró takarít - sáv már tiszta");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         Lane lane1 = new Lane();
         cp1.takeTurn(sp1, lane1);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-05: Hókotró takarít - fej nem működőképes szekvenciát. */
     private static void runUC05() {
         System.out.println("\n[FUTTATÁS] UC-05: Hókotró takarít - fej nem működőképes");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         Lane lane1 = new Lane();
         lane1.setState(new ThickSnowState());
         cp1.takeTurn(sp1, lane1);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-06: Hókotró áthalad vastag hóban szekvenciát. */
     private static void runUC06() {
         System.out.println("\n[FUTTATÁS] UC-06: Hókotró áthalad vastag hóban");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         Lane lane1 = new Lane();
         cp1.takeTurn(sp1, lane1);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
     
+    /** Futtatja a(z) UC-07: Havazás - sima sávra esik hó szekvenciát. */
     private static void runUC07() {
         System.out.println("\n[FUTTATÁS] UC-07: Havazás - sima sávra esik hó");
-        Road road1 = new Road(); // Paraméterek eltávolítva
-        City city1 = new City(); // Paraméterek eltávolítva
+        Road road1 = new Road(); 
+        City city1 = new City(); 
         city1.applySnowfall(5);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-08: Jégképződés vékony havas sávon szekvenciát. */
     private static void runUC08() {
         System.out.println("\n[FUTTATÁS] UC-08: Jégképződés vékony havas sávon");
         Lane lane1 = new Lane();
@@ -167,83 +181,92 @@ public class Main {
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-09: Söprő fejjel takarítás - vékony hó, van szomszéd sáv szekvenciát. */
     private static void runUC09() {
         System.out.println("\n[FUTTATÁS] UC-09: Söprő fejjel takarítás - vékony hó, van szomszéd sáv");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         Lane lane1 = new Lane();
         lane1.setState(new ThinSnowState());
         cp1.takeTurn(sp1, lane1);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-10: Hányó fejjel takarítás – vékony hó szekvenciát. */
     private static void runUC10() {
         System.out.println("\n[FUTTATÁS] UC-10: Hányó fejjel takarítás – vékony hó");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         Lane lane1 = new Lane();
         lane1.setState(new ThinSnowState());
         cp1.takeTurn(sp1, lane1);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-11: Jégtörő fejjel takarítás - jeges sáv szekvenciát. */
     private static void runUC11() {
         System.out.println("\n[FUTTATÁS] UC-11: Jégtörő fejjel takarítás - jeges sáv");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         Lane lane1 = new Lane();
         lane1.setState(new IcyState());
         cp1.takeTurn(sp1, lane1);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-12: Sószóróval takarítás - jeges sáv szekvenciát. */
     private static void runUC12() {
         System.out.println("\n[FUTTATÁS] UC-12: Sószóróval takarítás - jeges sáv");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         Lane lane1 = new Lane();
         lane1.setState(new IcyState());
         cp1.takeTurn(sp1, lane1);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-13: Sárkányfejjel takarítás - van üzemanyag szekvenciát. */
     private static void runUC13() {
         System.out.println("\n[FUTTATÁS] UC-13: Sárkányfejjel takarítás - van üzemanyag");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         Lane lane1 = new Lane();
         lane1.setState(new ThickSnowState());
         cp1.takeTurn(sp1, lane1);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
     
+    /** Futtatja a(z) UC-14: Fejcsere szekvenciát. */
     private static void runUC14() {
         System.out.println("\n[FUTTATÁS] UC-14: Fejcsere");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         ThrowHead newHead = new ThrowHead();
         cp1.buyHead(sp1, newHead);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-15: Hajtóanyag vásárlás szekvenciát. */
     private static void runUC15() {
         System.out.println("\n[FUTTATÁS] UC-15: Hajtóanyag vásárlás");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow sp1 = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow sp1 = new SnowPlow(); 
         cp1.buyFuel(sp1, 5);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-16: Új hókotró vásárlás szekvenciát. */
     private static void runUC16() {
         System.out.println("\n[FUTTATÁS] UC-16: Új hókotró vásárlás");
         CleanerPlayer cp1 = new CleanerPlayer();
-        SnowPlow lastPlow = new SnowPlow(); // Paraméterek eltávolítva
+        SnowPlow lastPlow = new SnowPlow(); 
         Lane lane1 = new Lane();
         lastPlow.setTargetLane(lane1); 
         cp1.buyNewPlow(lastPlow);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-17: Busz végállomásra érkezik - körszámláló nő szekvenciát. */
     private static void runUC17() {
         System.out.println("\n[FUTTATÁS] UC-17: Busz végállomásra érkezik");
         Bus bus1 = new Bus();
@@ -253,6 +276,7 @@ public class Main {
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-18: Jármű blokkolt - nem lép szekvenciát. */
     private static void runUC18() {
         System.out.println("\n[FUTTATÁS] UC-18: Jármű blokkolt - nem lép");
         Car car1 = new Car();
@@ -263,6 +287,7 @@ public class Main {
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-19: Jármű átvált szomszéd sávra szekvenciát. */
     private static void runUC19() {
         System.out.println("\n[FUTTATÁS] UC-19: Jármű átvált szomszéd sávra");
         Car car1 = new Car();
@@ -285,20 +310,22 @@ public class Main {
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-20: Havazás - sózott sávra esik hó szekvenciát. */
     private static void runUC20() {
         System.out.println("\n[FUTTATÁS] UC-20: Havazás - sózott sávra esik hó");
-        Road road1 = new Road(); // Paraméterek eltávolítva
-        City city1 = new City(); // Paraméterek eltávolítva
+        Road road1 = new Road(); 
+        City city1 = new City(); 
         city1.applySnowfall(2);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 
+    /** Futtatja a(z) UC-21: Havazás - vékony havas sávra esik hó szekvenciát. */
     private static void runUC21() {
         System.out.println("\n[FUTTATÁS] UC-21: Havazás - vékony havas sávra esik hó");
         Lane lane1 = new Lane();
         lane1.setState(new ThinSnowState());
-        Road road1 = new Road(); // Paraméterek eltávolítva
-        City city1 = new City(); // Paraméterek eltávolítva
+        Road road1 = new Road(); 
+        City city1 = new City(); 
         city1.applySnowfall(3);
         System.out.println("\nA teszt sikeresen lefutott.");
     }
