@@ -18,7 +18,7 @@ public class ThrowHead implements CleanerHead {
         SkeletonHelper.enterMethod("ThrowHead.Clean(Lane)");
         lane.getState();
         
-        boolean cleaned = SkeletonHelper.askQuestion("A sáv vastaghó állapotban volt és a hányófej megtisztította?");
+        boolean cleaned = SkeletonHelper.askQuestion("A  hányófej sikeresen megtisztította?");
         if(cleaned) {
             lane.setState("ClearState");
         }

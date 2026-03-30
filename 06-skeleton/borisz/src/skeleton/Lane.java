@@ -57,7 +57,7 @@ public class Lane {
      */
     public void accept(SnowPlow sp) {
         SkeletonHelper.enterMethod("Lane.Accept(SnowPlow)");
-        cleanWith(sp);
+        //cleanWith(sp);
         SkeletonHelper.exitMethod("Lane.Accept(SnowPlow)");
     }
 

@@ -1,7 +1,6 @@
 package skeleton;
 
 public class Bus extends Vehicle {
-    // KIVÉVE: private int completedRounds; private Terminal startTerminal, endTerminal;
 
     public void step(PathFinder pf, Lane currentLane) {
         SkeletonHelper.enterMethod("Bus.Step()");
@@ -15,13 +14,13 @@ public class Bus extends Vehicle {
             if (nextLane != null) {
                 boolean passable = nextLane.isPassable();
                 if (passable) {
+                    // Az accept() metódus önmagában lekezeli a csúszás és ütközés kérdését!
                     nextLane.accept(this); 
-                    boolean slippery = nextLane.slipperyRoadWithVehicles();
-                    if (!slippery) {
-                        boolean routeComplete = isRouteComplete();
-                        if (routeComplete) {
-                            dummyEnd.notifyArrival(this);
-                        }
+                    
+                    // Így itt már csak azt vizsgáljuk, hogy a végállomásra ért-e.
+                    boolean routeComplete = isRouteComplete();
+                    if (routeComplete) {
+                        dummyEnd.notifyArrival(this);
                     }
                 }
             }

@@ -1,7 +1,6 @@
 package skeleton;
 
 public abstract class Vehicle {
-    // KIVÉVE: protected int blockedTurns = 0;
 
     public void setBlocked(int turns) {
         SkeletonHelper.enterMethod("Vehicle.SetBlocked(" + turns + ")");

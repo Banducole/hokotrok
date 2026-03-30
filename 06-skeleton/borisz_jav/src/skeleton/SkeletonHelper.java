@@ -43,6 +43,18 @@ public class SkeletonHelper {
     }
 
     /**
+     * Feltesz egy kérdést, amire szöveges választ (pl. rövidítést) vár a tesztelőtől.
+     *
+     * @param question A kérdés szövege.
+     * @return A tesztelő által beírt szöveg, kisbetűsítve.
+     */
+    public static String askString(String question) {
+        printIndent();
+        System.out.print("? KÉRDÉS: " + question + " ");
+        return scanner.nextLine().trim().toLowerCase();
+    }
+
+    /**
      * Kiírja a megfelelő mennyiségű behúzást a vizuális hierarchia érdekében.
      */
     private static void printIndent() {
