@@ -270,8 +270,8 @@ public class Main {
     /** Futtatja a(z) UC-19: Jármű átvált szomszéd sávra szekvenciát. */
     private static void runUC19() {
         System.out.println("\n[FUTTATÁS] UC-19: Jármű átvált szomszéd sávra");
-        Car car1 = new Car();
-        car1.step();
+        Bus bus1 = new Bus();
+        bus1.step();
         System.out.println("\nA teszt sikeresen lefutott.");
     }
 

@@ -22,12 +22,28 @@ public class Bus extends Vehicle {
             Lane nextLane = pf.getShortestPath(this, dummyStart, dummyEnd);
             if (nextLane != null) {
                 boolean passable = nextLane.isPassable();
+                
                 if (passable) {
                     nextLane.accept(this); 
                     
                     boolean routeComplete = isRouteComplete();
                     if (routeComplete) {
                         dummyEnd.notifyArrival(this);
+                    }
+                    
+                } else {
+                    boolean hasAlternative = pf.switchPassableLane(nextLane);
+                    
+                    if (hasAlternative) {
+                        Lane alternativeLane = new Lane();
+                        alternativeLane.accept(this);
+                        
+                        boolean routeComplete = isRouteComplete();
+                        if (routeComplete) {
+                            dummyEnd.notifyArrival(this);
+                        }
+                    } else {
+                        this.setBlocked(1);
                     }
                 }
             }

@@ -33,7 +33,7 @@ public class SweepHead implements CleanerHead {
             PathFinder pf = new PathFinder();
             Lane neighbor = pf.getNeighborLane(lane, "RIGHT");
             if (neighbor != null) {
-                neighbor.addSnow(3); // Mennyiség átadása
+                neighbor.addSnow(3);
             }
             lane.setState(new ClearState());
         }
