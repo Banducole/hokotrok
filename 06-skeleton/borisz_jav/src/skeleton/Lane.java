@@ -4,7 +4,7 @@ package skeleton;
  * Egy utcaszakasz egyetlen sávját reprezentáló osztály.
  * A sávok felelősek a járművek fogadásáért, a forgalom nyilvántartásáért,
  * valamint az útviszonyok (hó, jég, só) kezeléséért.
- * A sávok állapotát most már dummy objektumokkal szimuláljuk a szkeleton fázisban.
+ * A sávok állapotát dummy objektumokkal szimuláljuk a szkeleton fázisban.
  */
 public class Lane {
     
@@ -99,6 +99,7 @@ public class Lane {
 
     /**
      * Lekérdezi a sáv aktuális állapotát (állapot objektumot).
+     * * @return A sáv állapotát reprezentáló LaneState objektum.
      */
     public LaneState getState() {
         SkeletonHelper.enterMethod("Lane.GetState()");

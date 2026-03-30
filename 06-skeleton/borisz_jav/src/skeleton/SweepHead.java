@@ -1,9 +1,14 @@
 package skeleton;
 
 /**
- * A söprő fej oldalra tolja a havat, közvetlenül a hókotró nyomvonala mellé.
+ * A söprő fej (SweepHead) a havat oldalra tolja, közvetlenül a hókotró nyomvonala mellé (a szomszédos sávra).
  */
 public class SweepHead implements CleanerHead {
+    
+    /**
+     * Visszaadja, hogy a söprőfej működőképes-e.
+     * @return Igaz, ha a fej használható állapotban van.
+     */
     @Override
     public boolean isOperational() {
         SkeletonHelper.enterMethod("SweepHead.IsOperational()");
@@ -12,6 +17,12 @@ public class SweepHead implements CleanerHead {
         return op;
     }
 
+    /**
+     * Elvégzi a sáv takarítását a söprőfejjel.
+     * Ha a sáv tartalma tolható (hó), akkor egy bizonyos mennyiséget átrak a szomszédos sávba, 
+     * majd a jelenlegi sávot tiszta (ClearState) állapotba helyezi.
+     * @param lane A takarítandó sáv.
+     */
     @Override
     public void clean(Lane lane) {
         SkeletonHelper.enterMethod("SweepHead.Clean(Lane)");
@@ -30,5 +41,3 @@ public class SweepHead implements CleanerHead {
         SkeletonHelper.exitMethod("SweepHead.Clean(Lane)");
     }
 }
-
-
