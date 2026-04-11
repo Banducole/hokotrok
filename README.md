@@ -25,6 +25,7 @@ Szevasztok! Mivel be lettetek állítva a GitHub repóba, itt vannak a legfontos
 
 **1. A kód letöltése a gépedre (Ezt csak legelőször kell megcsinálni)**
 Nyiss egy terminált abban a mappában, ahova a projektet akarod tenni, és írd be ezt (a linket a GitHub repó zöld "Code" gombjára kattintva tudod kimásolni):
+(Tullner megcsinálta hogy ne kelljen elfogadni folyton)
 
 ```bash
 git clone <ide_jön_a_github_repo_linkje>
