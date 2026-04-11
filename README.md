@@ -16,6 +16,9 @@ https://docs.google.com/document/d/1pxRIwrsELMsBIPfNmQ1nUWM1OTJcYdhEJ5IscE60GbU/
 **Skeleton google docs linkje**
 https://docs.google.com/document/d/17QLfc6As8kJSuFKoRmHRfHuk1QQCHnmaRMhaIviNXvY/edit?tab=t.0
 
+**Prototípus koncepció docs linkje**
+https://docs.google.com/document/d/1s53WzVWcqtpc54-mqA_q_7ufp173LJTQQOulmciY6n0/edit?tab=t.0
+
 ### 🚀 Git Gyorstalpaló a Projektkhez
 
 Szevasztok! Mivel be lettetek állítva a GitHub repóba, itt vannak a legfontosabb parancsok, amikkel dolgozni fogunk.
