@@ -19,6 +19,9 @@ https://docs.google.com/document/d/17QLfc6As8kJSuFKoRmHRfHuk1QQCHnmaRMhaIviNXvY/
 **Prototípus koncepció docs linkje**
 https://docs.google.com/document/d/1s53WzVWcqtpc54-mqA_q_7ufp173LJTQQOulmciY6n0/edit?tab=t.0
 
+**Részletes tervek**
+https://docs.google.com/document/d/1X_FB3CW8a-59sCryfMZUmbaV9wVobgsKhUGqEgpVKlo/edit?usp=sharing
+
 ### 🚀 Git Gyorstalpaló a Projektkhez
 
 Szevasztok! Mivel be lettetek állítva a GitHub repóba, itt vannak a legfontosabb parancsok, amikkel dolgozni fogunk.
