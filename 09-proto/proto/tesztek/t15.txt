@@ -1,0 +1,15 @@
+# T15 - Havazas zuzalekkal fedett jeges savra
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Allapot s1 IcyState
+Hokotro hk1
+Felszerel hk1 Rock
+Takarito cp1 0
+Toltes hk1 Rock 5
+Raallit hk1 s1
+Hokotro_Lep hk1 u1 s1
+# now apply lots of snow to bury the gravel
+Allapot s1 ThinSnowState
+Ho s1 4
+Stat Lane s1

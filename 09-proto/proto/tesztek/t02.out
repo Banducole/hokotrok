@@ -1,0 +1,18 @@
+[ACTION] c1: letrejott (Home)
+[ACTION] c2: letrejott (Workplace)
+[ACTION] u1: letrejott
+[ACTION] s1: letrejott
+[ACTION] u1: uj sav hozzaadva: s1
+[ACTION] u1: kapcsolva: c1 <-> c2
+[ACTION] s1: allapota beallitva: IcyState
+[ACTION] busz1: letrejott (Bus)
+[ACTION] auto1: letrejott (Car)
+[ACTION] busz1: raallitva s1 savra
+[ACTION] auto1: uticel beallitva: c1 -> c2
+[ACTION] auto1: raallitva s1 savra
+[ACTION] auto1: Sikeres lepes, uj pozicio: s1
+[ACTION] auto1: megcsuszott a csuszos savon
+[ACTION] auto1: Utkozes tortent, a jarmu blokkolodott
+[ACTION] busz1: Utkozes tortent, a jarmu blokkolodott
+[STAT] Car auto1 Position=s1 Blocked=true BlockedTurns=2
+[STAT] Bus busz1 Position=s1 Blocked=true BlockedTurns=2 CompletedRounds=0

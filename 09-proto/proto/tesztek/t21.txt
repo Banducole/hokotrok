@@ -1,0 +1,13 @@
+# T21 - Jarmu blokkolt - nem lep
+Csomopont c1 Home
+Csomopont c2 Workplace
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Kapcsol u1 c1 c2
+Jarmu auto1 Car
+Uticel_Auto auto1 c1 c2
+Raallit auto1 s1
+Allapot_Auto auto1 Blocked=2
+Auto_Lep auto1 false
+Stat Car auto1

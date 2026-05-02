@@ -1,0 +1,7 @@
+# T19 - Fejcsere
+Hokotro hk1
+Felszerel hk1 Sweep
+Takarito cp1 500
+Vesz_Fej cp1 hk1 Throw
+Stat SnowPlow hk1
+Stat CleanerPlayer cp1

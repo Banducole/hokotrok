@@ -1,0 +1,20 @@
+# T13 - Sopro fej zuzalekos savon
+Ut u1
+Sav s1
+Sav s2
+Hozzaad_Sav u1 s1
+Hozzaad_Sav u1 s2
+Allapot s1 ThinSnowState
+Allapot s2 ClearState
+Hokotro hk_rock
+Felszerel hk_rock Rock
+Takarito cp1 0
+Toltes hk_rock Rock 3
+Raallit hk_rock s1
+Hokotro_Lep hk_rock u1 s1
+Hokotro hk_sweep
+Felszerel hk_sweep Sweep
+Raallit hk_sweep s1
+Hokotro_Lep hk_sweep u1 s1
+Stat Lane s1
+Stat Lane s2
