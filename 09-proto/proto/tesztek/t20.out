@@ -1,0 +1,10 @@
+[ACTION] u1: letrejott
+[ACTION] s1: letrejott
+[ACTION] u1: uj sav hozzaadva: s1
+[ACTION] s1: allapota beallitva: ClearState
+[ACTION] hk1: letrejott
+[ACTION] hk1: felszerelve: ThrowHead
+[ACTION] cp1: letrejott takarito jatekos, kezdo egyenleg: 0
+[ACTION] hk1: raallitva s1 savra
+[ACTION] hk1: Hanyofej: nincs mit takaritani
+[STAT] CleanerPlayer cp1 Balance=0 Plows=0

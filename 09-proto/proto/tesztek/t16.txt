@@ -1,0 +1,22 @@
+# T16 - Jarmu blokkolt - nincs ut
+Csomopont c1 Home
+Csomopont c2 Intersection
+Csomopont c3 Workplace
+Ut u1
+Ut u2
+Sav s1
+Sav s2
+Hozzaad_Sav u1 s1
+Hozzaad_Sav u2 s2
+Kapcsol u1 c1 c2
+Kapcsol u2 c2 c3
+Jarmu busz1 Bus
+Raallit busz1 s2
+Uticel_Auto auto1 c2 c3
+# Block bus on s2
+Allapot_Auto busz1 Blocked=2
+Jarmu auto2 Car
+Uticel_Auto auto2 c1 c3
+Raallit auto2 s1
+Auto_Lep auto2 false
+Stat Car auto2

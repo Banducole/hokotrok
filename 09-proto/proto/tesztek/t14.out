@@ -1,0 +1,4 @@
+[ACTION] hk1: letrejott
+[ACTION] hk1: felszerelve: RockHead
+[ACTION] hk1: feltoltve 5 egyseg Rock
+[STAT] SnowPlow hk1 Position=null Head=RockHead Fuel_Rock=5

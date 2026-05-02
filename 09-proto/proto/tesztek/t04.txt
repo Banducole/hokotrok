@@ -1,0 +1,16 @@
+# T04 - Zuzalek szorasa jeges uton
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Allapot s1 IcyState
+Hokotro hk1
+Felszerel hk1 Rock
+Takarito cp1 0
+Toltes hk1 Rock 5
+Raallit hk1 s1
+Hokotro_Lep hk1 u1 s1
+Jarmu auto1 Car
+Raallit auto1 s1
+Auto_Lep auto1 false
+Stat Lane s1
+Stat SnowPlow hk1

@@ -1,0 +1,10 @@
+# T18 - Uj hokotro vasarlas
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Hokotro hk1
+Raallit hk1 s1
+Takarito cp1 1000
+Vesz_Hokotro cp1 hk1 hk2
+Stat CleanerPlayer cp1
+Stat SnowPlow hk2

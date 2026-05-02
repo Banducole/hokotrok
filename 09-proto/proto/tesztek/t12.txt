@@ -1,0 +1,13 @@
+# T12 - Sozott savra eso ho
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Allapot s1 ClearState
+Hokotro hk1
+Felszerel hk1 Salt
+Takarito cp1 0
+Toltes hk1 Salt 5
+Raallit hk1 s1
+Hokotro_Lep hk1 u1 s1
+Ho s1 3
+Stat Lane s1

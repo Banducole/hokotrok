@@ -1,0 +1,16 @@
+# T11 - Auto kikeruli a vastag havat
+Csomopont c1 Home
+Csomopont c2 Workplace
+Ut u1
+Sav s1
+Sav s2
+Hozzaad_Sav u1 s1
+Hozzaad_Sav u1 s2
+Kapcsol u1 c1 c2
+Allapot s1 ThickSnowState
+Allapot s2 ClearState
+Jarmu auto1 Car
+Uticel_Auto auto1 c1 c2
+Raallit auto1 s1
+Auto_Lep auto1 false
+Stat Car auto1

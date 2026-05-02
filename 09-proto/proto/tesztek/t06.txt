@@ -1,0 +1,13 @@
+# T06 - Busz haladasa ket vegallomas kozott
+Csomopont v1 Terminal
+Csomopont v2 Terminal
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Kapcsol u1 v1 v2
+Jarmu busz1 Bus
+Buszsofor busz1
+Uticel_Busz busz1 v1 v2
+Raallit busz1 s1
+Busz_Lep busz1 u1 s1 false
+Stat Bus busz1

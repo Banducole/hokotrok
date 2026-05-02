@@ -1,0 +1,6 @@
+[ACTION] hk1: letrejott
+[ACTION] hk1: felszerelve: SweepHead
+[ACTION] cp1: letrejott takarito jatekos, kezdo egyenleg: 500
+[ACTION] cp1: Fej vasarlas sikeres, maradek egyenleg: 300
+[STAT] SnowPlow hk1 Position=null Head=ThrowHead
+[STAT] CleanerPlayer cp1 Balance=300 Plows=0

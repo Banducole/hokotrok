@@ -1,0 +1,7 @@
+# T17 - Havazas vekony havas savra - vastagodas
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Allapot s1 ThinSnowState
+Ho s1 4
+Stat Lane s1
