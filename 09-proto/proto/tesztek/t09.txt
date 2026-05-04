@@ -10,3 +10,4 @@ Toltes hk1 Salt 5
 Raallit hk1 s1
 Hokotro_Lep hk1 u1 s1
 Stat SnowPlow hk1
+Stat Lane s1
