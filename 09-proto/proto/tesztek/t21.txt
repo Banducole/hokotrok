@@ -9,5 +9,5 @@ Jarmu auto1 Car
 Uticel_Auto auto1 c1 c2
 Raallit auto1 s1
 Allapot_Auto auto1 Blocked=2
-Auto_Lep auto1 false
+Auto_Lep auto1 False
 Stat Car auto1
