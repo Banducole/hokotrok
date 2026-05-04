@@ -19,5 +19,5 @@ Allapot_Auto busz1 Blocked=2
 Jarmu auto2 Car
 Uticel_Auto auto2 c1 c3
 Raallit auto2 s1
-Auto_Lep auto2 false
+Auto_Lep auto2 False
 Stat Car auto2
