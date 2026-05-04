@@ -11,6 +11,6 @@ Jarmu auto1 Car
 Raallit busz1 s1
 Uticel_Auto auto1 c1 c2
 Raallit auto1 s1
-Auto_Lep auto1 false
+Auto_Lep auto1 False
 Stat Car auto1
 Stat Bus busz1
