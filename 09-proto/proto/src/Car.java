@@ -1,23 +1,65 @@
 import java.util.List;
 
+/**
+ * Személyautó jármű, amely autonóm módon ingázik otthon és munkahely között.
+ * <p>
+ * A {@link PathFinder} BFS-keresésével határozza meg a következő sávot.
+ * Ha a célsáv átjárhatatlan, megpróbál szomszéd sávra váltani; ha ez sem
+ * sikerül, blokkolt állapotba kerül. Csúszós sávon ütközhet más járművel.
+ * </p>
+ */
 public class Car extends Vehicle {
+
+    /** Az autó lakóhelye (ingázás egyik végpontja). */
     private Home home;
+
+    /** Az autó munkahelye (ingázás másik végpontja). */
     private Workplace workplace;
+
+    /** BFS-alapú útvonalkereső a városon belül. */
     private final PathFinder pathFinder;
+
+    /** Az aktuális úticél csomópont (home vagy workplace). */
     private Node currentTarget;
 
+    /**
+     * Létrehozza az autót a megadott városhoz kötött útvonalkeresővel.
+     *
+     * @param city a város, amelyen belül az autó közlekedik
+     */
     public Car(City city) {
-        this.pathFinder = new PathFinder(city);
+        this.pathFinder = new PathFinder();
     }
 
+    /**
+     * Beállítja az autó lakóhelyét.
+     *
+     * @param home a lakóhely csomópont
+     */
     public void setHome(Home home) { this.home = home; }
+
+    /**
+     * Beállítja az autó munkahelyét és kezdeti úticélját (ha még nincs cél).
+     *
+     * @param workplace a munkahely csomópont
+     */
     public void setWorkplace(Workplace workplace) {
         this.workplace = workplace;
         if (currentTarget == null) currentTarget = workplace;
     }
+
+    /** @return az autó lakóhelye */
     public Home getHome() { return home; }
+
+    /** @return az autó munkahelye */
     public Workplace getWorkplace() { return workplace; }
 
+    /**
+     * Egy körlépés végrehajtása: blokkolt állapot kezelése, akadály megkerülése,
+     * következő sávra lépés, csúszás és ütközés ellenőrzése.
+     *
+     * @param random ha {@code true}, a csúszás véletlen; ha {@code false}, determinisztikus
+     */
     @Override
     public void step(boolean random) {
         if (isBlocked()) {
@@ -26,24 +68,11 @@ public class Car extends Vehicle {
             return;
         }
 
-        // If current lane is impassable (e.g. ThickSnow before us), try to switch to a parallel lane
+        /* Ha az aktuális sáv átjárhatatlan, próbáljon szomszéd sávra váltani */
         if (currentLane != null && !currentLane.getState().isPassable()) {
             if (switchPassableLane()) {
                 Logger.action(this, "Akadalyt kikerulte, savot valtott, uj pozicio: " + Logger.name(currentLane));
-                // After switching, still check slipperiness on the new lane
-                if (currentLane.isSlippery()) {
-                    boolean collide = !random;
-                    if (random) collide = Math.random() < 0.5;
-                    if (collide) {
-                        Logger.action(this, "megcsuszott a csuszos savon");
-                        for (Vehicle other : currentLane.getVehicles()) {
-                            if (other != this) {
-                                meetVehicle(other);
-                                return;
-                            }
-                        }
-                    }
-                }
+                checkSlip(random);
                 return;
             } else {
                 blockedTurns = 1;
@@ -73,9 +102,19 @@ public class Car extends Vehicle {
             Logger.action(this, "Akadalyt kikerulte, savot valtott, uj pozicio: " + Logger.name(currentLane));
         }
 
-        // Slip + collision check
+        checkSlip(random);
+    }
+
+    /**
+     * Ellenőrzi a csúszást és az esetleges ütközést az aktuális sávon.
+     * Ha a sáv csúszós és az ütközés bekövetkezik, megkeresi az első
+     * másik járművet és ütközési eseményt vált ki.
+     *
+     * @param random ha {@code true}, az ütközés véletlen (50%); ha {@code false}, biztos
+     */
+    private void checkSlip(boolean random) {
         if (currentLane.isSlippery()) {
-            boolean collide = !random; // random=false -> deterministic collision
+            boolean collide = !random;
             if (random) collide = Math.random() < 0.5;
             if (collide) {
                 Logger.action(this, "megcsuszott a csuszos savon");
@@ -90,13 +129,20 @@ public class Car extends Vehicle {
         }
     }
 
+    /**
+     * Meghatározza a következő sávot az útvonalkereső segítségével.
+     * Ha az autó eléri az aktuális célt, megfordítja az irányt.
+     *
+     * @return a következő sáv, vagy {@code null} ha nincs elérhető útvonal
+     */
     public Lane getNextLane() {
         if (currentLane == null || currentLane.getRoad() == null) return null;
         Node arrivalNode = currentLane.getRoad().getTo();
         if (arrivalNode == null) return null;
 
-        if (home != null && arrivalNode == home)              currentTarget = workplace;
-        else if (workplace != null && arrivalNode == workplace) currentTarget = home;
+        /* Célcsere: ha megérkeztünk az egyik végponthoz, fordulunk */
+        if (home != null && arrivalNode == home)                currentTarget = workplace;
+        else if (workplace != null && arrivalNode == workplace)  currentTarget = home;
 
         if (currentTarget == null) return null;
         List<Lane> path = pathFinder.getShortestPath(arrivalNode, currentTarget);

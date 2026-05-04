@@ -11,7 +11,8 @@
 [ACTION] u2: kapcsolva: c2 <-> c3
 [ACTION] busz1: letrejott (Bus)
 [ACTION] busz1: raallitva s2 savra
-[ERROR] Parancs feldolgozasi hiba: Uticel_Auto auto1 c2 c3 (RuntimeException: Nem letezo objektum: auto1)
+[ACTION] auto1: letrejott (Car)
+[ACTION] auto1: uticel beallitva: c1 -> c3
 [ACTION] busz1: blokkolt allapot beallitva: 2
 [ACTION] auto2: letrejott (Car)
 [ACTION] auto2: uticel beallitva: c1 -> c3
