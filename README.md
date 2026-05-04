@@ -24,6 +24,7 @@ https://docs.google.com/document/d/1X_FB3CW8a-59sCryfMZUmbaV9wVobgsKhUGqEgpVKlo/
 
 **Proto**
 https://docs.google.com/document/d/12AtoIhNVPk8zA0yd2x2m-3wY0q-HkX0rbfF0Yf-DhyY/edit?tab=t.0
+https://docs.google.com/document/d/1_p5c_kGZpX0QLmYy7K8piqQTGY4nFlYEowOGf1dJ1KA/edit?tab=t.0
 
 ### 🚀 Git Gyorstalpaló a Projektkhez
 
