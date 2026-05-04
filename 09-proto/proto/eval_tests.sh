@@ -13,9 +13,18 @@ run_test() {
     shift 2
     local out_file="$PROJ_DIR/tesztek/${id}.out"
     cat "$input" | java -cp out Proto > "$out_file" 2>&1
+    local exit_code=$?
 
     local ok=true
     local missing=""
+    if [ $exit_code -ne 0 ]; then
+        ok=false
+        missing="\n     EXIT CODE: $exit_code"
+    fi
+    if grep -qF "[ERROR]" "$out_file"; then
+        ok=false
+        missing="$missing\n     FOUND [ERROR] in output"
+    fi
     for pattern in "$@"; do
         if ! grep -qE "$pattern" "$out_file"; then
             ok=false
@@ -35,7 +44,10 @@ run_test() {
     fi
 }
 
-echo "=== Running 21 tests ==="
+KNOWN_TESTS=(t01 t02 t03 t04 t05 t06 t07 t08 t09 t10 t11 t12 t13 t14 t15 t16 t17 t18 t19 t20 t21)
+
+TOTAL=$(ls "$PROJ_DIR/tesztek/"*.txt 2>/dev/null | wc -l)
+echo "=== Running $TOTAL tests ==="
 
 run_test "t01" "tesztek/t01.txt" \
     "auto1.*Sikeres lepes" \
@@ -110,7 +122,7 @@ run_test "t17" "tesztek/t17.txt" \
 run_test "t18" "tesztek/t18.txt" \
     "vasarlas sikeres" \
     "CleanerPlayer.*cp1.*Balance=500" \
-    "SnowPlow.*hk2.*Position=s1"
+    "SnowPlow.*hk2.*Position=s2"
 
 run_test "t19" "tesztek/t19.txt" \
     "CleanerPlayer.*cp1.*Balance=300" \
@@ -123,6 +135,13 @@ run_test "t21" "tesztek/t21.txt" \
     "auto1.*blokkolt" \
     "Car.*auto1.*BlockedTurns=1" \
     "Car.*auto1.*Position=s1"
+
+for txt_file in "$PROJ_DIR/tesztek/"*.txt; do
+    id=$(basename "$txt_file" .txt)
+    if [[ ! " ${KNOWN_TESTS[*]} " =~ " ${id} " ]]; then
+        run_test "$id" "$txt_file"
+    fi
+done
 
 echo ""
 echo "=== Summary: $PASS passed, $FAIL failed ==="

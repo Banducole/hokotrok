@@ -12,7 +12,8 @@ Kapcsol u1 c1 c2
 Kapcsol u2 c2 c3
 Jarmu busz1 Bus
 Raallit busz1 s2
-Uticel_Auto auto1 c2 c3
+Jarmu auto1 Car
+Uticel_Auto auto1 c1 c3
 # Block bus on s2
 Allapot_Auto busz1 Blocked=2
 Jarmu auto2 Car

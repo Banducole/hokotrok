@@ -1,8 +1,28 @@
 import java.util.List;
 
+/**
+ * Soprofej – attolja a hót vagy zuzalekot a szomszedos savra.
+ * <p>
+ * Ha van szomszédos sav (a sav indexe + 1), a hó és a zúzalék
+ * átkerül oda; egyébként az út széle mellé kerül (eltűnik).
+ * Nem igényel üzemanyagot, mindig üzemképes.
+ * Tolható állapotokat kezel: {@link ThinSnowState}, {@link ThickSnowState},
+ * {@link BrokenIceState} és zúzalék.
+ * </p>
+ */
 public class SweepHead extends CleanerHead {
+
+    /**
+     * Letrehozza a soprofejt és beallitja az arat.
+     */
     public SweepHead() { this.price = Constants.PRICE_SWEEP_HEAD; }
 
+    /**
+     * Takaritis: tolhato ho vagy zuzalek atiranyitasa a szomszed savra,
+     * majd a sav allapotanak ClearState-re allitasa.
+     *
+     * @param lane a takaritando sav
+     */
     @Override
     public void clean(Lane lane) {
         LaneState state = lane.getState();
@@ -14,6 +34,7 @@ public class SweepHead extends CleanerHead {
             if (amount <= 0) amount = 1;
             Lane neighbor = null;
             if (road != null) {
+                /* a szomszed sav a lista kovetkezo eleme (magasabb index) */
                 List<Lane> lanes = road.getLanes();
                 int idx = lanes.indexOf(lane);
                 if (idx >= 0 && idx < lanes.size() - 1) neighbor = lanes.get(idx + 1);
@@ -38,5 +59,10 @@ public class SweepHead extends CleanerHead {
         }
     }
 
+    /**
+     * A soprofej mindig uzemiképes, nem igenyel uzemanyagot.
+     *
+     * @return {@code true}
+     */
     @Override public boolean isOperational() { return true; }
 }

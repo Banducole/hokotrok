@@ -1,7 +1,9 @@
 # T18 - Uj hokotro vasarlas
 Ut u1
 Sav s1
+Sav s2
 Hozzaad_Sav u1 s1
+Hozzaad_Sav u1 s2
 Hokotro hk1
 Raallit hk1 s1
 Takarito cp1 1000

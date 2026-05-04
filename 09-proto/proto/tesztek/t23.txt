@@ -1,0 +1,25 @@
+Csomopont c1 Home
+Csomopont c2 Workplace
+Csomopont c3 Intersection
+Ut u1
+Ut u2
+Sav s1
+Sav s2
+Sav s3
+Sav s4
+Hozzaad_Sav u1 s1
+Hozzaad_Sav u1 s2
+Hozzaad_Sav u2 s3
+Hozzaad_Sav u2 s4
+Kapcsol u1 c1 c2
+Kapcsol u2 c2 c3
+Jarmu auto1 Car
+Jarmu auto2 Car
+Uticel_Auto auto1 c1 c2
+Uticel_Auto auto2 c1 c2
+Raallit auto1 s1
+Raallit auto2 s3
+Auto_Lep auto1 false
+Auto_Lep auto2 false
+Stat Car auto1
+Stat Car auto2
