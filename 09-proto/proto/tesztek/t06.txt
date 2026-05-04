@@ -9,5 +9,5 @@ Jarmu busz1 Bus
 Buszsofor busz1
 Uticel_Busz busz1 v1 v2
 Raallit busz1 s1
-Busz_Lep busz1 u1 s1 false
+Busz_Lep busz1 u1 s1 False
 Stat Bus busz1
