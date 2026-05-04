@@ -9,8 +9,5 @@ Takarito cp1 0
 Toltes hk1 Rock 5
 Raallit hk1 s1
 Hokotro_Lep hk1 u1 s1
-Jarmu auto1 Car
-Raallit auto1 s1
-Auto_Lep auto1 false
 Stat Lane s1
 Stat SnowPlow hk1
