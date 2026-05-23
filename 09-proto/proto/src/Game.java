@@ -21,6 +21,9 @@ public class Game {
     /** Az eltelt korok szama. */
     private int roundNumber = 0;
 
+    /** Az aktuálisan soron lévő játékos indexe. */
+    private int currentPlayerIndex = 0;
+
     /**
      * Visszaadja a varost.
      *
@@ -75,5 +78,38 @@ public class Game {
             }
         }
         return true;
+    }
+
+    /**
+     * Visszaadja az aktuálisan soron lévő játékost.
+     *
+     * @return az aktuális játékos, vagy {@code null} ha nincs játékos
+     */
+    public Player getCurrentPlayer() {
+        if (players.isEmpty()) return null;
+        return players.get(currentPlayerIndex);
+    }
+
+    /**
+     * Visszaadja az aktuális játékos indexét.
+     *
+     * @return az index
+     */
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    /**
+     * Továbblép a következő játékosra. Ha az utolsó játékos is lépett,
+     * visszaáll az elsőre és végrehajtja a kört (hóesés, járművek léptetése).
+     */
+    public void nextPlayer() {
+        if (players.isEmpty()) return;
+        currentPlayerIndex++;
+        if (currentPlayerIndex >= players.size()) {
+            currentPlayerIndex = 0;
+            city.executeStep();
+            roundNumber++;
+        }
     }
 }
