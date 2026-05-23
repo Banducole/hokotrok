@@ -42,7 +42,22 @@ public class GameFrame extends JFrame {
     public void updateUI_game() {
         hudPanel.update();
         shopPanel.update();
+        updateBusSelection();
         gamePanel.repaint();
+    }
+
+    private void updateBusSelection() {
+        Player current = game.getCurrentPlayer();
+        Bus activeBus = null;
+        if (current instanceof BusDriver) {
+            activeBus = ((BusDriver) current).getBus();
+        }
+        for (VehicleView vv : gamePanel.getVehicleViews()) {
+            if (vv instanceof BusView) {
+                BusView bv = (BusView) vv;
+                bv.setSelected(bv.getVehicle() == activeBus);
+            }
+        }
     }
 
     public GamePanel getGamePanel() { return gamePanel; }

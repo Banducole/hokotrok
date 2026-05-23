@@ -64,6 +64,7 @@ public class GameController implements MouseListener, ActionListener {
                     plow.step();
                     selectedPlowView.setSelected(false);
                     selectedPlowView = null;
+                    game.nextPlayer();
                 }
             }
         }
@@ -76,15 +77,9 @@ public class GameController implements MouseListener, ActionListener {
         Bus bus = bd.getBus();
         Lane targetLane = clickedLane.getLane();
 
-        if (bus.isBlocked()) {
-            bus.decrementBlock();
-            game.nextPlayer();
-            return;
-        }
+        if (bus.isBlocked()) return;
 
         if (!isAdjacentLane(bus.getCurrentLane(), targetLane)) return;
-
-        if (!targetLane.isPassable()) return;
 
         Lane oldLane = bus.getCurrentLane();
         if (oldLane != null) oldLane.removeVehicle(bus);
@@ -118,8 +113,6 @@ public class GameController implements MouseListener, ActionListener {
                 }
             }
         }
-
-        game.nextPlayer();
     }
 
     private boolean isAdjacentLane(Lane current, Lane target) {
