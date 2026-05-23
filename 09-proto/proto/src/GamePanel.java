@@ -186,4 +186,8 @@ public class GamePanel extends JPanel {
         }
         return null;
     }
+
+    public void addDrawable(IDrawable d) {
+        drawables.add(d);
+    }
 }

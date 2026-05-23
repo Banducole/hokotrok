@@ -2,14 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * A fo alkalmazas-ablak. Tartalmazza a HUD-ot, a terkepet es a shop savot.
- * BorderLayout: HUDPanel NORTH, GamePanel CENTER, ShopPanel EAST.
+ * A fo alkalmazas-ablak. Tartalmazza a HUD-ot, a terkepet, a shop savot
+ * es a controller-t, valamint elrendezi ezeket az ablakban.
  */
 public class GameFrame extends JFrame {
 
     private final GamePanel gamePanel;
     private final HUDPanel hudPanel;
     private final ShopPanel shopPanel;
+    private final GameController controller;
     private final Game game;
 
     public GameFrame(Game game) {
@@ -18,6 +19,7 @@ public class GameFrame extends JFrame {
         this.gamePanel = new GamePanel(game);
         this.hudPanel = new HUDPanel(game);
         this.shopPanel = new ShopPanel(game);
+        this.controller = new GameController(game, this);
 
         initComponents();
     }
@@ -29,6 +31,9 @@ public class GameFrame extends JFrame {
         add(hudPanel, BorderLayout.NORTH);
         add(gamePanel, BorderLayout.CENTER);
         add(shopPanel, BorderLayout.EAST);
+
+        gamePanel.addMouseListener(controller);
+        shopPanel.registerActionListener(controller);
 
         shopPanel.update();
 
