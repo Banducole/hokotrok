@@ -29,6 +29,9 @@ https://docs.google.com/document/d/1_p5c_kGZpX0QLmYy7K8piqQTGY4nFlYEowOGf1dJ1KA/
 **Grafikus felület spec**
 https://docs.google.com/document/d/1I7t2AUPn0t0KVQ8CxMxVmh1m7ag0gy3XmN3CcNnOH04/edit?tab=t.0
 
+**Grafikus változat készítése**
+https://docs.google.com/document/d/19OL1-gmf7LnuCAZus9BTkZPP87_GKa4gnzzk-klNf7w/edit?tab=t.0
+
 ### 🚀 Git Gyorstalpaló a Projektkhez
 
 Szevasztok! Mivel be lettetek állítva a GitHub repóba, itt vannak a legfontosabb parancsok, amikkel dolgozni fogunk.
