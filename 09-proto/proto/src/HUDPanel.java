@@ -2,25 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-/**
- * Felso statusz sav. Minden jatekos nevet, tipusat, egyenleget/korszamot jeleníti meg.
- * Az aktualis jatekos zold kerettel kiemelve.
- */
 public class HUDPanel extends JPanel {
 
     private final Game game;
-
-    private static final int PANEL_HEIGHT = 60;
+    private static final int PANEL_HEIGHT = 80;
 
     public HUDPanel(Game game) {
         this.game = game;
         setPreferredSize(new Dimension(0, PANEL_HEIGHT));
-        setBackground(new Color(30, 35, 40));
+        setBackground(new Color(55, 60, 68));
     }
 
-    public void update() {
-        repaint();
-    }
+    public void update() { repaint(); }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -32,49 +25,51 @@ public class HUDPanel extends JPanel {
         if (players.isEmpty()) return;
 
         int currentIdx = game.getCurrentPlayerIndex();
-        int x = 15;
-
-        g2d.setFont(new Font("SansSerif", Font.PLAIN, 11));
-        g2d.setColor(new Color(180, 180, 180));
-        g2d.drawString("Kor: " + game.getRoundNumber(), x, 15);
-
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
-        int cardWidth = 180;
-        int cardHeight = 40;
-        int y = 18;
+        int totalWidth = getWidth();
+        int cardWidth = Math.min(320, (totalWidth - 20) / players.size() - 10);
+        int cardHeight = 60;
+        int y = 10;
 
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
-            int cx = 15 + i * (cardWidth + 10);
+            int cx = 10 + i * (cardWidth + 10);
 
             if (i == currentIdx) {
-                g2d.setColor(new Color(0, 180, 0));
-                g2d.setStroke(new BasicStroke(2));
-                g2d.drawRoundRect(cx - 2, y - 2, cardWidth + 4, cardHeight + 4, 8, 8);
+                g2d.setColor(new Color(0, 200, 0));
+                g2d.setStroke(new BasicStroke(3));
+                g2d.drawRoundRect(cx - 3, y - 3, cardWidth + 6, cardHeight + 6, 10, 10);
                 g2d.setStroke(new BasicStroke(1));
             }
 
-            g2d.setColor(new Color(55, 60, 70));
-            g2d.fillRoundRect(cx, y, cardWidth, cardHeight, 6, 6);
+            g2d.setColor(new Color(45, 50, 58));
+            g2d.fillRoundRect(cx, y, cardWidth, cardHeight, 8, 8);
 
-            g2d.setFont(new Font("SansSerif", Font.BOLD, 12));
-            g2d.setColor(Color.WHITE);
             String name = p.getName() != null ? p.getName() : "Jatekos" + (i + 1);
-            g2d.drawString(name, cx + 8, y + 16);
+            String type = (p instanceof CleanerPlayer) ? " (Tak.)" : " (Busz.)";
 
-            g2d.setFont(new Font("SansSerif", Font.PLAIN, 11));
-            g2d.setColor(new Color(180, 200, 220));
-            String info;
+            g2d.setFont(new Font("SansSerif", Font.BOLD, 14));
+            g2d.setColor(Color.WHITE);
+            g2d.drawString(name + type, cx + 10, y + 20);
+
             if (p instanceof CleanerPlayer) {
                 CleanerPlayer cp = (CleanerPlayer) p;
-                info = "Takarito | $" + cp.getBalance() + " | " + cp.getPlows().size() + " hokotro";
-            } else if (p instanceof BusDriver) {
-                BusDriver bd = (BusDriver) p;
-                info = "Sofor | " + bd.getBus().getCompletedRounds() + " fordulo";
-            } else {
-                info = "Jatekos";
+                int totalSalt = 0, totalKerosene = 0, totalRock = 0;
+                for (SnowPlow plow : cp.getPlows()) {
+                    CleanerHead head = plow.getHead();
+                    if (head == null) continue;
+                    if (head instanceof SaltHead) totalSalt += head.fuelLevel();
+                    else if (head instanceof DragonHead) totalKerosene += head.fuelLevel();
+                    else if (head instanceof RockHead) totalRock += head.fuelLevel();
+                }
+
+                g2d.setFont(new Font("SansSerif", Font.PLAIN, 11));
+                g2d.setColor(new Color(200, 210, 220));
+                String info = "Penz: " + cp.getBalance()
+                    + " | So: " + totalSalt
+                    + " | Kerozin: " + totalKerosene
+                    + " | Zuzalek: " + totalRock;
+                g2d.drawString(info, cx + 10, y + 40);
             }
-            g2d.drawString(info, cx + 8, y + 32);
         }
     }
 }

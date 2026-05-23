@@ -3,10 +3,6 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-/**
- * A terkep feluleti panel. Tartalmazza az osszes rajzolhato elemet
- * (IDrawable) es periodikusan ujrarajzolja oket egy Swing Timer-rel.
- */
 public class GamePanel extends JPanel {
 
     private final Game game;
@@ -19,11 +15,14 @@ public class GamePanel extends JPanel {
     private javax.swing.Timer timer;
 
     private static final int TIMER_MS = 100;
+    private static final int NODE_MARGIN = 90;
+    private static final int H_SPACING = 210;
+    private static final int V_SPACING = 300;
 
     public GamePanel(Game game) {
         this.game = game;
-        setBackground(new Color(40, 45, 50));
-        setPreferredSize(new Dimension(800, 600));
+        setBackground(new Color(210, 218, 225));
+        setPreferredSize(new Dimension(1050, 650));
         initViews();
         startTimer();
     }
@@ -32,7 +31,7 @@ public class GamePanel extends JPanel {
         City city = game.getCity();
         List<Node> nodes = city.getNodes();
 
-        int[][] coords = computeNodeCoordinates(nodes);
+        int[][] coords = computeGridCoordinates(nodes);
 
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
@@ -93,32 +92,18 @@ public class GamePanel extends JPanel {
         }
     }
 
-    private int[][] computeNodeCoordinates(List<Node> nodes) {
+    private int[][] computeGridCoordinates(List<Node> nodes) {
         int n = nodes.size();
         int[][] coords = new int[n][2];
 
-        int panelW = 800;
-        int panelH = 600;
-        int margin = 80;
-
-        if (n == 0) return coords;
-        if (n == 1) {
-            coords[0] = new int[]{panelW / 2, panelH / 2};
-            return coords;
-        }
-
-        int cols = (int) Math.ceil(Math.sqrt(n * 1.5));
+        int cols = 5;
         int rows = (int) Math.ceil((double) n / cols);
-
-        double xStep = (double) (panelW - 2 * margin) / Math.max(1, cols - 1);
-        double yStep = (double) (panelH - 2 * margin) / Math.max(1, rows - 1);
 
         for (int i = 0; i < n; i++) {
             int col = i % cols;
             int row = i / cols;
-            int jitter = (row % 2 == 1) ? (int)(xStep * 0.3) : 0;
-            coords[i][0] = margin + (int) (col * xStep) + jitter;
-            coords[i][1] = margin + (int) (row * yStep);
+            coords[i][0] = NODE_MARGIN + col * H_SPACING;
+            coords[i][1] = NODE_MARGIN + row * V_SPACING;
         }
 
         return coords;
@@ -137,33 +122,6 @@ public class GamePanel extends JPanel {
 
         for (IDrawable d : drawables) {
             d.draw(g2d);
-        }
-
-        drawLegend(g2d);
-    }
-
-    private void drawLegend(Graphics2D g) {
-        int lx = 10;
-        int ly = getHeight() - 110;
-        g.setFont(new Font("SansSerif", Font.PLAIN, 10));
-        g.setColor(new Color(200, 200, 200));
-
-        String[] labels = {"Tiszta", "Vekony ho", "Vastag ho", "Jeges", "Tort jeg"};
-        Color[] colors = {
-            new Color(160, 160, 160),
-            new Color(173, 216, 230),
-            Color.WHITE,
-            new Color(0, 200, 220),
-            new Color(0, 200, 220)
-        };
-
-        for (int i = 0; i < labels.length; i++) {
-            g.setColor(colors[i]);
-            g.fillRect(lx, ly + i * 18, 14, 14);
-            g.setColor(Color.BLACK);
-            g.drawRect(lx, ly + i * 18, 14, 14);
-            g.setColor(new Color(200, 200, 200));
-            g.drawString(labels[i], lx + 20, ly + i * 18 + 12);
         }
     }
 

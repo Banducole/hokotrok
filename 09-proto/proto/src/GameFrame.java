@@ -1,10 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * A fo alkalmazas-ablak. Tartalmazza a HUD-ot, a terkepet, a shop savot
- * es a controller-t, valamint elrendezi ezeket az ablakban.
- */
 public class GameFrame extends JFrame {
 
     private final GamePanel gamePanel;
@@ -38,7 +34,7 @@ public class GameFrame extends JFrame {
         shopPanel.update();
 
         pack();
-        setMinimumSize(new Dimension(1050, 700));
+        setMinimumSize(new Dimension(1350, 800));
         setLocationRelativeTo(null);
         setVisible(true);
     }

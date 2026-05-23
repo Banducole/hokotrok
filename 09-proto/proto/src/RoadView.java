@@ -3,9 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Ut megjelenito. A ket csomopont koze vonalat rajzol, es tartalmazza a LaneView-kat.
- */
 public class RoadView implements IDrawable {
 
     private final Road road;
@@ -35,13 +32,14 @@ public class RoadView implements IDrawable {
         double ny = dx / len;
 
         int laneCount = road.getLanes().size();
-        double totalWidth = laneCount * 16.0;
-        double startOffset = -totalWidth / 2.0 + 8.0;
+        double laneSpacing = 38.0;
+        double totalWidth = laneCount * laneSpacing;
+        double startOffset = -totalWidth / 2.0 + laneSpacing / 2.0;
 
         for (int i = 0; i < laneCount; i++) {
             Lane lane = road.getLanes().get(i);
             LaneView lv = new LaneView(lane);
-            double offset = startOffset + i * 16.0;
+            double offset = startOffset + i * laneSpacing;
             int lx1 = (int) (fx + nx * offset);
             int ly1 = (int) (fy + ny * offset);
             int lx2 = (int) (tx + nx * offset);

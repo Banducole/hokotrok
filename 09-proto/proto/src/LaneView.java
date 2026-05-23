@@ -1,40 +1,54 @@
 import java.awt.*;
 
-/**
- * Sav megjelenito. Szines teglalap az allapot szerint, zuzalek/tort jeg overlay-jel.
- */
 public class LaneView implements IDrawable {
 
     private final Lane lane;
     private int x1, y1, x2, y2;
-    private static final int LANE_WIDTH = 14;
+    private static final int LANE_WIDTH = 36;
 
     public LaneView(Lane lane) {
         this.lane = lane;
     }
 
     public void setEndpoints(int x1, int y1, int x2, int y2) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+        this.x1 = x1; this.y1 = y1;
+        this.x2 = x2; this.y2 = y2;
     }
 
     @Override
     public void draw(Graphics2D g) {
         Stroke old = g.getStroke();
-        g.setStroke(new BasicStroke(LANE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+        g.setStroke(new BasicStroke(LANE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
         g.setColor(getStateColor());
         g.drawLine(x1, y1, x2, y2);
 
+        g.setStroke(new BasicStroke(1));
+        g.setColor(new Color(170, 175, 180));
+        boolean vertical = Math.abs(y2 - y1) > Math.abs(x2 - x1);
+        if (vertical) {
+            int left = Math.min(x1, x2) - LANE_WIDTH / 2;
+            int right = Math.max(x1, x2) + LANE_WIDTH / 2;
+            int top = Math.min(y1, y2);
+            int bot = Math.max(y1, y2);
+            g.drawLine(left, top, left, bot);
+            g.drawLine(right, top, right, bot);
+        } else {
+            int top = Math.min(y1, y2) - LANE_WIDTH / 2;
+            int bot = Math.max(y1, y2) + LANE_WIDTH / 2;
+            int left = Math.min(x1, x2);
+            int right = Math.max(x1, x2);
+            g.drawLine(left, top, right, top);
+            g.drawLine(left, bot, right, bot);
+        }
+
         if (lane.isRocky()) {
-            g.setColor(new Color(139, 90, 43, 160));
+            g.setColor(new Color(120, 80, 30, 180));
             drawDots(g);
         }
 
         if (lane.getState() instanceof BrokenIceState) {
-            g.setStroke(new BasicStroke(1));
-            g.setColor(new Color(0, 80, 120, 150));
+            g.setColor(new Color(0, 80, 120, 120));
             drawCracks(g);
         }
 
@@ -42,35 +56,47 @@ public class LaneView implements IDrawable {
     }
 
     private void drawDots(Graphics2D g) {
-        int cx = (x1 + x2) / 2;
-        int cy = (y1 + y2) / 2;
         int dx = x2 - x1;
         int dy = y2 - y1;
         double len = Math.sqrt(dx * dx + dy * dy);
         if (len < 1) return;
-        int steps = Math.max(3, (int) (len / 20));
+        int steps = Math.max(4, (int) (len / 15));
         for (int i = 0; i <= steps; i++) {
             double t = (double) i / steps;
             int px = (int) (x1 + t * dx);
             int py = (int) (y1 + t * dy);
-            g.fillOval(px - 2, py - 2, 4, 4);
+            g.fillOval(px - 3, py - 3, 6, 6);
         }
     }
 
     private void drawCracks(Graphics2D g) {
-        int cx = (x1 + x2) / 2;
-        int cy = (y1 + y2) / 2;
-        g.drawLine(cx - 5, cy - 5, cx + 5, cy + 5);
-        g.drawLine(cx - 5, cy + 5, cx + 5, cy - 5);
-        g.drawLine(cx - 3, cy - 7, cx + 3, cy + 7);
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        double len = Math.sqrt(dx * dx + dy * dy);
+        if (len < 1) return;
+        int segments = Math.max(3, (int) (len / 30));
+        boolean vertical = Math.abs(dy) > Math.abs(dx);
+        for (int i = 0; i < segments; i++) {
+            double t = (double) i / segments + 0.05;
+            int cx = (int) (x1 + t * dx);
+            int cy = (int) (y1 + t * dy);
+            int spread = LANE_WIDTH / 3;
+            if (vertical) {
+                g.drawLine(cx - spread, cy - spread / 2, cx + spread, cy + spread / 2);
+                g.drawLine(cx - spread / 2, cy + spread, cx + spread / 2, cy - spread);
+            } else {
+                g.drawLine(cx - spread / 2, cy - spread, cx + spread / 2, cy + spread);
+                g.drawLine(cx + spread, cy - spread / 2, cx - spread, cy + spread / 2);
+            }
+        }
     }
 
     private Color getStateColor() {
         LaneState st = lane.getState();
-        if (st instanceof ClearState) return new Color(160, 160, 160);
-        if (st instanceof ThinSnowState) return new Color(173, 216, 230);
-        if (st instanceof ThickSnowState) return Color.WHITE;
-        if (st instanceof IcyState) return new Color(0, 200, 220);
+        if (st instanceof ClearState) return new Color(180, 185, 190);
+        if (st instanceof ThinSnowState) return new Color(180, 210, 235);
+        if (st instanceof ThickSnowState) return new Color(210, 225, 240);
+        if (st instanceof IcyState) return new Color(0, 210, 230);
         if (st instanceof BrokenIceState) return new Color(0, 200, 220);
         return Color.GRAY;
     }
@@ -84,7 +110,7 @@ public class LaneView implements IDrawable {
     public int getY2() { return y2; }
 
     public boolean containsPoint(int px, int py) {
-        return distToSegment(px, py) <= LANE_WIDTH / 2 + 3;
+        return distToSegment(px, py) <= LANE_WIDTH / 2 + 4;
     }
 
     private double distToSegment(int px, int py) {

@@ -1,81 +1,190 @@
-/**
- * Minta-palya eloallitasa a grafikus felulet tesztelesehez.
- * A palya egy kis varost modellez csomópontokkal, utakkal es jarmuvekkel.
- */
+import java.util.List;
+
 public class MapBuilder {
 
-    public static Game buildSampleGame() {
+    private static final int COLS = 5;
+    private static final int ROWS = 2;
+
+    public static Game buildGame(String[] names, boolean[] isCleaner) {
         Game game = new Game();
         City city = game.getCity();
 
-        Home h1 = new Home();
-        Home h2 = new Home();
-        Workplace w1 = new Workplace();
-        Terminal t1 = new Terminal();
-        Terminal t2 = new Terminal();
-        Intersection i1 = new Intersection();
-        Intersection i2 = new Intersection();
-        Intersection i3 = new Intersection();
+        Node[][] grid = createGrid(city);
+        Road[][] hRoads = createHorizontalRoads(grid, city);
+        Road[][] vRoads = createVerticalRoads(grid, city);
 
-        city.addNode(h1);
-        city.addNode(i1);
-        city.addNode(i2);
-        city.addNode(w1);
-        city.addNode(t1);
-        city.addNode(i3);
-        city.addNode(t2);
-        city.addNode(h2);
+        placeCars(city, hRoads, vRoads);
+        setSnowStates(hRoads, vRoads);
 
-        Road r1 = connectNodes(h1, i1);
-        Road r2 = connectNodes(i1, i2);
-        Road r3 = connectNodes(i2, w1);
-        Road r4 = connectNodes(t1, i1);
-        Road r5 = connectNodes(i2, i3);
-        Road r6 = connectNodes(i3, t2);
-        Road r7 = connectNodes(i3, h2);
+        List<Bus> buses = createBuses(grid);
+        int busIdx = 0;
 
-        for (Road r : new Road[]{r1, r2, r3, r4, r5, r6, r7}) {
-            addLanesToRoad(r, 2);
+        for (int i = 0; i < names.length; i++) {
+            if (isCleaner[i]) {
+                CleanerPlayer cp = new CleanerPlayer(Constants.INITIAL_CLEANER_BALANCE);
+                cp.setName(names[i]);
+                SnowPlow plow = new SnowPlow(cp);
+                cp.addPlow(plow);
+                plow.changeHead(new ThrowHead());
+                plow.getHead().refuel(20);
+                Lane lane = findFreeLane(city);
+                if (lane != null) {
+                    plow.setCurrentLane(lane);
+                    lane.accept(plow);
+                }
+                game.addPlayer(cp);
+            } else {
+                Bus bus = busIdx < buses.size() ? buses.get(busIdx++) : createFallbackBus(grid);
+                BusDriver bd = new BusDriver(bus);
+                bd.setName(names[i]);
+                game.addPlayer(bd);
+            }
         }
 
-        Car car1 = new Car(city);
-        car1.setHome(h1);
-        car1.setWorkplace(w1);
-        car1.setCurrentLane(r1.getLanes().get(0));
-        r1.getLanes().get(0).accept(car1);
+        return game;
+    }
 
-        Car car2 = new Car(city);
-        car2.setHome(h2);
-        car2.setWorkplace(w1);
-        car2.setCurrentLane(r7.getLanes().get(0));
-        r7.getLanes().get(0).accept(car2);
+    public static Game buildSampleGame() {
+        return buildGame(
+            new String[]{"Kovacs Peter", "Nagy Imre", "Szabo Bela", "Molnar Andrea"},
+            new boolean[]{true, false, false, true}
+        );
+    }
+
+    private static Node[][] createGrid(City city) {
+        Node[][] grid = new Node[ROWS][COLS];
+
+        grid[0][0] = new Home();
+        grid[0][1] = new Intersection();
+        grid[0][2] = new Workplace();
+        grid[0][3] = new Terminal();
+        grid[0][4] = new Intersection();
+
+        grid[1][0] = new Workplace();
+        grid[1][1] = new Intersection();
+        grid[1][2] = new Terminal();
+        grid[1][3] = new Terminal();
+        grid[1][4] = new Intersection();
+
+        for (int r = 0; r < ROWS; r++)
+            for (int c = 0; c < COLS; c++)
+                city.addNode(grid[r][c]);
+
+        return grid;
+    }
+
+    private static Road[][] createHorizontalRoads(Node[][] grid, City city) {
+        Road[][] hRoads = new Road[ROWS][COLS - 1];
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS - 1; c++) {
+                hRoads[r][c] = connectNodes(grid[r][c], grid[r][c + 1]);
+                addLanesToRoad(hRoads[r][c], 2);
+            }
+        }
+        return hRoads;
+    }
+
+    private static Road[][] createVerticalRoads(Node[][] grid, City city) {
+        Road[][] vRoads = new Road[ROWS - 1][COLS];
+        for (int r = 0; r < ROWS - 1; r++) {
+            for (int c = 0; c < COLS; c++) {
+                vRoads[r][c] = connectNodes(grid[r][c], grid[r + 1][c]);
+                addLanesToRoad(vRoads[r][c], 2);
+            }
+        }
+        return vRoads;
+    }
+
+    private static void placeCars(City city, Road[][] hRoads, Road[][] vRoads) {
+        placeCarOnLane(city, vRoads[0][0].getLanes().get(0));
+        placeCarOnLane(city, vRoads[0][0].getLanes().get(1));
+        placeCarOnLane(city, vRoads[0][2].getLanes().get(0));
+        placeCarOnLane(city, hRoads[0][0].getLanes().get(0));
+        placeCarOnLane(city, hRoads[1][1].getLanes().get(0));
+        placeCarOnLane(city, vRoads[0][3].getLanes().get(1));
+        placeCarOnLane(city, vRoads[0][4].getLanes().get(0));
+        placeCarOnLane(city, hRoads[1][3].getLanes().get(0));
+    }
+
+    private static void placeCarOnLane(City city, Lane lane) {
+        Car car = new Car(city);
+        car.setCurrentLane(lane);
+        lane.accept(car);
+    }
+
+    private static void setSnowStates(Road[][] hRoads, Road[][] vRoads) {
+        hRoads[0][0].getLanes().get(0).setState(new ThinSnowState(1));
+        hRoads[0][0].getLanes().get(1).setState(new ThickSnowState(4));
+
+        vRoads[0][2].getLanes().get(0).setState(new IcyState());
+        vRoads[0][2].getLanes().get(1).setState(new IcyState());
+
+        vRoads[0][3].getLanes().get(0).setState(new ThinSnowState(2));
+
+        hRoads[0][3].getLanes().get(0).setState(new IcyState());
+        hRoads[0][3].getLanes().get(1).setState(new BrokenIceState());
+
+        hRoads[1][0].getLanes().get(0).setState(new ThickSnowState(5));
+        hRoads[1][0].getLanes().get(1).setState(new ThinSnowState(1));
+
+        hRoads[1][3].getLanes().get(0).setState(new BrokenIceState());
+        hRoads[1][3].getLanes().get(1).setState(new IcyState());
+
+        vRoads[0][0].getLanes().get(0).setState(new ThinSnowState(1));
+
+        hRoads[0][1].getLanes().get(0).setState(new ThinSnowState(2));
+        hRoads[0][1].getLanes().get(0).setRocky(true);
+    }
+
+    private static java.util.List<Bus> createBuses(Node[][] grid) {
+        java.util.List<Bus> buses = new java.util.ArrayList<>();
 
         Bus bus1 = new Bus();
-        bus1.setTerminalStart(t1);
-        bus1.setTerminalEnd(t2);
-        bus1.setCurrentLane(r4.getLanes().get(0));
-        r4.getLanes().get(0).accept(bus1);
+        bus1.setTerminalStart((Terminal) grid[0][3]);
+        bus1.setTerminalEnd((Terminal) grid[1][2]);
+        Road r = grid[0][3].getConnectedRoads().get(0);
+        Lane busLane = r.getLanes().get(1);
+        bus1.setCurrentLane(busLane);
+        busLane.accept(bus1);
+        buses.add(bus1);
 
-        CleanerPlayer cp = new CleanerPlayer(2000);
-        cp.setName("Takarito1");
-        SnowPlow plow1 = new SnowPlow(cp);
-        cp.addPlow(plow1);
-        plow1.setCurrentLane(r2.getLanes().get(1));
-        r2.getLanes().get(1).accept(plow1);
-        plow1.changeHead(new ThrowHead());
+        Bus bus2 = new Bus();
+        bus2.setTerminalStart((Terminal) grid[1][2]);
+        bus2.setTerminalEnd((Terminal) grid[1][3]);
+        Road r2 = null;
+        for (Road rd : grid[1][2].getConnectedRoads()) {
+            if (rd.getFrom() == grid[1][2] && rd.getTo() == grid[1][3]
+             || rd.getFrom() == grid[1][3] && rd.getTo() == grid[1][2]) {
+                r2 = rd;
+                break;
+            }
+        }
+        if (r2 != null) {
+            Lane busLane2 = r2.getLanes().get(0);
+            bus2.setCurrentLane(busLane2);
+            busLane2.accept(bus2);
+        }
+        buses.add(bus2);
 
-        BusDriver bd = new BusDriver(bus1);
-        bd.setName("Sofor1");
+        return buses;
+    }
 
-        game.addPlayer(cp);
-        game.addPlayer(bd);
+    private static Bus createFallbackBus(Node[][] grid) {
+        Bus bus = new Bus();
+        bus.setTerminalStart((Terminal) grid[0][3]);
+        bus.setTerminalEnd((Terminal) grid[1][3]);
+        return bus;
+    }
 
-        r2.getLanes().get(0).setState(new ThinSnowState(1));
-        r3.getLanes().get(0).setState(new ThickSnowState(4));
-        r5.getLanes().get(0).setState(new IcyState());
-        r6.getLanes().get(1).setState(new BrokenIceState());
-
-        return game;
+    private static Lane findFreeLane(City city) {
+        for (Node n : city.getNodes()) {
+            for (Road r : n.getConnectedRoads()) {
+                for (Lane l : r.getLanes()) {
+                    if (l.getSnowPlow() == null && l.getVehicles().isEmpty()) return l;
+                }
+            }
+        }
+        return null;
     }
 
     private static Road connectNodes(Node from, Node to) {

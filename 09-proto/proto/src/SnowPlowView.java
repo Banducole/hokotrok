@@ -1,9 +1,6 @@
 import java.awt.*;
 import java.util.Map;
 
-/**
- * Hokotro megjelenito. Narancssarga negyzet fejbetujellel, kijeloltnel zold keret.
- */
 public class SnowPlowView implements IDrawable {
 
     private final SnowPlow snowPlow;
@@ -12,7 +9,8 @@ public class SnowPlowView implements IDrawable {
     private boolean selected;
     private final Map<Lane, LaneView> laneViewMap;
 
-    private static final int SIZE = 14;
+    private static final int WIDTH = 22;
+    private static final int HEIGHT = 14;
 
     public SnowPlowView(SnowPlow snowPlow, Map<Lane, LaneView> laneViewMap) {
         this.snowPlow = snowPlow;
@@ -22,26 +20,39 @@ public class SnowPlowView implements IDrawable {
     @Override
     public void draw(Graphics2D g) {
         updatePosition();
-        g.setColor(new Color(255, 140, 0));
-        g.fillRect(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
+
+        Color plowColor = getPlowColor();
+        g.setColor(plowColor);
+        g.fillRect(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
 
         if (selected) {
             g.setColor(new Color(0, 200, 0));
             g.setStroke(new BasicStroke(2));
-            g.drawRect(x - SIZE / 2 - 2, y - SIZE / 2 - 2, SIZE + 4, SIZE + 4);
+            g.drawRect(x - WIDTH / 2 - 3, y - HEIGHT / 2 - 3, WIDTH + 6, HEIGHT + 6);
             g.setStroke(new BasicStroke(1));
         } else {
-            g.setColor(Color.BLACK);
-            g.drawRect(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
+            g.setColor(plowColor.darker());
+            g.drawRect(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
         }
 
         String headLabel = getHeadLabel();
         if (!headLabel.isEmpty()) {
-            g.setColor(Color.BLACK);
+            g.setColor(Color.WHITE);
             g.setFont(new Font("SansSerif", Font.BOLD, 9));
             FontMetrics fm = g.getFontMetrics();
             g.drawString(headLabel, x - fm.stringWidth(headLabel) / 2, y + fm.getAscent() / 2 - 1);
         }
+    }
+
+    private Color getPlowColor() {
+        CleanerHead head = snowPlow.getHead();
+        if (head instanceof DragonHead) return new Color(210, 60, 40);
+        if (head instanceof SaltHead) return new Color(60, 120, 200);
+        if (head instanceof SweepHead) return new Color(80, 170, 70);
+        if (head instanceof IceBreakerHead) return new Color(100, 160, 200);
+        if (head instanceof RockHead) return new Color(160, 120, 70);
+        if (head instanceof ThrowHead) return new Color(220, 140, 30);
+        return new Color(255, 140, 0);
     }
 
     private void updatePosition() {
@@ -49,8 +60,8 @@ public class SnowPlowView implements IDrawable {
         if (lane == null) return;
         LaneView lv = laneViewMap.get(lane);
         if (lv == null) return;
-        x = lv.getCenterX() + 4;
-        y = lv.getCenterY() + 4;
+        x = lv.getCenterX();
+        y = lv.getCenterY();
     }
 
     private String getHeadLabel() {
@@ -70,7 +81,7 @@ public class SnowPlowView implements IDrawable {
     public SnowPlow getSnowPlow() { return snowPlow; }
 
     public boolean containsPoint(int px, int py) {
-        return px >= x - SIZE / 2 - 3 && px <= x + SIZE / 2 + 3
-            && py >= y - SIZE / 2 - 3 && py <= y + SIZE / 2 + 3;
+        return px >= x - WIDTH / 2 - 4 && px <= x + WIDTH / 2 + 4
+            && py >= y - HEIGHT / 2 - 4 && py <= y + HEIGHT / 2 + 4;
     }
 }
