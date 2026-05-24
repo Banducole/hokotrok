@@ -34,24 +34,21 @@ public class City {
      */
     public void executeStep() {
         Set<Vehicle> vehicles = new LinkedHashSet<>();
-        Set<SnowPlow> plows   = new LinkedHashSet<>();
         Set<Road> visited = new HashSet<>();
 
-        /* Az osszes sav jarmuveit es hokotroit osszegyujtjuk */
+        /* Az osszes sav jarmuveit osszegyujtjuk */
         for (Node node : nodes) {
             for (Road road : node.getConnectedRoads()) {
                 if (visited.contains(road)) continue;
                 visited.add(road);
                 for (Lane lane : road.getLanes()) {
                     vehicles.addAll(lane.getVehicles());
-                    if (lane.getSnowPlow() != null) plows.add(lane.getSnowPlow());
                 }
             }
         }
 
-        /* Jarmuvek lepnek eloszor, utana a hokotrok */
+        /* Jarmuvek lepnek – a hokotrok kizarolag manualis lepeskor takaritanak */
         for (Vehicle v : vehicles) v.step(false);
-        for (SnowPlow p : plows)   p.step();
     }
 
     /**

@@ -101,6 +101,30 @@ public class LaneView implements IDrawable {
         return Color.GRAY;
     }
 
+    /**
+     * Visszaadja az idx-edik entitás pozícióját a sávon, total darab entitás esetén.
+     * Az eltolás a sáv irányára merőleges, így vízszintes sávnál függőlegesen,
+     * függőleges sávnál vízszintesen rendeződnek egymás mellé.
+     */
+    public Point getEntityPosition(int idx, int total) {
+        int cx = getCenterX();
+        int cy = getCenterY();
+        if (total <= 1) return new Point(cx, cy);
+
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        double len = Math.sqrt(dx * dx + dy * dy);
+        if (len < 1) return new Point(cx, cy);
+
+        double nx = dx / len;
+        double ny = dy / len;
+
+        double step = 16.0;
+        double offset = (idx - (total - 1) / 2.0) * step;
+
+        return new Point((int)(cx + nx * offset), (int)(cy + ny * offset));
+    }
+
     public Lane getLane() { return lane; }
     public int getCenterX() { return (x1 + x2) / 2; }
     public int getCenterY() { return (y1 + y2) / 2; }

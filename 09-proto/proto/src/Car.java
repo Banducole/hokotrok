@@ -68,18 +68,23 @@ public class Car extends Vehicle {
             return;
         }
 
-        /* Ha az aktuális sáv átjárhatatlan, próbáljon szomszéd sávra váltani */
-        if (currentLane != null && !currentLane.getState().isPassable()) {
-            if (switchPassableLane()) {
-                Logger.action(this, "Akadalyt kikerulte, savot valtott, uj pozicio: " + Logger.name(currentLane));
-                checkSlip(random);
-                return;
-            } else {
-                blockedTurns = 1;
-                Logger.action(this, "Elakadt, nincs jarhato szomszed sav");
-                return;
-            }
+        if (currentLane != null && currentLane.getState() instanceof ThickSnowState) {
+            Logger.action(this, "Vastag ho miatt nem tud lepni");
+            return;
         }
+
+        /* Ha az aktuális sáv átjárhatatlan, próbáljon szomszéd sávra váltani */
+        // if (currentLane != null && !currentLane.getState().isPassable()) {
+        //     if (switchPassableLane()) {
+        //         Logger.action(this, "Akadalyt kikerulte, savot valtott, uj pozicio: " + Logger.name(currentLane));
+        //         checkSlip(random);
+        //         return;
+        //     } else {
+        //         blockedTurns = 1;
+        //         Logger.action(this, "Elakadt, nincs jarhato szomszed sav");
+        //         return;
+        //     }
+        // }
 
         Lane nextLane = getNextLane();
 
@@ -94,12 +99,12 @@ public class Car extends Vehicle {
             currentLane = nextLane;
             Logger.action(this, "Sikeres lepes, uj pozicio: " + Logger.name(currentLane));
         } else {
-            if (!switchPassableLane()) {
+            // if (!switchPassableLane()) {
                 blockedTurns = 1;
                 Logger.action(this, "Elakadt, nincs jarhato szomszed sav");
                 return;
-            }
-            Logger.action(this, "Akadalyt kikerulte, savot valtott, uj pozicio: " + Logger.name(currentLane));
+            // }
+            // Logger.action(this, "Akadalyt kikerulte, savot valtott, uj pozicio: " + Logger.name(currentLane));
         }
 
         checkSlip(random);

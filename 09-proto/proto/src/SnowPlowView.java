@@ -60,8 +60,11 @@ public class SnowPlowView implements IDrawable {
         if (lane == null) return;
         LaneView lv = laneViewMap.get(lane);
         if (lv == null) return;
-        x = lv.getCenterX();
-        y = lv.getCenterY();
+        int idx = lane.getVehicles().size();
+        int total = idx + 1;
+        java.awt.Point p = lv.getEntityPosition(idx, total);
+        x = p.x;
+        y = p.y;
     }
 
     private String getHeadLabel() {

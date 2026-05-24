@@ -45,7 +45,7 @@ public class Bus extends Vehicle {
      */
     @Override
     public void step(boolean random) {
-        /* a busz mozgasat a Busz_Lep parancs vezerli kozvetlenul */
+        if (isBlocked()) decrementBlock();
     }
 
     /**

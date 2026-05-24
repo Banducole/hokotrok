@@ -13,6 +13,9 @@ public class MapBuilder {
         Road[][] hRoads = createHorizontalRoads(grid, city);
         Road[][] vRoads = createVerticalRoads(grid, city);
 
+        Road wToWRoad = connectNodes(grid[0][2], grid[1][0]);
+        addLanesToRoad(wToWRoad, 1);
+
         placeCars(city, hRoads, vRoads);
         setSnowStates(hRoads, vRoads);
 
@@ -89,7 +92,8 @@ public class MapBuilder {
         for (int r = 0; r < ROWS - 1; r++) {
             for (int c = 0; c < COLS; c++) {
                 vRoads[r][c] = connectNodes(grid[r][c], grid[r + 1][c]);
-                addLanesToRoad(vRoads[r][c], 2);
+                int laneCount = (c == COLS - 1) ? 4 : 2;
+                addLanesToRoad(vRoads[r][c], laneCount);
             }
         }
         return vRoads;

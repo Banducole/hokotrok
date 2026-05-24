@@ -22,8 +22,11 @@ public abstract class VehicleView implements IDrawable {
         if (lane == null) return;
         LaneView lv = laneViewMap.get(lane);
         if (lv == null) return;
-        x = lv.getCenterX();
-        y = lv.getCenterY();
+        int idx = Math.max(0, lane.getVehicles().indexOf(vehicle));
+        int total = lane.getVehicles().size() + (lane.getSnowPlow() != null ? 1 : 0);
+        java.awt.Point p = lv.getEntityPosition(idx, total);
+        x = p.x;
+        y = p.y;
     }
 
     protected void drawBlocked(Graphics2D g, int size) {

@@ -79,6 +79,9 @@ public class GameController implements MouseListener, ActionListener {
 
         if (bus.isBlocked()) return;
 
+        Lane currentBusLane = bus.getCurrentLane();
+        if (currentBusLane != null && currentBusLane.getState() instanceof ThickSnowState) return;
+
         if (!isAdjacentLane(bus.getCurrentLane(), targetLane)) return;
 
         Lane oldLane = bus.getCurrentLane();
@@ -113,6 +116,8 @@ public class GameController implements MouseListener, ActionListener {
                 }
             }
         }
+
+        game.nextPlayer();
     }
 
     private boolean isAdjacentLane(Lane current, Lane target) {
