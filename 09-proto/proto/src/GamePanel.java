@@ -14,7 +14,7 @@ public class GamePanel extends JPanel {
     private final List<VehicleView> vehicleViews = new ArrayList<>();
     private javax.swing.Timer timer;
 
-    private static final int TIMER_MS = 100;
+    private static final int TIMER_MS = 50;
     private static final int NODE_MARGIN = 90;
     private static final int H_SPACING = 210;
     private static final int V_SPACING = 300;
@@ -116,8 +116,18 @@ public class GamePanel extends JPanel {
     }
 
     private void startTimer() {
-        timer = new javax.swing.Timer(TIMER_MS, e -> repaint());
+        timer = new javax.swing.Timer(TIMER_MS, e -> {
+            for (VehicleView vv : vehicleViews) vv.animTick();
+            for (SnowPlowView spv : plowViews) spv.animTick();
+            repaint();
+        });
         timer.start();
+    }
+
+    public boolean isAnimating() {
+        for (VehicleView vv : vehicleViews) if (vv.isAnimating()) return true;
+        for (SnowPlowView spv : plowViews) if (spv.isAnimating()) return true;
+        return false;
     }
 
     @Override

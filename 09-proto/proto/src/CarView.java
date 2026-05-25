@@ -11,11 +11,11 @@ public class CarView extends VehicleView {
 
     @Override
     public void draw(Graphics2D g) {
-        updatePosition();
+        int ix = (int) visX, iy = (int) visY;
         g.setColor(new Color(220, 190, 0));
-        g.fillRect(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
+        g.fillRect(ix - SIZE / 2, iy - SIZE / 2, SIZE, SIZE);
         g.setColor(new Color(180, 150, 0));
-        g.drawRect(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
+        g.drawRect(ix - SIZE / 2, iy - SIZE / 2, SIZE, SIZE);
         drawBlocked(g, SIZE);
     }
 }

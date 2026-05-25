@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A felhasznaloi esemenyek (eger, gomb) ertelmezeseert es
@@ -27,6 +29,7 @@ public class GameController implements MouseListener, ActionListener {
         int my = e.getY();
 
         if (game.isGameOver()) return;
+        if (frame.getGamePanel().isAnimating()) return;
 
         if (current instanceof CleanerPlayer) {
             handleCleanerClick(mx, my, (CleanerPlayer) current, panel);
@@ -60,11 +63,14 @@ public class GameController implements MouseListener, ActionListener {
                 Lane targetLane = clickedLane.getLane();
 
                 if (isAdjacentLane(plow.getCurrentLane(), targetLane)) {
+                    Lane oldPlowLane = plow.getCurrentLane();
                     plow.setTargetLane(targetLane);
                     plow.step();
+                    selectedPlowView.startAnimation(oldPlowLane, plow.getCurrentLane());
                     selectedPlowView.setSelected(false);
                     selectedPlowView = null;
-                    game.nextPlayer();
+                    Map<Vehicle, Lane> oldLanes = captureVehicleLanes(panel);
+                    scheduleCarAnimations(oldLanes, panel);
                 }
             }
         }
@@ -86,6 +92,7 @@ public class GameController implements MouseListener, ActionListener {
 
         if (!isAdjacentLane(bus.getCurrentLane(), targetLane)) return;
 
+        Lane oldBusLane = bus.getCurrentLane();
         Lane oldLane = bus.getCurrentLane();
         if (oldLane != null) oldLane.removeVehicle(bus);
         targetLane.accept(bus);
@@ -119,7 +126,47 @@ public class GameController implements MouseListener, ActionListener {
             }
         }
         
-        game.nextPlayer();
+        VehicleView bv = findVehicleView(bus, panel);
+        if (bv != null) bv.startAnimation(oldBusLane, bus.getCurrentLane());
+
+        Map<Vehicle, Lane> oldLanes = captureVehicleLanes(panel);
+        scheduleCarAnimations(oldLanes, panel);
+    }
+
+    private void scheduleCarAnimations(Map<Vehicle, Lane> oldLanes, GamePanel panel) {
+        javax.swing.Timer t = new javax.swing.Timer(500, e -> {
+            game.nextPlayer();
+            animateMovedVehicles(oldLanes, panel);
+            frame.updateUI_game();
+        });
+        t.setRepeats(false);
+        t.start();
+    }
+
+    private Map<Vehicle, Lane> captureVehicleLanes(GamePanel panel) {
+        Map<Vehicle, Lane> map = new HashMap<>();
+        for (VehicleView vv : panel.getVehicleViews()) {
+            map.put(vv.getVehicle(), vv.getVehicle().getCurrentLane());
+        }
+        return map;
+    }
+
+    private void animateMovedVehicles(Map<Vehicle, Lane> oldLanes, GamePanel panel) {
+        for (VehicleView vv : panel.getVehicleViews()) {
+            Vehicle v = vv.getVehicle();
+            Lane old = oldLanes.get(v);
+            Lane now = v.getCurrentLane();
+            if (old != null && now != null && old != now) {
+                vv.startAnimation(old, now);
+            }
+        }
+    }
+
+    private VehicleView findVehicleView(Vehicle vehicle, GamePanel panel) {
+        for (VehicleView vv : panel.getVehicleViews()) {
+            if (vv.getVehicle() == vehicle) return vv;
+        }
+        return null;
     }
 
     private boolean isAdjacentLane(Lane current, Lane target) {
@@ -151,6 +198,7 @@ public class GameController implements MouseListener, ActionListener {
         String cmd = e.getActionCommand();
 
         if ("NEXT_PLAYER".equals(cmd)) {
+            if (frame.getGamePanel().isAnimating()) return;
             if (selectedPlowView != null) {
                 selectedPlowView.setSelected(false);
                 selectedPlowView = null;
