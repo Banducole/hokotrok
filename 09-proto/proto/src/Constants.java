@@ -17,7 +17,7 @@ public class Constants {
     public static final int PRICE_KEROSENE_UNIT   = 400;
     public static final int PRICE_ROCK_UNIT       = 100;
 
-    public static final int BLOCK_TURNS_ON_COLLISION = 1;
+    public static final int BLOCK_TURNS_ON_COLLISION = 2;
     public static final int PAYMENT_PER_LANE_CLEANED = 2000;
     public static final int ROCK_HEAD_CAPACITY       = 10;
     public static final int SALT_HEAD_CAPACITY       = 15;

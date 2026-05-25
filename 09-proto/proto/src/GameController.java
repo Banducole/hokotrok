@@ -116,7 +116,7 @@ public class GameController implements MouseListener, ActionListener {
                 }
             }
         }
-
+        
         game.nextPlayer();
     }
 
