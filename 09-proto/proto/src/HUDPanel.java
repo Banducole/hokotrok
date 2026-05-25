@@ -84,7 +84,7 @@ public class HUDPanel extends JPanel {
                 } else {
                     Lane busLane = bus.getCurrentLane();
                     if (busLane != null && busLane.getState() instanceof ThickSnowState) {
-                        status = "Kimarad egy korbol - Elakadt a vastag hoban";
+                        status = "Elakadt a vastag hoban";
                     }
                 }
                 if (status != null) {
