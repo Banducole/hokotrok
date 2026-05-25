@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.List;
 import java.util.Map;
 
 public class SnowPlowView implements IDrawable {
@@ -8,6 +9,7 @@ public class SnowPlowView implements IDrawable {
     private int y;
     private boolean selected;
     private final Map<Lane, LaneView> laneViewMap;
+    private List<SnowPlowView> allPlowViews;
 
     private static final int WIDTH = 22;
     private static final int HEIGHT = 14;
@@ -55,14 +57,31 @@ public class SnowPlowView implements IDrawable {
         return new Color(255, 140, 0);
     }
 
+    public void setAllPlowViews(List<SnowPlowView> views) {
+        this.allPlowViews = views;
+    }
+
     private void updatePosition() {
         Lane lane = snowPlow.getCurrentLane();
         if (lane == null) return;
         LaneView lv = laneViewMap.get(lane);
         if (lv == null) return;
-        int idx = lane.getVehicles().size();
-        int total = idx + 1;
-        java.awt.Point p = lv.getEntityPosition(idx, total);
+
+        int vehicleCount = lane.getVehicles().size();
+        int myPlowIdx = 0;
+        int plowCount = 1;
+
+        if (allPlowViews != null) {
+            plowCount = 0;
+            for (SnowPlowView spv : allPlowViews) {
+                if (spv.getSnowPlow().getCurrentLane() == lane) {
+                    if (spv == this) myPlowIdx = plowCount;
+                    plowCount++;
+                }
+            }
+        }
+
+        java.awt.Point p = lv.getEntityPosition(vehicleCount + myPlowIdx, vehicleCount + plowCount);
         x = p.x;
         y = p.y;
     }

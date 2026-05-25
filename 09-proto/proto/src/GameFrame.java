@@ -30,6 +30,8 @@ public class GameFrame extends JFrame {
 
         gamePanel.addMouseListener(controller);
         shopPanel.registerActionListener(controller);
+        hudPanel.setController(controller);
+        shopPanel.setController(controller);
 
         shopPanel.update();
 

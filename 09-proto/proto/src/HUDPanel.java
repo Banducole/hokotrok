@@ -5,6 +5,7 @@ import java.util.List;
 public class HUDPanel extends JPanel {
 
     private final Game game;
+    private GameController controller;
     private static final int PANEL_HEIGHT = 80;
 
     public HUDPanel(Game game) {
@@ -12,6 +13,8 @@ public class HUDPanel extends JPanel {
         setPreferredSize(new Dimension(0, PANEL_HEIGHT));
         setBackground(new Color(55, 60, 68));
     }
+
+    public void setController(GameController controller) { this.controller = controller; }
 
     public void update() { repaint(); }
 
@@ -53,22 +56,42 @@ public class HUDPanel extends JPanel {
 
             if (p instanceof CleanerPlayer) {
                 CleanerPlayer cp = (CleanerPlayer) p;
-                int totalSalt = 0, totalKerosene = 0, totalRock = 0;
-                for (SnowPlow plow : cp.getPlows()) {
-                    CleanerHead head = plow.getHead();
-                    if (head == null) continue;
-                    if (head instanceof SaltHead) totalSalt += head.fuelLevel();
-                    else if (head instanceof DragonHead) totalKerosene += head.fuelLevel();
-                    else if (head instanceof RockHead) totalRock += head.fuelLevel();
+                String info = "Penz: " + cp.getBalance();
+
+                if (i == currentIdx && controller != null) {
+                    SnowPlow sel = controller.getSelectedPlow();
+                    if (sel != null && sel.getOwner() == cp) {
+                        CleanerHead head = sel.getHead();
+                        if (head instanceof SaltHead) {
+                            info += " | So: " + head.fuelLevel();
+                        } else if (head instanceof DragonHead) {
+                            info += " | Kerozin: " + head.fuelLevel();
+                        } else if (head instanceof RockHead) {
+                            info += " | Zuzalek: " + head.fuelLevel();
+                        }
+                    }
                 }
 
                 g2d.setFont(new Font("SansSerif", Font.PLAIN, 11));
                 g2d.setColor(new Color(200, 210, 220));
-                String info = "Penz: " + cp.getBalance()
-                    + " | So: " + totalSalt
-                    + " | Kerozin: " + totalKerosene
-                    + " | Zuzalek: " + totalRock;
                 g2d.drawString(info, cx + 10, y + 40);
+
+            } else if (p instanceof BusDriver) {
+                Bus bus = ((BusDriver) p).getBus();
+                String status = null;
+                if (bus.isBlocked()) {
+                    status = "Kimarad egy korbol - Karambol";
+                } else {
+                    Lane busLane = bus.getCurrentLane();
+                    if (busLane != null && busLane.getState() instanceof ThickSnowState) {
+                        status = "Kimarad egy korbol - Elakadt a vastag hoban";
+                    }
+                }
+                if (status != null) {
+                    g2d.setFont(new Font("SansSerif", Font.ITALIC, 11));
+                    g2d.setColor(new Color(255, 160, 60));
+                    g2d.drawString(status, cx + 10, y + 40);
+                }
             }
         }
     }

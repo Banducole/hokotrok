@@ -26,7 +26,6 @@ public class DragonHead extends CleanerHead {
     public void clean(Lane lane) {
         SnowPlow plow = lane.getSnowPlow();
         if (isOperational()) {
-            lane.setRocky(false);
             lane.setState(new ClearState());
             keroseneAmount--;
             Logger.action(plow, "Sarkanyfej takaritott. Maradek Kerosene: " + keroseneAmount);
@@ -48,7 +47,7 @@ public class DragonHead extends CleanerHead {
      *
      * @param amount a hozzáadandó kerozin egységekben
      */
-    @Override public void refuel(int amount) { keroseneAmount += amount; }
+    @Override public void refuel(int amount) { keroseneAmount = Math.min(keroseneAmount + amount, Constants.DRAGON_HEAD_CAPACITY); }
 
     /** @return {@code "Kerosene"} */
     @Override public String fuelKind()  { return "Kerosene"; }

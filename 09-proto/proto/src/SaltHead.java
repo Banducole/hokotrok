@@ -46,7 +46,7 @@ public class SaltHead extends CleanerHead {
      *
      * @param amount a hozzáadandó só mennyisége egységekben
      */
-    @Override public void refuel(int amount) { saltAmount += amount; }
+    @Override public void refuel(int amount) { saltAmount = Math.min(saltAmount + amount, Constants.SALT_HEAD_CAPACITY); }
 
     /** @return {@code "Salt"} */
     @Override public String fuelKind()  { return "Salt"; }

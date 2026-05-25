@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,10 +12,15 @@ public abstract class VehicleView implements IDrawable {
     protected int x;
     protected int y;
     protected Map<Lane, LaneView> laneViewMap;
+    protected List<SnowPlowView> allPlowViews;
 
     public VehicleView(Vehicle vehicle, Map<Lane, LaneView> laneViewMap) {
         this.vehicle = vehicle;
         this.laneViewMap = laneViewMap;
+    }
+
+    public void setAllPlowViews(List<SnowPlowView> views) {
+        this.allPlowViews = views;
     }
 
     protected void updatePosition() {
@@ -23,10 +29,20 @@ public abstract class VehicleView implements IDrawable {
         LaneView lv = laneViewMap.get(lane);
         if (lv == null) return;
         int idx = Math.max(0, lane.getVehicles().indexOf(vehicle));
-        int total = lane.getVehicles().size() + (lane.getSnowPlow() != null ? 1 : 0);
+        int plowCount = countPlowsOnLane(lane);
+        int total = lane.getVehicles().size() + plowCount;
         java.awt.Point p = lv.getEntityPosition(idx, total);
         x = p.x;
         y = p.y;
+    }
+
+    private int countPlowsOnLane(Lane lane) {
+        if (allPlowViews == null) return lane.getSnowPlow() != null ? 1 : 0;
+        int count = 0;
+        for (SnowPlowView spv : allPlowViews) {
+            if (spv.getSnowPlow().getCurrentLane() == lane) count++;
+        }
+        return count;
     }
 
     protected void drawBlocked(Graphics2D g, int size) {

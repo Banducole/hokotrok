@@ -78,18 +78,24 @@ public class GamePanel extends JPanel {
                                 vv = new BusView((Bus) v, laneViewMap);
                             }
                             vehicleViews.add(vv);
-                            drawables.add(vv);
                         }
                     }
                     SnowPlow plow = lane.getSnowPlow();
                     if (plow != null && seenPlows.add(plow)) {
                         SnowPlowView spv = new SnowPlowView(plow, laneViewMap);
                         plowViews.add(spv);
-                        drawables.add(spv);
                     }
                 }
             }
         }
+
+        // Jarmuvek elobb, hokotrok utobb – igy a hokotrok mindig felul rajzolodnak
+        drawables.addAll(vehicleViews);
+        drawables.addAll(plowViews);
+
+        // Minden nezet megkapja a teljes hokotro-listat az elcsusztatas szamitasahoz
+        for (VehicleView vv : vehicleViews) vv.setAllPlowViews(plowViews);
+        for (SnowPlowView spv : plowViews) spv.setAllPlowViews(plowViews);
     }
 
     private int[][] computeGridCoordinates(List<Node> nodes) {

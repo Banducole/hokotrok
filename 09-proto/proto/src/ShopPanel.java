@@ -7,6 +7,7 @@ import java.util.List;
 public class ShopPanel extends JPanel {
 
     private final Game game;
+    private GameController controller;
     private boolean active = false;
     private final List<JButton> allButtons = new ArrayList<>();
 
@@ -15,6 +16,9 @@ public class ShopPanel extends JPanel {
     private JButton btnNewPlow;
     private JButton btnNextPlayer;
     private JButton btnSnowfall;
+
+    private JPanel rowFuelSalt, rowFuelKerosene, rowFuelRock;
+    private JPanel lastRow;
 
     private static final int PANEL_WIDTH = 250;
 
@@ -30,8 +34,11 @@ public class ShopPanel extends JPanel {
         add(Box.createVerticalStrut(8));
 
         btnFuelSalt = addShopRow("So", "Vasarlas", "FUEL_SALT", new Color(240, 240, 240));
+        rowFuelSalt = lastRow;
         btnFuelKerosene = addShopRow("Kerozin", "Vasarlas", "FUEL_KEROSENE", new Color(200, 50, 50));
+        rowFuelKerosene = lastRow;
         btnFuelRock = addShopRow("Ko", "Vasarlas", "FUEL_ROCK", new Color(150, 150, 150));
+        rowFuelRock = lastRow;
 
         add(Box.createVerticalStrut(8));
         addSeparator();
@@ -101,6 +108,7 @@ public class ShopPanel extends JPanel {
         row.add(btn);
         allButtons.add(btn);
 
+        this.lastRow = row;
         add(row);
         add(Box.createVerticalStrut(2));
         return btn;
@@ -187,9 +195,27 @@ public class ShopPanel extends JPanel {
         repaint();
     }
 
+    public void setController(GameController c) { this.controller = c; }
+
     public void update() {
         Player current = game.getCurrentPlayer();
-        setActive(current instanceof CleanerPlayer);
+        boolean isCleanerTurn = current instanceof CleanerPlayer;
+        setActive(isCleanerTurn);
+
+        boolean showSalt = false, showKerosene = false, showRock = false;
+        if (isCleanerTurn && controller != null) {
+            SnowPlow sel = controller.getSelectedPlow();
+            if (sel != null) {
+                CleanerHead head = sel.getHead();
+                showSalt     = head instanceof SaltHead;
+                showKerosene = head instanceof DragonHead;
+                showRock     = head instanceof RockHead;
+            }
+        }
+        if (rowFuelSalt     != null) rowFuelSalt.setVisible(showSalt);
+        if (rowFuelKerosene != null) rowFuelKerosene.setVisible(showKerosene);
+        if (rowFuelRock     != null) rowFuelRock.setVisible(showRock);
+        revalidate();
     }
 
     public void registerActionListener(ActionListener listener) {

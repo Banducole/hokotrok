@@ -213,7 +213,7 @@ public class GameController implements MouseListener, ActionListener {
         frame.updateUI_game();
     }
 
-    private SnowPlow getSelectedPlow() {
+    public SnowPlow getSelectedPlow() {
         if (selectedPlowView != null) {
             return selectedPlowView.getSnowPlow();
         }
@@ -235,6 +235,7 @@ public class GameController implements MouseListener, ActionListener {
     private void addNewPlowView(SnowPlow plow) {
         GamePanel panel = frame.getGamePanel();
         SnowPlowView spv = new SnowPlowView(plow, panel.getLaneViewMap());
+        spv.setAllPlowViews(panel.getPlowViews());
         panel.getPlowViews().add(spv);
         panel.addDrawable(spv);
     }
