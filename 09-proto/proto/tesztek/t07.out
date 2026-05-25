@@ -1,0 +1,16 @@
+[ACTION] u1: letrejott
+[ACTION] s1: letrejott
+[ACTION] s2: letrejott
+[ACTION] u1: uj sav hozzaadva: s1
+[ACTION] u1: uj sav hozzaadva: s2
+[ACTION] s1: allapota beallitva: ThinSnowState
+[ACTION] s2: allapota beallitva: ClearState
+[ACTION] hk1: letrejott
+[ACTION] hk1: felszerelve: SweepHead
+[ACTION] cp1: letrejott takarito jatekos, kezdo egyenleg: 0
+[ACTION] hk1: raallitva s1 savra
+[ACTION] s2: 1 egyseg ho esett, Allapot: ThinSnowState
+[ACTION] hk1: Soprofej takaritott, ho atkerult szomszed savba
+[ACTION] s1: allapota ClearState-re valtozott
+[STAT] Lane s1 State=ClearState SnowThickness=0 Slippery=false IsPassable=true Rocky=false SaltCountdown=0 PassageCount=0
+[STAT] Lane s2 State=ThinSnowState SnowThickness=1 Slippery=false IsPassable=true Rocky=false SaltCountdown=0 PassageCount=0

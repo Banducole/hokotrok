@@ -1,0 +1,13 @@
+[ACTION] v1: letrejott (Terminal)
+[ACTION] v2: letrejott (Terminal)
+[ACTION] u1: letrejott
+[ACTION] s1: letrejott
+[ACTION] u1: uj sav hozzaadva: s1
+[ACTION] u1: kapcsolva: v1 <-> v2
+[ACTION] busz1: letrejott (Bus)
+[ACTION] driver_busz1: buszsofor letrejott
+[ACTION] busz1: uticel beallitva: v1 <-> v2
+[ACTION] busz1: raallitva s1 savra
+[ACTION] busz1: Sikeres lepes, uj pozicio: s1
+[ACTION] busz1: Megerkezett vegallomashoz, fordulok: 1
+[STAT] Bus busz1 Position=s1 Blocked=false BlockedTurns=0 CompletedRounds=1

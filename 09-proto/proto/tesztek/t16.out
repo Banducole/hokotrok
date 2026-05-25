@@ -1,0 +1,21 @@
+[ACTION] c1: letrejott (Home)
+[ACTION] c2: letrejott (Intersection)
+[ACTION] c3: letrejott (Workplace)
+[ACTION] u1: letrejott
+[ACTION] u2: letrejott
+[ACTION] s1: letrejott
+[ACTION] s2: letrejott
+[ACTION] u1: uj sav hozzaadva: s1
+[ACTION] u2: uj sav hozzaadva: s2
+[ACTION] u1: kapcsolva: c1 <-> c2
+[ACTION] u2: kapcsolva: c2 <-> c3
+[ACTION] busz1: letrejott (Bus)
+[ACTION] busz1: raallitva s2 savra
+[ACTION] auto1: letrejott (Car)
+[ACTION] auto1: uticel beallitva: c1 -> c3
+[ACTION] busz1: blokkolt allapot beallitva: 2
+[ACTION] auto2: letrejott (Car)
+[ACTION] auto2: uticel beallitva: c1 -> c3
+[ACTION] auto2: raallitva s1 savra
+[ACTION] auto2: Elakadt, nincs jarhato szomszed sav
+[STAT] Car auto2 Position=s1 Blocked=true BlockedTurns=1

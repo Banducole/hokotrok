@@ -1,0 +1,11 @@
+# T03 - Hokotro takarit (Hanyo fejjel)
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Allapot s1 ThickSnowState
+Hokotro hk1
+Felszerel hk1 Throw
+Takarito cp1 0
+Raallit hk1 s1
+Hokotro_Lep hk1 u1 s1
+Stat Lane s1

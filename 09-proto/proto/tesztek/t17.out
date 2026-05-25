@@ -1,0 +1,7 @@
+[ACTION] u1: letrejott
+[ACTION] s1: letrejott
+[ACTION] u1: uj sav hozzaadva: s1
+[ACTION] s1: allapota beallitva: ThinSnowState
+[ACTION] s1: allapota ThickSnowState-re valtozott
+[ACTION] s1: 4 egyseg ho esett, Allapot: ThickSnowState
+[STAT] Lane s1 State=ThickSnowState SnowThickness=5 Slippery=false IsPassable=false Rocky=false SaltCountdown=0 PassageCount=0

@@ -1,0 +1,12 @@
+[ACTION] u1: letrejott
+[ACTION] s1: letrejott
+[ACTION] u1: uj sav hozzaadva: s1
+[ACTION] s1: allapota beallitva: ClearState
+[ACTION] hk1: letrejott
+[ACTION] hk1: felszerelve: SaltHead
+[ACTION] cp1: letrejott takarito jatekos, kezdo egyenleg: 0
+[ACTION] hk1: feltoltve 5 egyseg Salt
+[ACTION] hk1: raallitva s1 savra
+[ACTION] hk1: sozva, olvadasi folyamat elindult, maradek so: 4
+[ACTION] s1: 3 egyseg ho esett, de a so azonnal felolvasztotta
+[STAT] Lane s1 State=ClearState SnowThickness=0 Slippery=false IsPassable=true Rocky=false SaltCountdown=2 PassageCount=0

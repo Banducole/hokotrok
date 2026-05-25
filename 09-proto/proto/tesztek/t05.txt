@@ -1,0 +1,15 @@
+# T05 - Havazas es jegkepzodes letaposas miatt
+Csomopont c1 Home
+Csomopont c2 Workplace
+Ut u1
+Sav s1
+Hozzaad_Sav u1 s1
+Kapcsol u1 c1 c2
+Allapot s1 ThinSnowState
+Jarmu auto1 Car
+Uticel_Auto auto1 c1 c2
+Raallit auto1 s1
+Auto_Lep auto1 False
+Auto_Lep auto1 False
+Auto_Lep auto1 False
+Stat Lane s1

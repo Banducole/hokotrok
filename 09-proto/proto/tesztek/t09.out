@@ -1,0 +1,12 @@
+[ACTION] u1: letrejott
+[ACTION] s1: letrejott
+[ACTION] u1: uj sav hozzaadva: s1
+[ACTION] s1: allapota beallitva: IcyState
+[ACTION] hk1: letrejott
+[ACTION] hk1: felszerelve: SaltHead
+[ACTION] cp1: letrejott takarito jatekos, kezdo egyenleg: 0
+[ACTION] hk1: feltoltve 5 egyseg Salt
+[ACTION] hk1: raallitva s1 savra
+[ACTION] s1: so hatasara ClearState-re valtozott
+[ACTION] hk1: sozva, olvadasi folyamat elindult, maradek so: 4
+[STAT] SnowPlow hk1 Position=s1 Head=SaltHead Fuel_Salt=4
