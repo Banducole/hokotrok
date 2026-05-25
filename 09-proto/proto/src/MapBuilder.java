@@ -16,7 +16,7 @@ public class MapBuilder {
         Road wToWRoad = connectNodes(grid[0][2], grid[1][0]);
         addLanesToRoad(wToWRoad, 1);
 
-        placeCars(city, hRoads, vRoads);
+        placeCars(city, hRoads, vRoads, grid);
         setSnowStates(hRoads, vRoads);
 
         List<Bus> buses = createBuses(grid);
@@ -99,19 +99,24 @@ public class MapBuilder {
         return vRoads;
     }
 
-    private static void placeCars(City city, Road[][] hRoads, Road[][] vRoads) {
-        placeCarOnLane(city, vRoads[0][0].getLanes().get(0));
-        placeCarOnLane(city, vRoads[0][0].getLanes().get(1));
-        placeCarOnLane(city, vRoads[0][2].getLanes().get(0));
-        placeCarOnLane(city, hRoads[0][0].getLanes().get(0));
-        placeCarOnLane(city, hRoads[1][1].getLanes().get(0));
-        placeCarOnLane(city, vRoads[0][3].getLanes().get(1));
-        placeCarOnLane(city, vRoads[0][4].getLanes().get(0));
-        placeCarOnLane(city, hRoads[1][3].getLanes().get(0));
+    private static void placeCars(City city, Road[][] hRoads, Road[][] vRoads, Node[][] grid) {
+        Home home = (Home) grid[0][0];
+        Workplace workplace = (Workplace) grid[0][2];
+
+        placeCarOnLane(city, vRoads[0][0].getLanes().get(0), home, workplace);
+        placeCarOnLane(city, vRoads[0][0].getLanes().get(1), home, workplace);
+        placeCarOnLane(city, vRoads[0][2].getLanes().get(0), home, workplace);
+        placeCarOnLane(city, hRoads[0][0].getLanes().get(0), home, workplace);
+        placeCarOnLane(city, hRoads[1][1].getLanes().get(0), home, workplace);
+        placeCarOnLane(city, vRoads[0][3].getLanes().get(1), home, workplace);
+        placeCarOnLane(city, vRoads[0][4].getLanes().get(0), home, workplace);
+        placeCarOnLane(city, hRoads[1][3].getLanes().get(0), home, workplace);
     }
 
-    private static void placeCarOnLane(City city, Lane lane) {
+    private static void placeCarOnLane(City city, Lane lane, Home home, Workplace workplace) {
         Car car = new Car(city);
+        car.setHome(home);
+        car.setWorkplace(workplace);
         car.setCurrentLane(lane);
         lane.accept(car);
     }

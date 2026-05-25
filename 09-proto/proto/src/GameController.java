@@ -82,6 +82,8 @@ public class GameController implements MouseListener, ActionListener {
         Lane currentBusLane = bus.getCurrentLane();
         if (currentBusLane != null && currentBusLane.getState() instanceof ThickSnowState) return;
 
+        if (!targetLane.getState().isPassable()) return;
+
         if (!isAdjacentLane(bus.getCurrentLane(), targetLane)) return;
 
         Lane oldLane = bus.getCurrentLane();
