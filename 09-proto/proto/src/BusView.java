@@ -27,6 +27,17 @@ public class BusView extends VehicleView {
         }
 
         drawBlocked(g, Math.max(WIDTH, HEIGHT));
+        
+        Lane lane = vehicle.getCurrentLane();
+        if (lane != null && lane.getState() instanceof ThickSnowState) {
+            int size = Math.max(WIDTH, HEIGHT);
+            g.setColor(Color.RED);
+            g.setStroke(new BasicStroke(2));
+            g.drawRect(x - size / 2 - 2, y - size / 2 - 2, size + 4, size + 4);
+            g.drawLine(x - size / 2, y - size / 2, x + size / 2, y + size / 2);
+            g.drawLine(x + size / 2, y - size / 2, x - size / 2, y + size / 2);
+            g.setStroke(new BasicStroke(1));
+        }
     }
 
     public void setSelected(boolean selected) { this.selected = selected; }
