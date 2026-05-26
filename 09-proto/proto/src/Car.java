@@ -155,7 +155,6 @@ public class Car extends Vehicle {
         }
         else if (workplace != null && arrivalNode.equals(workplace)) {
             currentTarget = home;
-            System.out.println("xdadsadasdadasdasdasdadsasdad");
         }
 
         if (currentTarget == null){
