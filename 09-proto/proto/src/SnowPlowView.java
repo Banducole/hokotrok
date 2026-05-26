@@ -48,6 +48,7 @@ public class SnowPlowView implements IDrawable {
     private float animT;
     private boolean animating;
     private static final float ANIM_STEP = 0.1f;
+    private double currentAngle = Double.NaN;
 
     public SnowPlowView(SnowPlow snowPlow, Map<Lane, LaneView> laneViewMap) {
         this.snowPlow = snowPlow;
@@ -100,6 +101,12 @@ public class SnowPlowView implements IDrawable {
         visX = sX; visY = sY;
         animT = 0f;
         animating = true;
+        if (oldRoad == null || newRoad == null || oldRoad != newRoad) {
+            currentAngle = Math.atan2(
+                animPY[animPLen - 1] - animPY[animPLen - 2],
+                animPX[animPLen - 1] - animPX[animPLen - 2]
+            );
+        }
     }
 
     private static Node sharedNode(Road a, Road b) {
@@ -111,6 +118,31 @@ public class SnowPlowView implements IDrawable {
     public boolean isAnimating() { return animating; }
 
     public void setDiagonalLaneViews(List<LaneView> views) { this.diagonalLaneViews = views; }
+
+    private double getLaneAngle() {
+        Lane lane = snowPlow.getCurrentLane();
+        LaneView lv = lane != null ? laneViewMap.get(lane) : null;
+        boolean diagonal = false;
+        if (lv != null) {
+            double dx = Math.abs(lv.getX2() - lv.getX1());
+            double dy = Math.abs(lv.getY2() - lv.getY1());
+            double len = Math.sqrt(dx * dx + dy * dy);
+            diagonal = len > 1 && dx > 0.1 * len && dy > 0.1 * len;
+        }
+
+        double raw;
+        if (!Double.isNaN(currentAngle)) {
+            raw = currentAngle;
+        } else if (lv != null) {
+            raw = Math.atan2(lv.getY2() - lv.getY1(), lv.getX2() - lv.getX1());
+        } else {
+            return 0;
+        }
+
+        if (diagonal) return raw;
+        double deg = Math.toDegrees(raw);
+        return Math.toRadians(Math.round(deg / 90.0) * 90.0);
+    }
 
     private boolean isUnderDiagonal() {
         if (diagonalLaneViews == null) return false;
@@ -134,20 +166,20 @@ public class SnowPlowView implements IDrawable {
         int ix = (int) visX, iy = (int) visY;
 
         if (plowImage != null) {
+            double angle = getLaneAngle();
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.translate(ix, iy); // Eltolás a hókotró közepére
-            
-            g2d.rotate(Math.PI);
-            
+            g2d.translate(ix, iy);
+            g2d.rotate(angle + Math.PI / 2);
+
             g2d.drawImage(plowImage, -IMAGE_WIDTH / 2, -IMAGE_HEIGHT / 2, IMAGE_WIDTH, IMAGE_HEIGHT, null);
-            
+
             BufferedImage currentHeadImage = getHeadImage();
             if (currentHeadImage != null) {
-                int headSize = 14; // A tisztítófej ikonjának mérete
+                int headSize = 14;
                 g2d.drawImage(currentHeadImage, -headSize / 2, -IMAGE_HEIGHT / 2, headSize, headSize, null);
             }
             g2d.dispose();
-            
+
             if (currentHeadImage == null) {
                 drawHeadLabel(g, ix, iy);
             }
@@ -155,8 +187,7 @@ public class SnowPlowView implements IDrawable {
             if (selected) {
                 g.setColor(new Color(0, 200, 0));
                 g.setStroke(new BasicStroke(2));
-                // A keret pontosan a manuálisan beállított IMAGE_WIDTH / IMAGE_HEIGHT méreteket öleli körbe
-                g.drawRect(ix - IMAGE_WIDTH / 2 - 3, iy - IMAGE_HEIGHT / 2 - 3, IMAGE_WIDTH + 6, IMAGE_HEIGHT + 6);
+                g.drawRect(ix - IMAGE_HEIGHT / 2 - 3, iy - IMAGE_HEIGHT / 2 - 3, IMAGE_HEIGHT + 6, IMAGE_HEIGHT + 6);
                 g.setStroke(new BasicStroke(1));
             }
 

@@ -16,6 +16,7 @@ public abstract class VehicleView implements IDrawable {
     private float animT;
     private boolean animating;
     private static final float ANIM_STEP = 0.1f;
+    protected double currentAngle = Double.NaN;
 
     public VehicleView(Vehicle vehicle, Map<Lane, LaneView> laneViewMap) {
         this.vehicle = vehicle;
@@ -92,6 +93,12 @@ public abstract class VehicleView implements IDrawable {
         visX = sX; visY = sY;
         animT = 0f;
         animating = true;
+        if (oldRoad == null || newRoad == null || oldRoad != newRoad) {
+            currentAngle = Math.atan2(
+                animPY[animPLen - 1] - animPY[animPLen - 2],
+                animPX[animPLen - 1] - animPX[animPLen - 2]
+            );
+        }
     }
 
     private static Node sharedNode(Road a, Road b) {
@@ -131,6 +138,31 @@ public abstract class VehicleView implements IDrawable {
             g.drawLine(ix - size / 2, iy - size / 2, ix + size / 2, iy + size / 2);
             g.drawLine(ix + size / 2, iy - size / 2, ix - size / 2, iy + size / 2);
         }
+    }
+
+    protected double getLaneAngle() {
+        Lane lane = vehicle.getCurrentLane();
+        LaneView lv = lane != null ? laneViewMap.get(lane) : null;
+        boolean diagonal = false;
+        if (lv != null) {
+            double dx = Math.abs(lv.getX2() - lv.getX1());
+            double dy = Math.abs(lv.getY2() - lv.getY1());
+            double len = Math.sqrt(dx * dx + dy * dy);
+            diagonal = len > 1 && dx > 0.1 * len && dy > 0.1 * len;
+        }
+
+        double raw;
+        if (!Double.isNaN(currentAngle)) {
+            raw = currentAngle;
+        } else if (lv != null) {
+            raw = Math.atan2(lv.getY2() - lv.getY1(), lv.getX2() - lv.getX1());
+        } else {
+            return 0;
+        }
+
+        if (diagonal) return raw;
+        double deg = Math.toDegrees(raw);
+        return Math.toRadians(Math.round(deg / 90.0) * 90.0);
     }
 
     public Vehicle getVehicle() { return vehicle; }

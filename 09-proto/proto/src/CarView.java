@@ -29,13 +29,19 @@ public class CarView extends VehicleView {
     public void draw(Graphics2D g) {
         Composite oldComp = applyBridgeAlpha(g);
         int ix = (int) visX, iy = (int) visY;
+        double angle = getLaneAngle();
+
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.translate(ix, iy);
+        g2d.rotate(angle);
 
         if (carImage != null) {
-            g.drawImage(carImage, ix - (IMAGE_SIZE / 2), iy - (IMAGE_SIZE / 2), IMAGE_SIZE, IMAGE_SIZE, null);
+            g2d.drawImage(carImage, -IMAGE_SIZE / 2, -IMAGE_SIZE / 2, IMAGE_SIZE, IMAGE_SIZE, null);
         } else {
-            g.setColor(Color.BLACK);
-            g.fillRect(ix - LOGIC_SIZE / 2, iy - LOGIC_SIZE / 2, LOGIC_SIZE, LOGIC_SIZE);
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(-LOGIC_SIZE / 2, -LOGIC_SIZE / 2, LOGIC_SIZE, LOGIC_SIZE);
         }
+        g2d.dispose();
 
         drawBlocked(g, LOGIC_SIZE);
         g.setComposite(oldComp);

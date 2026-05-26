@@ -44,35 +44,28 @@ public class BusView extends VehicleView {
         Composite oldComp = applyBridgeAlpha(g);
         int ix = (int) visX;
         int iy = (int) visY;
+        double angle = getLaneAngle();
+
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.translate(ix, iy);
+        g2d.rotate(angle);
 
         if (busImage != null) {
-            g.drawImage(
-                busImage, 
-                ix - (IMAGE_WIDTH / 2), 
-                iy - (IMAGE_HEIGHT / 2), 
-                IMAGE_WIDTH, 
-                IMAGE_HEIGHT, 
-                null
-            );
+            g2d.drawImage(busImage, -IMAGE_WIDTH / 2, -IMAGE_HEIGHT / 2, IMAGE_WIDTH, IMAGE_HEIGHT, null);
         } else {
-            g.setColor(FALLBACK_FILL_COLOR);
-            g.fillRect(ix - (LOGIC_WIDTH / 2), iy - (LOGIC_HEIGHT / 2), LOGIC_WIDTH, LOGIC_HEIGHT);
-            
-            g.setColor(FALLBACK_BORDER_COLOR);
-            g.drawRect(ix - (LOGIC_WIDTH / 2), iy - (LOGIC_HEIGHT / 2), LOGIC_WIDTH, LOGIC_HEIGHT);
+            g2d.setColor(FALLBACK_FILL_COLOR);
+            g2d.fillRect(-LOGIC_WIDTH / 2, -LOGIC_HEIGHT / 2, LOGIC_WIDTH, LOGIC_HEIGHT);
+            g2d.setColor(FALLBACK_BORDER_COLOR);
+            g2d.drawRect(-LOGIC_WIDTH / 2, -LOGIC_HEIGHT / 2, LOGIC_WIDTH, LOGIC_HEIGHT);
         }
 
         if (selected) {
-            g.setColor(SELECTION_COLOR);
-            g.setStroke(new BasicStroke(2));
-            g.drawRect(
-                ix - (IMAGE_WIDTH / 2) - 3, 
-                iy - (IMAGE_HEIGHT / 2) - 3, 
-                IMAGE_WIDTH + 6, 
-                IMAGE_HEIGHT + 6
-            );
-            g.setStroke(new BasicStroke(1));
+            g2d.setColor(SELECTION_COLOR);
+            g2d.setStroke(new BasicStroke(2));
+            g2d.drawRect(-IMAGE_WIDTH / 2 - 3, -IMAGE_HEIGHT / 2 - 3, IMAGE_WIDTH + 6, IMAGE_HEIGHT + 6);
+            g2d.setStroke(new BasicStroke(1));
         }
+        g2d.dispose();
 
         drawBlocked(g, Math.max(LOGIC_WIDTH, LOGIC_HEIGHT));
 
@@ -80,17 +73,13 @@ public class BusView extends VehicleView {
         if (lane != null && lane.getState() instanceof ThickSnowState) {
             g.setColor(SNOW_WARNING_COLOR);
             g.setStroke(new BasicStroke(2));
-
             int boxX = ix - (IMAGE_WIDTH / 2) - 2;
             int boxY = iy - (IMAGE_HEIGHT / 2) - 2;
             int boxWidth = IMAGE_WIDTH + 4;
             int boxHeight = IMAGE_HEIGHT + 4;
-
             g.drawRect(boxX, boxY, boxWidth, boxHeight);
-            
             g.drawLine(boxX, boxY, boxX + boxWidth, boxY + boxHeight);
             g.drawLine(boxX + boxWidth, boxY, boxX, boxY + boxHeight);
-            
             g.setStroke(new BasicStroke(1));
         }
 
