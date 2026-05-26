@@ -59,15 +59,15 @@ public class MapBuilder {
 
         grid[0][0] = new Home();
         grid[0][1] = new Intersection();
-        grid[0][2] = new Workplace();
+        grid[0][2] = new Intersection();
         grid[0][3] = new Terminal();
         grid[0][4] = new Intersection();
 
-        grid[1][0] = new Workplace();
+        grid[1][0] = new Intersection();
         grid[1][1] = new Intersection();
         grid[1][2] = new Terminal();
         grid[1][3] = new Terminal();
-        grid[1][4] = new Intersection();
+        grid[1][4] = new Workplace();
 
         for (int r = 0; r < ROWS; r++)
             for (int c = 0; c < COLS; c++)
@@ -93,6 +93,7 @@ public class MapBuilder {
             for (int c = 0; c < COLS; c++) {
                 vRoads[r][c] = connectNodes(grid[r][c], grid[r + 1][c]);
                 int laneCount = (c == COLS - 1) ? 4 : 2;
+                
                 addLanesToRoad(vRoads[r][c], laneCount);
             }
         }
@@ -101,16 +102,10 @@ public class MapBuilder {
 
     private static void placeCars(City city, Road[][] hRoads, Road[][] vRoads, Node[][] grid) {
         Home home = (Home) grid[0][0];
-        Workplace workplace = (Workplace) grid[0][2];
+        Workplace workplace = (Workplace) grid[1][4];
 
         placeCarOnLane(city, vRoads[0][0].getLanes().get(0), home, workplace);
-        placeCarOnLane(city, vRoads[0][0].getLanes().get(1), home, workplace);
-        placeCarOnLane(city, vRoads[0][2].getLanes().get(0), home, workplace);
-        placeCarOnLane(city, hRoads[0][0].getLanes().get(0), home, workplace);
-        placeCarOnLane(city, hRoads[1][1].getLanes().get(0), home, workplace);
-        placeCarOnLane(city, vRoads[0][3].getLanes().get(1), home, workplace);
-        placeCarOnLane(city, vRoads[0][4].getLanes().get(0), home, workplace);
-        placeCarOnLane(city, hRoads[1][3].getLanes().get(0), home, workplace);
+
     }
 
     private static void placeCarOnLane(City city, Lane lane, Home home, Workplace workplace) {
@@ -136,7 +131,7 @@ public class MapBuilder {
         hRoads[1][0].getLanes().get(0).setState(new ThickSnowState(5));
         hRoads[1][0].getLanes().get(1).setState(new ThinSnowState(1));
 
-        hRoads[1][3].getLanes().get(0).setState(new BrokenIceState());
+        hRoads[1][3].getLanes().get(0).setState(new ThinSnowState(1));
         hRoads[1][3].getLanes().get(1).setState(new IcyState());
 
         vRoads[0][0].getLanes().get(0).setState(new ThinSnowState(1));
