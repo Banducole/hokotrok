@@ -106,7 +106,6 @@ public class Game {
     public void nextPlayer() {
         if (players.isEmpty()) return;
         city.executeStep();
-        city.applySnowfall(1);
         currentPlayerIndex++;
         if (currentPlayerIndex >= players.size()) {
             currentPlayerIndex = 0;

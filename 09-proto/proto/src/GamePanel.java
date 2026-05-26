@@ -39,6 +39,10 @@ public class GamePanel extends JPanel {
             nodeViewMap.put(node, nv);
         }
 
+        for (NodeView nv : nodeViewMap.values()) {
+            nv.computeSize(nodeViewMap);
+        }
+
         Set<Road> visitedRoads = new HashSet<>();
         List<RoadView> roadViews = new ArrayList<>();
         for (Node node : nodes) {
@@ -50,19 +54,29 @@ public class GamePanel extends JPanel {
                         laneViewMap.put(lv.getLane(), lv);
                         allLaneViews.add(lv);
                     }
-                    drawables.add(rv);
                 }
             }
         }
 
+        List<LaneView> diagonalLanes = new ArrayList<>();
+        for (RoadView rv : roadViews) {
+            if (!rv.isDiagonal()) {
+                drawables.add(rv);
+            } else {
+                diagonalLanes.addAll(rv.getLaneViews());
+            }
+        }
+        for (RoadView rv : roadViews) {
+            if (rv.isDiagonal()) drawables.add(rv);
+        }
         for (NodeView nv : nodeViewMap.values()) {
             drawables.add(nv);
         }
 
-        collectVehiclesAndPlows();
+        collectVehiclesAndPlows(diagonalLanes);
     }
 
-    private void collectVehiclesAndPlows() {
+    private void collectVehiclesAndPlows(List<LaneView> diagonalLanes) {
         Set<Vehicle> seenVehicles = new HashSet<>();
         Set<SnowPlow> seenPlows = new HashSet<>();
 
@@ -94,8 +108,14 @@ public class GamePanel extends JPanel {
         drawables.addAll(plowViews);
 
         // Minden nezet megkapja a teljes hokotro-listat az elcsusztatas szamitasahoz
-        for (VehicleView vv : vehicleViews) vv.setAllPlowViews(plowViews);
-        for (SnowPlowView spv : plowViews) spv.setAllPlowViews(plowViews);
+        for (VehicleView vv : vehicleViews) {
+            vv.setAllPlowViews(plowViews);
+            vv.setDiagonalLaneViews(diagonalLanes);
+        }
+        for (SnowPlowView spv : plowViews) {
+            spv.setAllPlowViews(plowViews);
+            spv.setDiagonalLaneViews(diagonalLanes);
+        }
     }
 
     private int[][] computeGridCoordinates(List<Node> nodes) {

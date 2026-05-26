@@ -63,7 +63,6 @@ public class Car extends Vehicle {
     @Override
     public void step(boolean random) {
         if (isBlocked()) {
-            decrementBlock();
             Logger.action(this, "blokkolt, nem tud lepni, maradek blokk: " + blockedTurns);
             return;
         }

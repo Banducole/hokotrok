@@ -138,9 +138,19 @@ public class GameController implements MouseListener, ActionListener {
             game.nextPlayer();
             animateMovedVehicles(oldLanes, panel);
             frame.updateUI_game();
+            scheduleSnowfall();
         });
         t.setRepeats(false);
         t.start();
+    }
+
+    private void scheduleSnowfall() {
+        javax.swing.Timer snow = new javax.swing.Timer(1000, e -> {
+            game.getCity().applySnowfall(1);
+            frame.updateUI_game();
+        });
+        snow.setRepeats(false);
+        snow.start();
     }
 
     private Map<Vehicle, Lane> captureVehicleLanes(GamePanel panel) {
@@ -206,6 +216,7 @@ public class GameController implements MouseListener, ActionListener {
             game.nextPlayer();
             checkGameOver();
             frame.updateUI_game();
+            scheduleSnowfall();
             return;
         }
 
