@@ -141,17 +141,32 @@ public class Car extends Vehicle {
      * @return a következő sáv, vagy {@code null} ha nincs elérhető útvonal
      */
     public Lane getNextLane() {
-        if (currentLane == null || currentLane.getRoad() == null) return null;
+        if (currentLane == null || currentLane.getRoad() == null) {
+            return null;
+        }
+        
         Node arrivalNode = currentLane.getRoad().getTo();
-        if (arrivalNode == null) return null;
+        if (arrivalNode == null) {
+            return null;
+        }
 
         /* Célcsere: ha megérkeztünk az egyik végponthoz, fordulunk */
-        if (home != null && arrivalNode == home)                currentTarget = workplace;
-        else if (workplace != null && arrivalNode == workplace)  currentTarget = home;
+        if (home != null && arrivalNode.equals(home)) {
+            currentTarget = workplace;
+        }
+        else if (workplace != null && arrivalNode.equals(workplace)) {
+            currentTarget = home;
+            System.out.println("xdadsadasdadasdasdasdadsasdad");
+        }
 
-        if (currentTarget == null) return null;
+        if (currentTarget == null){
+            return null;
+        } 
         List<Lane> path = pathFinder.getShortestPath(arrivalNode, currentTarget);
-        if (path != null && !path.isEmpty()) return path.get(0);
+
+        if (path != null && !path.isEmpty()){
+            return path.get(0);
+        }
         return null;
     }
 }
