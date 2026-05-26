@@ -1,8 +1,42 @@
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 public class SnowPlowView implements IDrawable {
+
+    // --- KÉPEK BETÖLTÉSE ---
+    private static BufferedImage plowImage;
+    private static BufferedImage dragonHeadImage;
+    private static BufferedImage sweepHeadImage;
+    private static BufferedImage throwHeadImage;
+    private static BufferedImage iceBreakerHeadImage;
+    private static BufferedImage rockHeadImage;
+    private static BufferedImage saltHeadImage;
+
+    static {
+        try {
+            plowImage = ImageIO.read(SnowPlowView.class.getResource("/images/hokotro.png"));
+            dragonHeadImage = ImageIO.read(SnowPlowView.class.getResource("/images/sarkanyfej.png"));
+            sweepHeadImage = ImageIO.read(SnowPlowView.class.getResource("/images/soprofej.png"));
+            throwHeadImage = ImageIO.read(SnowPlowView.class.getResource("/images/hanyofej.png"));
+            iceBreakerHeadImage = ImageIO.read(SnowPlowView.class.getResource("/images/jegtotro.png"));
+            rockHeadImage = ImageIO.read(SnowPlowView.class.getResource("/images/kavicsszorofej.png"));
+            saltHeadImage = ImageIO.read(SnowPlowView.class.getResource("/images/soszorofej.png"));
+        } catch (Exception e) {
+            System.err.println("Egy vagy több hókotró/fej kép nem található!");
+        }
+    }
+
+    // A játék eredeti logikai mérete (hibakezeléshez)
+    private static final int LOGIC_WIDTH = 22;
+    private static final int LOGIC_HEIGHT = 14;
+
+    // --- AZ ÚJ KÉP FIX MÉRETE (Állítsd be, hogy beférjen az útra!) ---
+    // Mivel a hókotró "álló" (függőleges) helyzetben lesz, a WIDTH a kisebb, a HEIGHT a nagyobb.
+    private static final int IMAGE_WIDTH = 16;  // A hókotró szélessége (hogy elférjen a sávban)
+    private static final int IMAGE_HEIGHT = 32; // A hókotró hosszúsága
 
     private final SnowPlow snowPlow;
     private int x, y;
@@ -17,9 +51,6 @@ public class SnowPlowView implements IDrawable {
     private float animT;
     private boolean animating;
     private static final float ANIM_STEP = 0.1f;
-
-    private static final int WIDTH = 22;
-    private static final int HEIGHT = 14;
 
     public SnowPlowView(SnowPlow snowPlow, Map<Lane, LaneView> laneViewMap) {
         this.snowPlow = snowPlow;
@@ -105,28 +136,81 @@ public class SnowPlowView implements IDrawable {
         }
         int ix = (int) visX, iy = (int) visY;
 
-        Color plowColor = getPlowColor();
-        g.setColor(plowColor);
-        g.fillRect(ix - WIDTH / 2, iy - HEIGHT / 2, WIDTH, HEIGHT);
+        // --- HÓKOTRÓ KÉPÉNEK KIRAJZOLÁSA ---
+        if (plowImage != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.translate(ix, iy); // Eltolás a hókotró közepére
+            
+            // FORGATÁS JAVÍTÁSA: 180 fokkal (Math.PI) megforgatjuk, hogy a lefelé néző hókotró felfelé nézzen.
+            // (Ha még mindig rossz irányba néz, cseréld ki a Math.PI -t 0 -ra vagy -Math.PI/2 -re!)
+            g2d.rotate(Math.PI);
+            
+            // Kép kirajzolása a fix megadott méretekkel
+            g2d.drawImage(plowImage, -IMAGE_WIDTH / 2, -IMAGE_HEIGHT / 2, IMAGE_WIDTH, IMAGE_HEIGHT, null);
+            
+            // --- FEJ KÉPÉNEK RÁRAJZOLÁSA ---
+            BufferedImage currentHeadImage = getHeadImage();
+            if (currentHeadImage != null) {
+                int headSize = 14; // A tisztítófej ikonjának mérete
+                // A fejet az Y tengelyen eltoljuk az autó orráig (a tolólaphoz)
+                g2d.drawImage(currentHeadImage, -headSize / 2, -IMAGE_HEIGHT / 2, headSize, headSize, null);
+            }
+            g2d.dispose();
+            
+            // Ha valamiért nincs meg a fej kép, de a hókotró megvan, az eredeti betűt rajzoljuk ki
+            if (currentHeadImage == null) {
+                drawHeadLabel(g, ix, iy);
+            }
 
-        if (selected) {
-            g.setColor(new Color(0, 200, 0));
-            g.setStroke(new BasicStroke(2));
-            g.drawRect(ix - WIDTH / 2 - 3, iy - HEIGHT / 2 - 3, WIDTH + 6, HEIGHT + 6);
-            g.setStroke(new BasicStroke(1));
+            // --- ZÖLD KIJELÖLŐ KERET ---
+            if (selected) {
+                g.setColor(new Color(0, 200, 0));
+                g.setStroke(new BasicStroke(2));
+                // A keret pontosan a manuálisan beállított IMAGE_WIDTH / IMAGE_HEIGHT méreteket öleli körbe
+                g.drawRect(ix - IMAGE_WIDTH / 2 - 3, iy - IMAGE_HEIGHT / 2 - 3, IMAGE_WIDTH + 6, IMAGE_HEIGHT + 6);
+                g.setStroke(new BasicStroke(1));
+            }
+
         } else {
+            // VÉSZHELYZETI RAJZOLÁS (Ha egyáltalán nincs meg a hókotró kép)
+            Color plowColor = getPlowColor();
+            g.setColor(plowColor);
+            g.fillRect(ix - LOGIC_WIDTH / 2, iy - LOGIC_HEIGHT / 2, LOGIC_WIDTH, LOGIC_HEIGHT);
             g.setColor(plowColor.darker());
-            g.drawRect(ix - WIDTH / 2, iy - HEIGHT / 2, WIDTH, HEIGHT);
-        }
+            g.drawRect(ix - LOGIC_WIDTH / 2, iy - LOGIC_HEIGHT / 2, LOGIC_WIDTH, LOGIC_HEIGHT);
+            drawHeadLabel(g, ix, iy);
 
+            if (selected) {
+                g.setColor(new Color(0, 200, 0));
+                g.setStroke(new BasicStroke(2));
+                g.drawRect(ix - LOGIC_WIDTH / 2 - 3, iy - LOGIC_HEIGHT / 2 - 3, LOGIC_WIDTH + 6, LOGIC_HEIGHT + 6);
+                g.setStroke(new BasicStroke(1));
+            }
+        }
+        
+        g.setComposite(oldComp);
+    }
+
+    private BufferedImage getHeadImage() {
+        CleanerHead head = snowPlow.getHead();
+        if (head == null) return null;
+        if (head instanceof SweepHead)     return sweepHeadImage;
+        if (head instanceof ThrowHead)     return throwHeadImage;
+        if (head instanceof IceBreakerHead) return iceBreakerHeadImage;
+        if (head instanceof SaltHead)      return saltHeadImage;
+        if (head instanceof DragonHead)    return dragonHeadImage;
+        if (head instanceof RockHead)      return rockHeadImage;
+        return null;
+    }
+
+    private void drawHeadLabel(Graphics2D g, int ix, int iy) {
         String headLabel = getHeadLabel();
         if (!headLabel.isEmpty()) {
             g.setColor(Color.WHITE);
-            g.setFont(new Font("SansSerif", Font.BOLD, 9));
+            g.setFont(new Font("SansSerif", Font.BOLD, 12)); 
             FontMetrics fm = g.getFontMetrics();
-            g.drawString(headLabel, ix - fm.stringWidth(headLabel) / 2, iy + fm.getAscent() / 2 - 1);
+            g.drawString(headLabel, ix - fm.stringWidth(headLabel) / 2, iy + fm.getAscent() / 2 - 2);
         }
-        g.setComposite(oldComp);
     }
 
     private Color getPlowColor() {
@@ -182,7 +266,8 @@ public class SnowPlowView implements IDrawable {
 
     public boolean containsPoint(int px, int py) {
         int ix = (int) visX, iy = (int) visY;
-        return px >= ix - WIDTH / 2 - 4 && px <= ix + WIDTH / 2 + 4
-            && py >= iy - HEIGHT / 2 - 4 && py <= iy + HEIGHT / 2 + 4;
+        // JAVÍTVA: Itt is az új IMAGE_WIDTH és IMAGE_HEIGHT méreteket használjuk a kattintás érzékeléséhez!
+        return px >= ix - IMAGE_WIDTH / 2 - 4 && px <= ix + IMAGE_WIDTH / 2 + 4
+            && py >= iy - IMAGE_HEIGHT / 2 - 4 && py <= iy + IMAGE_HEIGHT / 2 + 4;
     }
 }
