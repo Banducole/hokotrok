@@ -27,15 +27,17 @@ public class CarView extends VehicleView {
 
     @Override
     public void draw(Graphics2D g) {
+        Composite oldComp = applyBridgeAlpha(g);
         int ix = (int) visX, iy = (int) visY;
-        
+
         if (carImage != null) {
             g.drawImage(carImage, ix - (IMAGE_SIZE / 2), iy - (IMAGE_SIZE / 2), IMAGE_SIZE, IMAGE_SIZE, null);
         } else {
             g.setColor(Color.BLACK);
             g.fillRect(ix - LOGIC_SIZE / 2, iy - LOGIC_SIZE / 2, LOGIC_SIZE, LOGIC_SIZE);
         }
-        
+
         drawBlocked(g, LOGIC_SIZE);
+        g.setComposite(oldComp);
     }
 }
