@@ -33,17 +33,23 @@ public class PathFinder {
         if (from == null || to == null) return null;
         if (from == to) return new ArrayList<>();
 
+        List<Lane> result = bfs(from, to, true);
+        if (result == null) result = bfs(from, to, false);
+        return result;
+    }
+
+    private List<Lane> bfs(Node from, Node to, boolean onlyPassable) {
         Queue<Node> queue = new LinkedList<>();
         Map<Node, Node> prev = new HashMap<>();
         Map<Node, Road> roadUsed = new HashMap<>();
         queue.add(from);
         prev.put(from, null);
 
-        /* BFS a legrövidebb út megkereséséhez */
         while (!queue.isEmpty()) {
             Node current = queue.poll();
             if (current == to) break;
             for (Road road : current.getConnectedRoads()) {
+                if (onlyPassable && getPassableLanes(road).isEmpty()) continue;
                 Node neighbor = getOtherEnd(road, current);
                 if (neighbor == null) continue;
                 if (!prev.containsKey(neighbor)) {
@@ -56,7 +62,6 @@ public class PathFinder {
 
         if (!prev.containsKey(to)) return null;
 
-        /* Visszakövetés: az útvonal utait összegyűjtjük */
         List<Road> roads = new ArrayList<>();
         Node cursor = to;
         while (prev.get(cursor) != null) {
@@ -64,7 +69,6 @@ public class PathFinder {
             cursor = prev.get(cursor);
         }
 
-        /* Minden úthoz kiválasztjuk az első (lehetőleg átjárható) sávot */
         List<Lane> result = new ArrayList<>();
         for (Road r : roads) {
             List<Lane> passable = getPassableLanes(r);

@@ -143,28 +143,38 @@ public class Car extends Vehicle {
         if (currentLane == null || currentLane.getRoad() == null) {
             return null;
         }
-        
-        Node arrivalNode = currentLane.getRoad().getTo();
-        if (arrivalNode == null) {
-            return null;
-        }
 
-        /* Célcsere: ha megérkeztünk az egyik végponthoz, fordulunk */
-        if (home != null && arrivalNode.equals(home)) {
+        Road road = currentLane.getRoad();
+        Node fromNode = road.getFrom();
+        Node toNode = road.getTo();
+
+        /* Célcsere: ha az autó olyan úton áll, aminek egyik vége a cél */
+        if (home != null && (home == fromNode || home == toNode)) {
             currentTarget = workplace;
-        }
-        else if (workplace != null && arrivalNode.equals(workplace)) {
+        } else if (workplace != null && (workplace == fromNode || workplace == toNode)) {
             currentTarget = home;
         }
 
-        if (currentTarget == null){
+        if (currentTarget == null) {
             return null;
-        } 
-        List<Lane> path = pathFinder.getShortestPath(arrivalNode, currentTarget);
+        }
 
-        if (path != null && !path.isEmpty()){
-            return path.get(0);
+        /* BFS mindkét végpontból, rövidebb utat választjuk */
+        List<Lane> pathFrom = pathFinder.getShortestPath(fromNode, currentTarget);
+        List<Lane> pathTo = pathFinder.getShortestPath(toNode, currentTarget);
+
+        List<Lane> best = shorter(pathFrom, pathTo);
+        if (best != null && !best.isEmpty()) {
+            return best.get(0);
         }
         return null;
+    }
+
+    private static List<Lane> shorter(List<Lane> a, List<Lane> b) {
+        boolean aOk = a != null && !a.isEmpty();
+        boolean bOk = b != null && !b.isEmpty();
+        if (!aOk) return bOk ? b : null;
+        if (!bOk) return a;
+        return a.size() <= b.size() ? a : b;
     }
 }
