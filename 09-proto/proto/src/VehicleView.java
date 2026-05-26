@@ -9,6 +9,7 @@ public abstract class VehicleView implements IDrawable {
     protected float visX, visY;
     protected Map<Lane, LaneView> laneViewMap;
     protected List<SnowPlowView> allPlowViews;
+    protected List<LaneView> diagonalLaneViews;
 
     private float[] animPX, animPY;
     private int animPLen;
@@ -22,6 +23,28 @@ public abstract class VehicleView implements IDrawable {
     }
 
     public void setAllPlowViews(List<SnowPlowView> views) { this.allPlowViews = views; }
+    public void setDiagonalLaneViews(List<LaneView> views) { this.diagonalLaneViews = views; }
+
+    protected boolean isUnderDiagonal() {
+        if (diagonalLaneViews == null) return false;
+        Lane currentLane = vehicle.getCurrentLane();
+        for (LaneView lv : diagonalLaneViews) {
+            if (lv.getLane() == currentLane) return false;
+        }
+        int ix = (int) visX, iy = (int) visY;
+        for (LaneView lv : diagonalLaneViews) {
+            if (lv.containsPoint(ix, iy)) return true;
+        }
+        return false;
+    }
+
+    protected Composite applyBridgeAlpha(Graphics2D g) {
+        Composite old = g.getComposite();
+        if (isUnderDiagonal()) {
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        }
+        return old;
+    }
 
     public void animTick() {
         if (!animating) {

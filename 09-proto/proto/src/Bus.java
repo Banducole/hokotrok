@@ -45,7 +45,7 @@ public class Bus extends Vehicle {
      */
     @Override
     public void step(boolean random) {
-        if (isBlocked()) decrementBlock();
+        // blokkolt allapot csokkentest City.executeStep() vegzi
     }
 
     /**

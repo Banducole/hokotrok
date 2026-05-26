@@ -7,6 +7,10 @@ public class RoadView implements IDrawable {
 
     private final Road road;
     private final List<LaneView> laneViews = new ArrayList<>();
+    private boolean diagonal;
+
+    private static final int SHADOW_OFFSET = 6;
+    private static final Color SHADOW_COLOR = new Color(0, 0, 0, 60);
 
     public RoadView(Road road, Map<Node, NodeView> nodeMap) {
         this.road = road;
@@ -27,6 +31,10 @@ public class RoadView implements IDrawable {
         double dy = ty - fy;
         double len = Math.sqrt(dx * dx + dy * dy);
         if (len < 1) return;
+
+        double absDx = Math.abs(dx);
+        double absDy = Math.abs(dy);
+        diagonal = absDx > 0.1 * len && absDy > 0.1 * len;
 
         double nx = -dy / len;
         double ny = dx / len;
@@ -51,11 +59,28 @@ public class RoadView implements IDrawable {
 
     @Override
     public void draw(Graphics2D g) {
+        if (diagonal) {
+            drawShadow(g);
+        }
         for (LaneView lv : laneViews) {
             lv.draw(g);
         }
     }
 
+    private void drawShadow(Graphics2D g) {
+        Stroke old = g.getStroke();
+        g.setColor(SHADOW_COLOR);
+        for (LaneView lv : laneViews) {
+            g.setStroke(new BasicStroke(40, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g.drawLine(
+                lv.getX1() + SHADOW_OFFSET, lv.getY1() + SHADOW_OFFSET,
+                lv.getX2() + SHADOW_OFFSET, lv.getY2() + SHADOW_OFFSET
+            );
+        }
+        g.setStroke(old);
+    }
+
+    public boolean isDiagonal() { return diagonal; }
     public List<LaneView> getLaneViews() { return laneViews; }
     public Road getRoad() { return road; }
 }

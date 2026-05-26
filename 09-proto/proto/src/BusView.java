@@ -13,6 +13,7 @@ public class BusView extends VehicleView {
 
     @Override
     public void draw(Graphics2D g) {
+        Composite oldComp = applyBridgeAlpha(g);
         int ix = (int) visX, iy = (int) visY;
         g.setColor(new Color(50, 100, 220));
         g.fillRect(ix - WIDTH / 2, iy - HEIGHT / 2, WIDTH, HEIGHT);
@@ -38,6 +39,7 @@ public class BusView extends VehicleView {
             g.drawLine(ix + size / 2, iy - size / 2, ix - size / 2, iy + size / 2);
             g.setStroke(new BasicStroke(1));
         }
+        g.setComposite(oldComp);
     }
 
     public void setSelected(boolean selected) { this.selected = selected; }

@@ -10,6 +10,7 @@ public class SnowPlowView implements IDrawable {
     private boolean selected;
     private final Map<Lane, LaneView> laneViewMap;
     private List<SnowPlowView> allPlowViews;
+    private List<LaneView> diagonalLaneViews;
 
     private float[] animPX, animPY;
     private int animPLen;
@@ -81,8 +82,27 @@ public class SnowPlowView implements IDrawable {
 
     public boolean isAnimating() { return animating; }
 
+    public void setDiagonalLaneViews(List<LaneView> views) { this.diagonalLaneViews = views; }
+
+    private boolean isUnderDiagonal() {
+        if (diagonalLaneViews == null) return false;
+        Lane currentLane = snowPlow.getCurrentLane();
+        for (LaneView lv : diagonalLaneViews) {
+            if (lv.getLane() == currentLane) return false;
+        }
+        int ix = (int) visX, iy = (int) visY;
+        for (LaneView lv : diagonalLaneViews) {
+            if (lv.containsPoint(ix, iy)) return true;
+        }
+        return false;
+    }
+
     @Override
     public void draw(Graphics2D g) {
+        Composite oldComp = g.getComposite();
+        if (isUnderDiagonal()) {
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        }
         int ix = (int) visX, iy = (int) visY;
 
         Color plowColor = getPlowColor();
@@ -106,6 +126,7 @@ public class SnowPlowView implements IDrawable {
             FontMetrics fm = g.getFontMetrics();
             g.drawString(headLabel, ix - fm.stringWidth(headLabel) / 2, iy + fm.getAscent() / 2 - 1);
         }
+        g.setComposite(oldComp);
     }
 
     private Color getPlowColor() {

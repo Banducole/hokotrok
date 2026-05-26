@@ -49,6 +49,9 @@ public class City {
 
         /* Jarmuvek lepnek – a hokotrok kizarolag manualis lepeskor takaritanak */
         for (Vehicle v : vehicles) v.step(false);
+
+        /* Blokkolás csökkentése külön fázisban, hogy egyidejű ütközésnél mindkét jármű mutassa a piros X-et */
+        for (Vehicle v : vehicles) v.decrementBlock();
     }
 
     /**
