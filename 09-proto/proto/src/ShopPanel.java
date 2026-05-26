@@ -33,11 +33,11 @@ public class ShopPanel extends JPanel {
     private void initComponents() {
         add(Box.createVerticalStrut(8));
 
-        btnFuelSalt = addShopRow("So", "Vasarlas", "FUEL_SALT", new Color(240, 240, 240));
+        btnFuelSalt = addShopRow("So", "Vasarlas", "FUEL_SALT", new Color(240, 240, 240), Constants.PRICE_SALT_UNIT * 5);
         rowFuelSalt = lastRow;
-        btnFuelKerosene = addShopRow("Kerozin", "Vasarlas", "FUEL_KEROSENE", new Color(200, 50, 50));
+        btnFuelKerosene = addShopRow("Kerozin", "Vasarlas", "FUEL_KEROSENE", new Color(200, 50, 50), Constants.PRICE_KEROSENE_UNIT * 5);
         rowFuelKerosene = lastRow;
-        btnFuelRock = addShopRow("Ko", "Vasarlas", "FUEL_ROCK", new Color(150, 150, 150));
+        btnFuelRock = addShopRow("Ko", "Vasarlas", "FUEL_ROCK", new Color(150, 150, 150), Constants.PRICE_ROCK_UNIT * 5);
         rowFuelRock = lastRow;
 
         add(Box.createVerticalStrut(8));
@@ -83,11 +83,11 @@ public class ShopPanel extends JPanel {
         add(Box.createVerticalStrut(8));
     }
 
-    private JButton addShopRow(String label, String btnText, String cmd, Color iconColor) {
+    private JButton addShopRow(String label, String btnText, String cmd, Color iconColor, int price) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setOpaque(false);
-        row.setMaximumSize(new Dimension(PANEL_WIDTH - 10, 40));
+        row.setMaximumSize(new Dimension(PANEL_WIDTH - 10, 50));
         row.setAlignmentX(Component.LEFT_ALIGNMENT);
         row.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
 
@@ -95,9 +95,16 @@ public class ShopPanel extends JPanel {
         row.add(icon);
         row.add(Box.createHorizontalStrut(8));
 
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.setOpaque(false);
         JLabel nameLabel = new JLabel(label);
         nameLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
-        row.add(nameLabel);
+        JLabel priceLabel = new JLabel("(" + price + " Ft)");
+        priceLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        textPanel.add(nameLabel);
+        textPanel.add(priceLabel);
+        row.add(textPanel);
         row.add(Box.createHorizontalGlue());
 
         JButton btn = new JButton(btnText);
