@@ -54,4 +54,6 @@ public class DragonHead extends CleanerHead {
 
     /** @return az aktuális kerozinkészlet egységekben */
     @Override public int    fuelLevel() { return keroseneAmount; }
+
+    @Override public int    fuelCapacity() { return Constants.DRAGON_HEAD_CAPACITY; }
 }

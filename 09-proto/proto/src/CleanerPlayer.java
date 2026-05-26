@@ -69,16 +69,20 @@ public class CleanerPlayer extends Player {
      * @param amount   a feltöltendő mennyiség egységekben
      */
     public void buyFuel(SnowPlow plow, FuelType fuelType, int amount) {
+        CleanerHead head = plow.getHead();
+        if (head == null) {
+            Logger.error(this, "A hokotrora nincs fej szerelve");
+            return;
+        }
+        if (head.fuelCapacity() > 0 && head.fuelLevel() >= head.fuelCapacity()) {
+            Logger.error(this, "Az uzemanyag tartaly tele van");
+            return;
+        }
         int cost = fuelType.getPrice() * amount;
         if (balance >= cost) {
-            CleanerHead head = plow.getHead();
-            if (head != null) {
-                balance -= cost;
-                head.refuel(amount);
-                Logger.action(this, "Toltes sikeres, maradek egyenleg: " + balance);
-            } else {
-                Logger.error(this, "A hokotrora nincs fej szerelve");
-            }
+            balance -= cost;
+            head.refuel(amount);
+            Logger.action(this, "Toltes sikeres, maradek egyenleg: " + balance);
         } else {
             Logger.error(this, "Nincs eleg penz a tolteshez");
         }

@@ -53,4 +53,6 @@ public class SaltHead extends CleanerHead {
 
     /** @return az aktuális sókészlet egységekben */
     @Override public int    fuelLevel() { return saltAmount; }
+
+    @Override public int    fuelCapacity() { return Constants.SALT_HEAD_CAPACITY; }
 }
