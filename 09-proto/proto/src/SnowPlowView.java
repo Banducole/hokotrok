@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 public class SnowPlowView implements IDrawable {
 
-    // --- KÉPEK BETÖLTÉSE ---
     private static BufferedImage plowImage;
     private static BufferedImage dragonHeadImage;
     private static BufferedImage sweepHeadImage;
@@ -33,10 +32,8 @@ public class SnowPlowView implements IDrawable {
     private static final int LOGIC_WIDTH = 22;
     private static final int LOGIC_HEIGHT = 14;
 
-    // --- AZ ÚJ KÉP FIX MÉRETE (Állítsd be, hogy beférjen az útra!) ---
-    // Mivel a hókotró "álló" (függőleges) helyzetben lesz, a WIDTH a kisebb, a HEIGHT a nagyobb.
-    private static final int IMAGE_WIDTH = 16;  // A hókotró szélessége (hogy elférjen a sávban)
-    private static final int IMAGE_HEIGHT = 32; // A hókotró hosszúsága
+    private static final int IMAGE_WIDTH = 16;
+    private static final int IMAGE_HEIGHT = 32;
 
     private final SnowPlow snowPlow;
     private int x, y;
@@ -136,33 +133,25 @@ public class SnowPlowView implements IDrawable {
         }
         int ix = (int) visX, iy = (int) visY;
 
-        // --- HÓKOTRÓ KÉPÉNEK KIRAJZOLÁSA ---
         if (plowImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.translate(ix, iy); // Eltolás a hókotró közepére
             
-            // FORGATÁS JAVÍTÁSA: 180 fokkal (Math.PI) megforgatjuk, hogy a lefelé néző hókotró felfelé nézzen.
-            // (Ha még mindig rossz irányba néz, cseréld ki a Math.PI -t 0 -ra vagy -Math.PI/2 -re!)
             g2d.rotate(Math.PI);
             
-            // Kép kirajzolása a fix megadott méretekkel
             g2d.drawImage(plowImage, -IMAGE_WIDTH / 2, -IMAGE_HEIGHT / 2, IMAGE_WIDTH, IMAGE_HEIGHT, null);
             
-            // --- FEJ KÉPÉNEK RÁRAJZOLÁSA ---
             BufferedImage currentHeadImage = getHeadImage();
             if (currentHeadImage != null) {
                 int headSize = 14; // A tisztítófej ikonjának mérete
-                // A fejet az Y tengelyen eltoljuk az autó orráig (a tolólaphoz)
                 g2d.drawImage(currentHeadImage, -headSize / 2, -IMAGE_HEIGHT / 2, headSize, headSize, null);
             }
             g2d.dispose();
             
-            // Ha valamiért nincs meg a fej kép, de a hókotró megvan, az eredeti betűt rajzoljuk ki
             if (currentHeadImage == null) {
                 drawHeadLabel(g, ix, iy);
             }
 
-            // --- ZÖLD KIJELÖLŐ KERET ---
             if (selected) {
                 g.setColor(new Color(0, 200, 0));
                 g.setStroke(new BasicStroke(2));
@@ -172,7 +161,6 @@ public class SnowPlowView implements IDrawable {
             }
 
         } else {
-            // VÉSZHELYZETI RAJZOLÁS (Ha egyáltalán nincs meg a hókotró kép)
             Color plowColor = getPlowColor();
             g.setColor(plowColor);
             g.fillRect(ix - LOGIC_WIDTH / 2, iy - LOGIC_HEIGHT / 2, LOGIC_WIDTH, LOGIC_HEIGHT);
@@ -266,7 +254,6 @@ public class SnowPlowView implements IDrawable {
 
     public boolean containsPoint(int px, int py) {
         int ix = (int) visX, iy = (int) visY;
-        // JAVÍTVA: Itt is az új IMAGE_WIDTH és IMAGE_HEIGHT méreteket használjuk a kattintás érzékeléséhez!
         return px >= ix - IMAGE_WIDTH / 2 - 4 && px <= ix + IMAGE_WIDTH / 2 + 4
             && py >= iy - IMAGE_HEIGHT / 2 - 4 && py <= iy + IMAGE_HEIGHT / 2 + 4;
     }
