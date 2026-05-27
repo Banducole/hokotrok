@@ -8,26 +8,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A Hókotrók játék boltját és az akciókat tartalmazó oldalsó grafikus panel.
+ * * Ez a {@link JPanel} leszármazott felelős a fejlesztések (hókotró fejek), 
+ * üzemanyagok (só, kerozin, zúzalék) vásárlásának, valamint az általános 
+ * játékakciók (következő játékos, hóesés, új hókotró vásárlása) megjelenítéséért. 
+ * A panel dinamikusan frissül az éppen soron lévő játékos típusától (takarító vagy busz) 
+ * és a kiválasztott hókotró felszereltségétől függően.
+ */
 public class ShopPanel extends JPanel {
 
+    /** A játék belső logikáját tároló modell objektum. */
     private final Game game;
+    
+    /** A felhasználói interakciókat kezelő vezérlő. */
     private GameController controller;
+    
+    /** Jelzi, hogy a panel aktuálisan aktív-e (általában csak takarító játékos körében az). */
     private boolean active = false;
+    
+    /** Az összes regisztrált gomb listája az eseménykezelők egyszerűbb kiosztásához. */
     private final List<JButton> allButtons = new ArrayList<>();
 
+    // Felszerelés és akció gombok
     private JButton btnSweep, btnThrow, btnIceBreaker, btnSalt, btnDragon, btnRock;
     private JButton btnFuelSalt, btnFuelKerosene, btnFuelRock;
     private JButton btnNewPlow;
     private JButton btnNextPlayer;
     private JButton btnSnowfall;
 
+    // Üzemanyag vásárló sorok (dinamikusan elrejtésre/megjelenítésre kerülnek)
     private JPanel rowFuelSalt, rowFuelKerosene, rowFuelRock;
     private JPanel lastRow;
 
+    /** A felszerelt fejek melletti pipákat tároló térkép, a parancs (cmd) alapján. */
     private final Map<String, JLabel> headCheckmarks = new HashMap<>();
 
+    /** A panel fix szélessége pixelben. */
     private static final int PANEL_WIDTH = 250;
 
+    // Statikus képek a bolt ikonjaihoz
     private static BufferedImage imgSweep, imgThrow, imgIceBreaker, imgSaltHead, imgDragon, imgRockHead;
     private static BufferedImage imgFuelSalt, imgFuelKerosene, imgFuelRock;
     private static BufferedImage imgPipa;
@@ -55,6 +75,10 @@ public class ShopPanel extends JPanel {
         }
     }
 
+    /**
+     * Létrehozza a bolt panelt a megadott játékmodell alapján.
+     * * @param game a {@link Game} modellpéldány
+     */
     public ShopPanel(Game game) {
         this.game = game;
         setPreferredSize(new Dimension(PANEL_WIDTH, 0));
@@ -63,6 +87,10 @@ public class ShopPanel extends JPanel {
         initComponents();
     }
 
+    /**
+     * Inicializálja és elrendezi a bolt panel összes grafikus komponensét.
+     * Létrehozza az üzemanyag- és fejvásárló sorokat, valamint az alsó vezérlőgombokat.
+     */
     private void initComponents() {
         add(Box.createVerticalStrut(8));
 
@@ -116,6 +144,15 @@ public class ShopPanel extends JPanel {
         add(Box.createVerticalStrut(8));
     }
 
+    /**
+     * Létrehoz és hozzáad egy általános vásárlói sort (pl. üzemanyaghoz) a panelhez.
+     * * @param label   a termék neve (pl. "Só")
+     * @param btnText a gomb felirata (pl. "Vásárlás")
+     * @param cmd     a gombhoz tartozó egyedi parancs (ActionCommand)
+     * @param iconImg a termék ikonja
+     * @param price   a termék ára
+     * @return a létrehozott vásárlás gomb
+     */
     private JButton addShopRow(String label, String btnText, String cmd, BufferedImage iconImg, int price) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
@@ -154,6 +191,15 @@ public class ShopPanel extends JPanel {
         return btn;
     }
 
+    /**
+     * Létrehoz egy speciális sort a hókotró fejek kiválasztásához és vásárlásához.
+     * A sor teljes egésze kattintható, és támogatja a "felszerelt" állapotot jelző pipát.
+     * * @param name    a fej neve
+     * @param price   a fej ára
+     * @param cmd     a művelet parancsa (ActionCommand)
+     * @param iconImg a fej ikonja
+     * @return a sorhoz tartozó rejtett gomb, ami az eseményt kiváltja
+     */
     private JButton addHeadRow(String name, int price, String cmd, BufferedImage iconImg) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
@@ -203,6 +249,12 @@ public class ShopPanel extends JPanel {
         return btn;
     }
 
+    /**
+     * Stílusozott (szegéllyel és megfelelő margókkal rendelkező) vezérlőgombot hoz létre.
+     * * @param text a gomb felirata
+     * @param cmd  a gomb eseményparancsa
+     * @return az elkészült gomb
+     */
     private JButton createStyledButton(String text, String cmd) {
         JButton btn = new JButton(text);
         btn.setActionCommand(cmd);
@@ -216,6 +268,10 @@ public class ShopPanel extends JPanel {
         return btn;
     }
 
+    /**
+     * Középre igazítva ad hozzá egy komponenst a panelhez.
+     * * @param comp a hozzáadandó grafikus elem
+     */
     private void addCentered(JComponent comp) {
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         wrapper.setOpaque(false);
@@ -224,6 +280,9 @@ public class ShopPanel extends JPanel {
         add(wrapper);
     }
 
+    /**
+     * Hozzáad egy esztétikus, vízszintes elválasztó vonalat a panelhez.
+     */
     private void addSeparator() {
         JSeparator sep = new JSeparator();
         sep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 2));
@@ -231,6 +290,11 @@ public class ShopPanel extends JPanel {
         add(sep);
     }
 
+    /**
+     * Beállítja a panel aktív vagy inaktív állapotát. Inaktív állapotban 
+     * a legtöbb gomb letiltásra kerül (kivéve a körpasszolás és hóesés).
+     * * @param active true, ha a bolt aktív, false ha nem
+     */
     public void setActive(boolean active) {
         this.active = active;
         for (JButton btn : allButtons) {
@@ -241,8 +305,20 @@ public class ShopPanel extends JPanel {
         repaint();
     }
 
-    public void setController(GameController c) { this.controller = c; }
+    /**
+     * Beregisztrálja a megadott vezérlőt.
+     * * @param c a {@link GameController} példány
+     */
+    public void setController(GameController c) { 
+        this.controller = c; 
+    }
 
+    /**
+     * Frissíti a bolt grafikus felületét a játék aktuális állapota alapján.
+     * Ellenőrzi, hogy takarító játékos van-e soron, beállítja az aktív fejet 
+     * jelző pipát, valamint csak azt az üzemanyagvásárló sort teszi láthatóvá, 
+     * amelyik a felszerelt speciális fejhez (só, kerozin, zúzalék) szükséges.
+     */
     public void update() {
         Player current = game.getCurrentPlayer();
         boolean isCleanerTurn = current instanceof CleanerPlayer;
@@ -287,6 +363,10 @@ public class ShopPanel extends JPanel {
         repaint();
     }
 
+    /**
+     * Beregisztrálja a megadott eseménykezelőt a panel összes gombjához.
+     * * @param listener a külső {@link ActionListener} (általában a controller)
+     */
     public void registerActionListener(ActionListener listener) {
         for (JButton btn : allButtons) {
             btn.addActionListener(listener);
@@ -295,6 +375,11 @@ public class ShopPanel extends JPanel {
         btnSnowfall.addActionListener(listener);
     }
 
+    /**
+     * A panel egyedi rajzolásáért felelős metódus. Ha a panel inaktív, 
+     * egy áttetsző, sötétítő réteget húz az egész területre.
+     * * @param g a {@link Graphics} kontextus
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -304,9 +389,21 @@ public class ShopPanel extends JPanel {
         }
     }
 
+    /**
+     * Belső segédosztály a képek méretezett és élsimított megjelenítésére a boltban.
+     * Ha a kép hiányzik, egy szürke, fallback (helyettesítő) négyzetet rajzol.
+     */
     private static class IconPanel extends JPanel {
+        
+        /** A kirajzolandó kép. */
         private final BufferedImage img;
 
+        /**
+         * Létrehoz egy fix méretű ikonpanelt.
+         * * @param img a megjelenítendő kép
+         * @param w   a panel szélessége
+         * @param h   a panel magassága
+         */
         IconPanel(BufferedImage img, int w, int h) {
             this.img = img;
             setPreferredSize(new Dimension(w, h));

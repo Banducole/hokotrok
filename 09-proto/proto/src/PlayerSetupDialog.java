@@ -1,15 +1,46 @@
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Modális dialógusablak a játékosok beállítására a játék indítása előtt.
+ *
+ * A {@link JDialog} leszármazottjaként ez az osztály biztosítja a grafikus 
+ * felületet a játékosok számának (2, 3 vagy 4), nevüknek, valamint a 
+ * szerepkörüknek (takarító/hókotró vagy buszvezető) kiválasztására.
+ * A megadott adatokat a játék indításakor a modell és a pálya felépítéséhez 
+ * használja fel a rendszer.
+ * 
+ */
 public class PlayerSetupDialog extends JDialog {
 
+    /** A kiválasztott játékosok száma (alapértelmezetten 4). */
     private int playerCount = 4;
+    
+    /** A játékosok nevét bekérő szövegmezők tömbje. */
     private JTextField[] nameFields;
+    
+    /** A takarító (hókotró) szerepkört kiválasztó rádiógombok tömbje. */
     private JRadioButton[] cleanerRadios;
+    
+    /** A buszvezető szerepkört kiválasztó rádiógombok tömbje. */
     private JRadioButton[] busRadios;
+    
+    /** A játékosok beviteli mezőit tartalmazó dinamikus panel. */
     private JPanel playersPanel;
+    
+    /** Jelzi, hogy a felhasználó a "Játék indítása" gombbal zárta-e be az ablakot. */
     private boolean confirmed = false;
 
+    /**
+     * Létrehozza a beállító dialógusablakot.
+     * 
+     * Inicializálja a fő elrendezést, létrehozza a játékosszámot kiválasztó 
+     * legördülő menüt ({@link JComboBox}), valamint a start gombot. Automatikusan 
+     * meghívja a {@link #rebuildPlayersPanel()} metódust az alapértelmezett 
+     * beviteli mezők legenerálásához.
+     *
+     * @param parent a szülő ablak ({@link JFrame}), amelyhez a dialógus rögzítve van (lehet null is)
+     */
     public PlayerSetupDialog(JFrame parent) {
         super(parent, "Játékosok beállítása", true);
         setLayout(new BorderLayout(10, 10));
@@ -50,6 +81,15 @@ public class PlayerSetupDialog extends JDialog {
         setLocationRelativeTo(parent);
     }
 
+    /**
+     * Újraépíti a játékosok adatait bekérő panelt a kiválasztott játékosszám alapján.
+     * 
+     * Ez a metódus törli a panel korábbi tartalmát, majd a {@link #playerCount} 
+     * értékének megfelelően új szövegmezőket és rádiógombokat hoz létre. 
+     * Kényelmi funkcióként előre kitölti a mezőket alapértelmezett nevekkel 
+     * és váltakozó szerepkörökkel. Végül frissíti a felületet.
+     * 
+     */
     private void rebuildPlayersPanel() {
         playersPanel.removeAll();
         nameFields = new JTextField[playerCount];
@@ -87,8 +127,22 @@ public class PlayerSetupDialog extends JDialog {
         pack();
     }
 
-    public boolean isConfirmed() { return confirmed; }
+    /**
+     * Lekérdezi, hogy a beállításokat megerősítették-e.
+     *
+     * @return true, ha a felhasználó a "Játék indítása" gombra kattintott, egyébként false
+     */
+    public boolean isConfirmed() { 
+        return confirmed; 
+    }
 
+    /**
+     * Kigyűjti és visszaadja a szövegmezőkbe beírt játékosneveket.
+     * Ha egy mezőt a felhasználó üresen hagy, automatikusan generál 
+     * számára egy azonosítót (pl. "Játékos 1").
+     *
+     * @return a játékosok neveit tartalmazó tömb
+     */
     public String[] getPlayerNames() {
         String[] names = new String[playerCount];
         for (int i = 0; i < playerCount; i++) {
@@ -98,6 +152,11 @@ public class PlayerSetupDialog extends JDialog {
         return names;
     }
 
+    /**
+     * Kigyűjti a rádiógombok állapotát, megállapítva minden játékos szerepkörét.
+     *
+     * @return egy logikai tömb, ahol a true érték a takarító (hókotró), a false pedig a buszvezető szerepkört jelzi
+     */
     public boolean[] getIsCleaner() {
         boolean[] result = new boolean[playerCount];
         for (int i = 0; i < playerCount; i++) {

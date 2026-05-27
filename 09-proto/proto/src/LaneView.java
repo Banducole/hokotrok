@@ -1,30 +1,73 @@
 import java.awt.*;
 
+/**
+ * Egy sáv ({@link Lane}) grafikus megjelenítéséért felelős osztály a Hókotrók projektben.
+ * 
+ * Megvalósítja az {@link IDrawable} interfészt. Feladata a sáv vizuális állapotának
+ * (pl. tiszta, havas, jeges) megfelelő színű kirajzolása, a sáv széleinek (szegélyvonalak)
+ * megrajzolása, valamint a speciális állapotok – mint a zúzalék ({@code isRocky()}) vagy 
+ * a feltört jég ({@link BrokenIceState}) – extra textúráinak megjelenítése. Emellett 
+ * felelős a rajta elhelyezkedő entitások elrendezéséért és az egérkattintások 
+ * azonosításáért is.
+ * 
+ */
 public class LaneView implements IDrawable {
 
+    /** A nézethez tartozó sáv ({@link Lane}) modellpéldánya. */
     private final Lane lane;
-    private int x1, y1, x2, y2;
+    
+    /** A sáv kezdőpontjának X koordinátája. */
+    private int x1;
+    /** A sáv kezdőpontjának Y koordinátája. */
+    private int y1;
+    /** A sáv végpontjának X koordinátája. */
+    private int x2;
+    /** A sáv végpontjának Y koordinátája. */
+    private int y2;
+    
+    /** A sáv fix grafikus vastagsága pixelben. */
     private static final int LANE_WIDTH = 36;
 
+    /**
+     * Létrehozza a sáv nézetét a megadott modellpéldány alapján.
+     *
+     * @param lane a megjelenítendő {@link Lane} objektum
+     */
     public LaneView(Lane lane) {
         this.lane = lane;
     }
 
+    /**
+     * Beállítja a sáv rajzolásához szükséges kezdő- és végpontok képernyőkoordinátáit.
+     *
+     * @param x1 a kezdőpont X koordinátája
+     * @param y1 a kezdőpont Y koordinátája
+     * @param x2 a végpont X koordinátája
+     * @param y2 a végpont Y koordinátája
+     */
     public void setEndpoints(int x1, int y1, int x2, int y2) {
         this.x1 = x1; this.y1 = y1;
         this.x2 = x2; this.y2 = y2;
     }
 
+    /**
+     * Kirajzolja a sávot a megadott grafikus kontextusra.
+     * 
+     * A rajzolás három fő lépésből áll:
+     * A vastag alapsáv megrajzolása a sáv állapotától ({@link LaneState}) függő színnel.
+     * A vékony, szürke szegélyvonalak megrajzolása a sáv mindkét oldalán (normálvektoros eltolással).
+     * Az "extrák" kirajzolása: zúzalék pöttyök, ha a sáv kavicsos, illetve repedések, ha az állapota {@link BrokenIceState}.
+     *
+     * @param g a {@link Graphics2D} objektum, amire a rajzolás történik
+     */
     @Override
     public void draw(Graphics2D g) {
         Stroke old = g.getStroke();
 
-        // 1. A vastag, színes sáv megrajzolása
         g.setStroke(new BasicStroke(LANE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
         g.setColor(getStateColor());
         g.drawLine(x1, y1, x2, y2);
 
-        // 2. A sáv szegélyeinek (vékony szürke vonalak) megrajzolása
         g.setStroke(new BasicStroke(1));
         g.setColor(new Color(170, 175, 180));
         
@@ -58,6 +101,12 @@ public class LaneView implements IDrawable {
         g.setStroke(old);
     }
 
+    /**
+     * Kirajzolja a zúzalékot (apró pöttyöket) a sáv hosszában, 
+     * ha a sáv kaviccsal/zúzalékkal van felszórva.
+     *
+     * @param g a {@link Graphics2D} kontextus
+     */
     private void drawDots(Graphics2D g) {
         int dx = x2 - x1;
         int dy = y2 - y1;
@@ -72,6 +121,12 @@ public class LaneView implements IDrawable {
         }
     }
 
+    /**
+     * Kirajzolja a jégrepedéseket a sáv hosszában, amit a 
+     * feltört jég ({@link BrokenIceState}) állapothoz használunk.
+     *
+     * @param g a {@link Graphics2D} kontextus
+     */
     private void drawCracks(Graphics2D g) {
         int dx = x2 - x1;
         int dy = y2 - y1;
@@ -94,6 +149,11 @@ public class LaneView implements IDrawable {
         }
     }
 
+    /**
+     * Visszaadja a sáv állapotának megfelelő kitöltési színt.
+     *
+     * @return a sáv aktuális állapotát ({@link LaneState}) reprezentáló {@link Color}
+     */
     private Color getStateColor() {
         LaneState st = lane.getState();
         if (st instanceof ClearState) return new Color(180, 185, 190);
@@ -104,6 +164,14 @@ public class LaneView implements IDrawable {
         return Color.GRAY;
     }
 
+    /**
+     * Kiszámítja egy jármű vagy hókotró pontos pozícióját a sávon belül úgy,
+     * hogy több entitás esetén azok ne fedjék át teljesen egymást.
+     *
+     * @param idx   az aktuális entitás sorszáma a sávon
+     * @param total a sávon lévő összes entitás száma
+     * @return a kiszámított képernyőkoordináta egy {@link Point} objektumban
+     */
     public Point getEntityPosition(int idx, int total) {
         int cx = getCenterX();
         int cy = getCenterY();
@@ -123,18 +191,46 @@ public class LaneView implements IDrawable {
         return new Point((int)(cx + nx * offset), (int)(cy + ny * offset));
     }
 
+    /** @return a nézethez tartozó modell ({@link Lane}) */
     public Lane getLane() { return lane; }
+    
+    /** @return a sáv középpontjának X koordinátája */
     public int getCenterX() { return (x1 + x2) / 2; }
+    
+    /** @return a sáv középpontjának Y koordinátája */
     public int getCenterY() { return (y1 + y2) / 2; }
+    
+    /** @return a sáv kezdőpontjának X koordinátája */
     public int getX1() { return x1; }
+    
+    /** @return a sáv kezdőpontjának Y koordinátája */
     public int getY1() { return y1; }
+    
+    /** @return a sáv végpontjának X koordinátája */
     public int getX2() { return x2; }
+    
+    /** @return a sáv végpontjának Y koordinátája */
     public int getY2() { return y2; }
 
+    /**
+     * Megvizsgálja, hogy egy adott képernyőkoordináta a sáv grafikus területén belülre esik-e.
+     * Ezt az egérkattintások azonosítására (hit-testing) használjuk.
+     *
+     * @param px a vizsgálandó X koordináta
+     * @param py a vizsgálandó Y koordináta
+     * @return {@code true}, ha a pont a sávhoz tartozik, egyébként {@code false}
+     */
     public boolean containsPoint(int px, int py) {
         return distToSegment(px, py) <= LANE_WIDTH / 2 + 4;
     }
 
+    /**
+     * Kiszámítja egy adott pont és a sáv (mint vonalszakasz) közötti legrövidebb távolságot.
+     *
+     * @param px a pont X koordinátája
+     * @param py a pont Y koordinátája
+     * @return a távolság pixelben
+     */
     private double distToSegment(int px, int py) {
         double dx = x2 - x1;
         double dy = y2 - y1;

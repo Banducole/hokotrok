@@ -2,22 +2,73 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * A játék státuszadatainak (HUD - Heads-Up Display) megjelenítéséért felelős grafikus panel a Hókotrók projektben.
+ * <p>
+ * A {@link JPanel} leszármazottjaként ez az osztály rajzolja ki a képernyő tetején
+ * látható információs sávot. Itt jelennek meg a játékosok ({@link Player}) kártyái,
+ * az aktuális játékos vizuális kiemelése, valamint a hozzájuk tartozó részletes adatok:
+ * takarítók ({@link CleanerPlayer}) esetén a pénzösszeg és a kiválasztott hókotró üzemanyagszintje,
+ * buszvezetők ({@link BusDriver}) esetén pedig a teljesített körök száma és a busz állapota
+ * (pl. karambol vagy elakadás mély hóban).
+ * </p>
+ */
 public class HUDPanel extends JPanel {
 
+    /** A játék belső logikáját és állapotát tároló modell objektum. */
     private final Game game;
+    
+    /** A felhasználói interakciókat és a játéklogikát összekötő vezérlő. */
     private GameController controller;
+    
+    /** A HUD panel fix magassága pixelben. */
     private static final int PANEL_HEIGHT = 80;
 
+    /**
+     * Létrehozza a státusz panelt a megadott játékmodell alapján.
+     * <p>
+     * Beállítja a panel preferált méretét ({@value #PANEL_HEIGHT} pixel magasság)
+     * és a sötétszürke háttérszínt.
+     * </p>
+     *
+     * @param game a játék belső állapotát és logikáját tartalmazó {@link Game} modellpéldány
+     */
     public HUDPanel(Game game) {
         this.game = game;
         setPreferredSize(new Dimension(0, PANEL_HEIGHT));
         setBackground(new Color(55, 60, 68));
     }
 
-    public void setController(GameController controller) { this.controller = controller; }
+    /**
+     * Beállítja a játékvezérlőt, amellyel a panel képes lekérdezni a specifikus
+     * interakciós adatokat (pl. az aktuálisan kiválasztott hókotrót).
+     *
+     * @param controller a {@link GameController} példány
+     */
+    public void setController(GameController controller) { 
+        this.controller = controller; 
+    }
 
-    public void update() { repaint(); }
+    /**
+     * Frissíti a HUD panelt (újrarajzolást kér a Swing-től).
+     */
+    public void update() { 
+        repaint(); 
+    }
 
+    /**
+     * A panel tényleges kirajzolását végző metódus.
+     *
+     * Végigiterál a játékosok listáján, és mindenkinek rajzol egy információs "kártyát".
+     * Az éppen soron lévő játékost zöld kerettel emeli ki. A kártyákon megjeleníti
+     * a játékos nevét és típusát (takarító vagy buszvezető). Ezen felül dinamikusan 
+     * lekérdezi és kiírja a típusfüggő adatokat: 
+     * 
+     * {@link CleanerPlayer}: Aktuális egyenleg, illetve a kiválasztott hókotró speciális fejének ({@link SaltHead}, {@link DragonHead}, {@link RockHead}) üzemanyagszintje.
+     * {@link BusDriver}: A busz ({@link Bus}) által befejezett körök száma, valamint az esetleges akadályoztatás ({@link ThickSnowState} miatti elakadás vagy karambol).
+     * 
+     * @param g a {@link Graphics} kontextus
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
