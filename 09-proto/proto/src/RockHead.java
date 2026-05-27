@@ -60,4 +60,6 @@ public class RockHead extends CleanerHead {
 
     /** @return az aktuális zúzalékkészlet egységekben */
     @Override public int    fuelLevel() { return rockAmount; }
+
+    @Override public int    fuelCapacity() { return ROCK_LIMIT; }
 }

@@ -176,7 +176,11 @@ public class SnowPlowView implements IDrawable {
             BufferedImage currentHeadImage = getHeadImage();
             if (currentHeadImage != null) {
                 int headSize = 14;
-                g2d.drawImage(currentHeadImage, -headSize / 2, -IMAGE_HEIGHT / 2, headSize, headSize, null);
+                int hx = -headSize / 2;
+                int hy = -IMAGE_HEIGHT / 2;
+                g2d.rotate(Math.PI, hx + headSize / 2.0, hy + headSize / 2.0);
+                g2d.drawImage(currentHeadImage, hx, hy, headSize, headSize, null);
+                g2d.rotate(-Math.PI, hx + headSize / 2.0, hy + headSize / 2.0);
             }
             g2d.dispose();
 

@@ -58,4 +58,12 @@ public abstract class CleanerHead {
      * @return az uzemanyag mennyisege egysegekben
      */
     public int fuelLevel() { return 0; }
+
+    /**
+     * A fej maximális üzemanyag-kapacitása.
+     * Alaptérelmezes: 0 (üzemanyag nélküli fejeknél).
+     *
+     * @return a maximális üzemanyag egységekben
+     */
+    public int fuelCapacity() { return 0; }
 }
