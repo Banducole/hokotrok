@@ -10,7 +10,7 @@ public class GameFrame extends JFrame {
     private final Game game;
 
     public GameFrame(Game game) {
-        super("Banducole - Varosi Hotakarito Jatek");
+        super("Banducole - Városi hótakarító játék");
         this.game = game;
         this.gamePanel = new GamePanel(game);
         this.hudPanel = new HUDPanel(game);

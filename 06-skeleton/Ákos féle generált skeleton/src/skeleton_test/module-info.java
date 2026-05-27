@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * 
- */
-module Skeleton_test {
-}

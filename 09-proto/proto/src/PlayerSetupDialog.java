@@ -11,16 +11,16 @@ public class PlayerSetupDialog extends JDialog {
     private boolean confirmed = false;
 
     public PlayerSetupDialog(JFrame parent) {
-        super(parent, "Jatekosok Beallitasa", true);
+        super(parent, "Játékosok beállítása", true);
         setLayout(new BorderLayout(10, 10));
         setResizable(false);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBorder(BorderFactory.createTitledBorder("Jatekosok Beallitasa"));
+        mainPanel.setBorder(BorderFactory.createTitledBorder("Játékosok beállítása"));
 
         JPanel countPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        countPanel.add(new JLabel("Jatekosok szama:"));
+        countPanel.add(new JLabel("Játékosok száma:"));
         JComboBox<Integer> countCombo = new JComboBox<>(new Integer[]{2, 3, 4});
         countCombo.setSelectedItem(4);
         countCombo.addActionListener(e -> {
@@ -36,7 +36,7 @@ public class PlayerSetupDialog extends JDialog {
 
         add(mainPanel, BorderLayout.CENTER);
 
-        JButton startButton = new JButton("Jatek inditasa");
+        JButton startButton = new JButton("Játék indítása");
         startButton.addActionListener(e -> {
             confirmed = true;
             dispose();
@@ -56,17 +56,17 @@ public class PlayerSetupDialog extends JDialog {
         cleanerRadios = new JRadioButton[playerCount];
         busRadios = new JRadioButton[playerCount];
 
-        String[] defaultNames = {"Kovacs Peter", "Nagy Imre", "Szabo Bela", "Molnar Andrea"};
+        String[] defaultNames = {"Kovács Péter", "Nagy Imre", "Szabó Béla", "Molnár Andrea"};
         boolean[] defaultCleaner = {true, false, false, true};
 
         for (int i = 0; i < playerCount; i++) {
             JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-            row.add(new JLabel("Jatekos " + (i + 1) + ":"));
+            row.add(new JLabel("Játékos " + (i + 1) + ":"));
 
-            nameFields[i] = new JTextField(i < defaultNames.length ? defaultNames[i] : "Jatekos" + (i + 1), 15);
+            nameFields[i] = new JTextField(i < defaultNames.length ? defaultNames[i] : "Játékos " + (i + 1), 15);
             row.add(nameFields[i]);
 
-            cleanerRadios[i] = new JRadioButton("Hokotro");
+            cleanerRadios[i] = new JRadioButton("Hókotró");
             busRadios[i] = new JRadioButton("Busz");
             ButtonGroup bg = new ButtonGroup();
             bg.add(cleanerRadios[i]);
@@ -93,7 +93,7 @@ public class PlayerSetupDialog extends JDialog {
         String[] names = new String[playerCount];
         for (int i = 0; i < playerCount; i++) {
             names[i] = nameFields[i].getText().trim();
-            if (names[i].isEmpty()) names[i] = "Jatekos" + (i + 1);
+            if (names[i].isEmpty()) names[i] = "Játékos " + (i + 1);
         }
         return names;
     }

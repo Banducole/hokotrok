@@ -19,7 +19,8 @@ public class MapBuilder {
         placeCars(city, hRoads, vRoads, grid);
         setSnowStates(hRoads, vRoads);
 
-        List<Bus> buses = createBuses(grid);
+        // JAVÍTÁS: Átadjuk a hRoads-t is, hogy biztosan jó sávra tegyük a buszokat
+        List<Bus> buses = createBuses(grid, hRoads);
         int busIdx = 0;
 
         for (int i = 0; i < names.length; i++) {
@@ -57,16 +58,17 @@ public class MapBuilder {
     private static Node[][] createGrid(City city) {
         Node[][] grid = new Node[ROWS][COLS];
 
+        // 2 db távolabb lévő Terminal
         grid[0][0] = new Home();
         grid[0][1] = new Intersection();
         grid[0][2] = new Intersection();
-        grid[0][3] = new Terminal();
-        grid[0][4] = new Intersection();
+        grid[0][3] = new Intersection(); 
+        grid[0][4] = new Terminal();     
 
-        grid[1][0] = new Intersection();
+        grid[1][0] = new Terminal();     
         grid[1][1] = new Intersection();
-        grid[1][2] = new Terminal();
-        grid[1][3] = new Terminal();
+        grid[1][2] = new Intersection(); 
+        grid[1][3] = new Intersection(); 
         grid[1][4] = new Workplace();
 
         for (int r = 0; r < ROWS; r++)
@@ -104,8 +106,10 @@ public class MapBuilder {
         Home home = (Home) grid[0][0];
         Workplace workplace = (Workplace) grid[1][4];
 
+        // 3 autó kerül a pályára különböző sávokra
         placeCarOnLane(city, vRoads[0][0].getLanes().get(0), home, workplace);
-
+        placeCarOnLane(city, hRoads[0][0].getLanes().get(0), home, workplace);
+        placeCarOnLane(city, hRoads[1][3].getLanes().get(0), home, workplace);
     }
 
     private static void placeCarOnLane(City city, Lane lane, Home home, Workplace workplace) {
@@ -140,34 +144,29 @@ public class MapBuilder {
         hRoads[0][1].getLanes().get(0).setRocky(true);
     }
 
-    private static java.util.List<Bus> createBuses(Node[][] grid) {
+    // JAVÍTÁS: A buszokat explicit járható sávra helyezzük
+    private static java.util.List<Bus> createBuses(Node[][] grid, Road[][] hRoads) {
         java.util.List<Bus> buses = new java.util.ArrayList<>();
 
+        Terminal t1 = (Terminal) grid[0][4];
+        Terminal t2 = (Terminal) grid[1][0];
+
         Bus bus1 = new Bus();
-        bus1.setTerminalStart((Terminal) grid[0][3]);
-        bus1.setTerminalEnd((Terminal) grid[1][2]);
-        Road r = grid[0][3].getConnectedRoads().get(0);
-        Lane busLane = r.getLanes().get(1);
-        bus1.setCurrentLane(busLane);
-        busLane.accept(bus1);
+        bus1.setTerminalStart(t1);
+        bus1.setTerminalEnd(t2);
+        // A hRoads[0][3] 1-es sávja BrokenIceState (átjárható)
+        Lane busLane1 = hRoads[0][3].getLanes().get(1);
+        bus1.setCurrentLane(busLane1);
+        busLane1.accept(bus1);
         buses.add(bus1);
 
         Bus bus2 = new Bus();
-        bus2.setTerminalStart((Terminal) grid[1][2]);
-        bus2.setTerminalEnd((Terminal) grid[1][3]);
-        Road r2 = null;
-        for (Road rd : grid[1][2].getConnectedRoads()) {
-            if (rd.getFrom() == grid[1][2] && rd.getTo() == grid[1][3]
-             || rd.getFrom() == grid[1][3] && rd.getTo() == grid[1][2]) {
-                r2 = rd;
-                break;
-            }
-        }
-        if (r2 != null) {
-            Lane busLane2 = r2.getLanes().get(0);
-            bus2.setCurrentLane(busLane2);
-            busLane2.accept(bus2);
-        }
+        bus2.setTerminalStart(t2);
+        bus2.setTerminalEnd(t1);
+        // A hRoads[1][0] 1-es sávja ThinSnowState (átjárható). A 0-s sáv ThickSnowState lenne, ami láthatatlanná tenné!
+        Lane busLane2 = hRoads[1][0].getLanes().get(1);
+        bus2.setCurrentLane(busLane2);
+        busLane2.accept(bus2);
         buses.add(bus2);
 
         return buses;
@@ -175,8 +174,8 @@ public class MapBuilder {
 
     private static Bus createFallbackBus(Node[][] grid) {
         Bus bus = new Bus();
-        bus.setTerminalStart((Terminal) grid[0][3]);
-        bus.setTerminalEnd((Terminal) grid[1][3]);
+        bus.setTerminalStart((Terminal) grid[0][4]);
+        bus.setTerminalEnd((Terminal) grid[1][0]);
         return bus;
     }
 

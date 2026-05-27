@@ -1,8 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShopPanel extends JPanel {
 
@@ -20,7 +24,36 @@ public class ShopPanel extends JPanel {
     private JPanel rowFuelSalt, rowFuelKerosene, rowFuelRock;
     private JPanel lastRow;
 
+    private final Map<String, JLabel> headCheckmarks = new HashMap<>();
+
     private static final int PANEL_WIDTH = 250;
+
+    private static BufferedImage imgSweep, imgThrow, imgIceBreaker, imgSaltHead, imgDragon, imgRockHead;
+    private static BufferedImage imgFuelSalt, imgFuelKerosene, imgFuelRock;
+    private static BufferedImage imgPipa;
+    private static ImageIcon iconPipa;
+
+    static {
+        try {
+            imgSweep = ImageIO.read(ShopPanel.class.getResource("/images/soprofej.png"));
+            imgThrow = ImageIO.read(ShopPanel.class.getResource("/images/hanyofej.png"));
+            imgIceBreaker = ImageIO.read(ShopPanel.class.getResource("/images/jegtotro.png"));
+            imgSaltHead = ImageIO.read(ShopPanel.class.getResource("/images/soszorofej.png"));
+            imgDragon = ImageIO.read(ShopPanel.class.getResource("/images/sarkanyfej.png"));
+            imgRockHead = ImageIO.read(ShopPanel.class.getResource("/images/kavicsszorofej.png"));
+
+            imgFuelSalt = ImageIO.read(ShopPanel.class.getResource("/images/so.png"));
+            imgFuelKerosene = ImageIO.read(ShopPanel.class.getResource("/images/kerozin.png"));
+            imgFuelRock = ImageIO.read(ShopPanel.class.getResource("/images/kis_kavics.png"));
+
+            imgPipa = ImageIO.read(ShopPanel.class.getResource("/images/pipa.png"));
+            if (imgPipa != null) {
+                iconPipa = new ImageIcon(imgPipa.getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+            }
+        } catch (Exception e) {
+            System.err.println("ShopPanel: Egy vagy több kép nem található az /images mappában!");
+        }
+    }
 
     public ShopPanel(Game game) {
         this.game = game;
@@ -33,30 +66,30 @@ public class ShopPanel extends JPanel {
     private void initComponents() {
         add(Box.createVerticalStrut(8));
 
-        btnFuelSalt = addShopRow("So", "Vasarlas", "FUEL_SALT", new Color(240, 240, 240));
+        btnFuelSalt = addShopRow("Só", "Vásárlás", "FUEL_SALT", imgFuelSalt);
         rowFuelSalt = lastRow;
-        btnFuelKerosene = addShopRow("Kerozin", "Vasarlas", "FUEL_KEROSENE", new Color(200, 50, 50));
+        btnFuelKerosene = addShopRow("Kerozin", "Vásárlás", "FUEL_KEROSENE", imgFuelKerosene);
         rowFuelKerosene = lastRow;
-        btnFuelRock = addShopRow("Ko", "Vasarlas", "FUEL_ROCK", new Color(150, 150, 150));
+        btnFuelRock = addShopRow("Zúzalék", "Vásárlás", "FUEL_ROCK", imgFuelRock);
         rowFuelRock = lastRow;
 
         add(Box.createVerticalStrut(8));
         addSeparator();
         add(Box.createVerticalStrut(4));
 
-        btnSweep = addHeadRow("Soprofej", Constants.PRICE_SWEEP_HEAD, "BUY_SWEEP", new Color(100, 180, 80));
-        btnThrow = addHeadRow("Hanyofej", Constants.PRICE_THROW_HEAD, "BUY_THROW", new Color(220, 150, 50));
-        btnIceBreaker = addHeadRow("Jegtorofej", Constants.PRICE_ICEBREAKER_HEAD, "BUY_ICEBREAKER", new Color(140, 180, 210));
-        btnSalt = addHeadRow("Soszorofej", Constants.PRICE_SALT_HEAD, "BUY_SALT_HEAD", new Color(80, 130, 200));
-        btnDragon = addHeadRow("Sarkanyfej", Constants.PRICE_DRAGON_HEAD, "BUY_DRAGON", new Color(210, 50, 50));
-        btnRock = addHeadRow("Koszorofej", Constants.PRICE_ROCK_HEAD, "BUY_ROCK_HEAD", new Color(160, 130, 90));
+        btnSweep = addHeadRow("Söprőfej", Constants.PRICE_SWEEP_HEAD, "BUY_SWEEP", imgSweep);
+        btnThrow = addHeadRow("Hányófej", Constants.PRICE_THROW_HEAD, "BUY_THROW", imgThrow);
+        btnIceBreaker = addHeadRow("Jégtörőfej", Constants.PRICE_ICEBREAKER_HEAD, "BUY_ICEBREAKER", imgIceBreaker);
+        btnSalt = addHeadRow("Sószórófej", Constants.PRICE_SALT_HEAD, "BUY_SALT_HEAD", imgSaltHead);
+        btnDragon = addHeadRow("Sárkányfej", Constants.PRICE_DRAGON_HEAD, "BUY_DRAGON", imgDragon);
+        btnRock = addHeadRow("Zúzalékszórófej", Constants.PRICE_ROCK_HEAD, "BUY_ROCK_HEAD", imgRockHead);
 
         add(Box.createVerticalGlue());
 
         addSeparator();
         add(Box.createVerticalStrut(6));
 
-        btnNextPlayer = createStyledButton("Kovetkezo jatekos", "NEXT_PLAYER");
+        btnNextPlayer = createStyledButton("Következő játékos", "NEXT_PLAYER");
         btnNextPlayer.setBackground(new Color(180, 185, 192));
         btnNextPlayer.setFont(new Font("SansSerif", Font.BOLD, 13));
         btnNextPlayer.setMaximumSize(new Dimension(PANEL_WIDTH - 20, 36));
@@ -65,7 +98,7 @@ public class ShopPanel extends JPanel {
 
         add(Box.createVerticalStrut(4));
 
-        btnNewPlow = createStyledButton("Uj hokotro", "BUY_PLOW");
+        btnNewPlow = createStyledButton("Új hókotró", "BUY_PLOW");
         btnNewPlow.setBackground(new Color(180, 185, 192));
         btnNewPlow.setFont(new Font("SansSerif", Font.PLAIN, 12));
         btnNewPlow.setMaximumSize(new Dimension(PANEL_WIDTH - 20, 32));
@@ -73,7 +106,7 @@ public class ShopPanel extends JPanel {
 
         add(Box.createVerticalStrut(4));
 
-        btnSnowfall = createStyledButton("Hoeses", "SNOWFALL");
+        btnSnowfall = createStyledButton("Hóesés", "SNOWFALL");
         btnSnowfall.setBackground(new Color(180, 185, 192));
         btnSnowfall.setFont(new Font("SansSerif", Font.PLAIN, 11));
         btnSnowfall.setMaximumSize(new Dimension(PANEL_WIDTH - 20, 28));
@@ -83,7 +116,7 @@ public class ShopPanel extends JPanel {
         add(Box.createVerticalStrut(8));
     }
 
-    private JButton addShopRow(String label, String btnText, String cmd, Color iconColor) {
+    private JButton addShopRow(String label, String btnText, String cmd, BufferedImage iconImg) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setOpaque(false);
@@ -91,7 +124,7 @@ public class ShopPanel extends JPanel {
         row.setAlignmentX(Component.LEFT_ALIGNMENT);
         row.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
 
-        JPanel icon = new IconPanel(iconColor, 30, 30);
+        JPanel icon = new IconPanel(iconImg, 30, 30);
         row.add(icon);
         row.add(Box.createHorizontalStrut(8));
 
@@ -114,7 +147,7 @@ public class ShopPanel extends JPanel {
         return btn;
     }
 
-    private JButton addHeadRow(String name, int price, String cmd, Color iconColor) {
+    private JButton addHeadRow(String name, int price, String cmd, BufferedImage iconImg) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setOpaque(false);
@@ -122,7 +155,7 @@ public class ShopPanel extends JPanel {
         row.setAlignmentX(Component.LEFT_ALIGNMENT);
         row.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
 
-        JPanel icon = new IconPanel(iconColor, 36, 36);
+        JPanel icon = new IconPanel(iconImg, 36, 36);
         row.add(icon);
         row.add(Box.createHorizontalStrut(6));
 
@@ -139,9 +172,15 @@ public class ShopPanel extends JPanel {
 
         row.add(Box.createHorizontalGlue());
 
+        JLabel checkmark = new JLabel(iconPipa);
+        checkmark.setVisible(false);
+        headCheckmarks.put(cmd, checkmark);
+        row.add(checkmark);
+        row.add(Box.createHorizontalStrut(8));
+
         JButton btn = new JButton(name);
         btn.setActionCommand(cmd);
-        btn.setVisible(false);
+        btn.setVisible(false); 
         allButtons.add(btn);
 
         add(row);
@@ -203,19 +242,42 @@ public class ShopPanel extends JPanel {
         setActive(isCleanerTurn);
 
         boolean showSalt = false, showKerosene = false, showRock = false;
+        String activeHeadCmd = "";
+
         if (isCleanerTurn && controller != null) {
             SnowPlow sel = controller.getSelectedPlow();
             if (sel != null) {
                 CleanerHead head = sel.getHead();
-                showSalt     = head instanceof SaltHead;
-                showKerosene = head instanceof DragonHead;
-                showRock     = head instanceof RockHead;
+                if (head != null) {
+                    if (head instanceof SweepHead) activeHeadCmd = "BUY_SWEEP";
+                    else if (head instanceof ThrowHead) activeHeadCmd = "BUY_THROW";
+                    else if (head instanceof IceBreakerHead) activeHeadCmd = "BUY_ICEBREAKER";
+                    else if (head instanceof SaltHead) {
+                        activeHeadCmd = "BUY_SALT_HEAD";
+                        showSalt = true;
+                    }
+                    else if (head instanceof DragonHead) {
+                        activeHeadCmd = "BUY_DRAGON";
+                        showKerosene = true;
+                    }
+                    else if (head instanceof RockHead) {
+                        activeHeadCmd = "BUY_ROCK_HEAD";
+                        showRock = true;
+                    }
+                }
             }
         }
-        if (rowFuelSalt     != null) rowFuelSalt.setVisible(showSalt);
+
+        if (rowFuelSalt != null) rowFuelSalt.setVisible(showSalt);
         if (rowFuelKerosene != null) rowFuelKerosene.setVisible(showKerosene);
-        if (rowFuelRock     != null) rowFuelRock.setVisible(showRock);
+        if (rowFuelRock != null) rowFuelRock.setVisible(showRock);
+
+        for (Map.Entry<String, JLabel> entry : headCheckmarks.entrySet()) {
+            entry.getValue().setVisible(entry.getKey().equals(activeHeadCmd));
+        }
+
         revalidate();
+        repaint();
     }
 
     public void registerActionListener(ActionListener listener) {
@@ -236,10 +298,10 @@ public class ShopPanel extends JPanel {
     }
 
     private static class IconPanel extends JPanel {
-        private final Color color;
+        private final BufferedImage img;
 
-        IconPanel(Color color, int w, int h) {
-            this.color = color;
+        IconPanel(BufferedImage img, int w, int h) {
+            this.img = img;
             setPreferredSize(new Dimension(w, h));
             setMaximumSize(new Dimension(w, h));
             setMinimumSize(new Dimension(w, h));
@@ -251,10 +313,15 @@ public class ShopPanel extends JPanel {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(color);
-            g2d.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 6, 6);
-            g2d.setColor(color.darker());
-            g2d.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 6, 6);
+            
+            if (img != null) {
+                g2d.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+            } else {
+                g2d.setColor(Color.GRAY);
+                g2d.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 6, 6);
+                g2d.setColor(Color.DARK_GRAY);
+                g2d.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 6, 6);
+            }
         }
     }
 }

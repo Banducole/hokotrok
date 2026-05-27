@@ -19,29 +19,32 @@ public class LaneView implements IDrawable {
     public void draw(Graphics2D g) {
         Stroke old = g.getStroke();
 
+        // 1. A vastag, színes sáv megrajzolása
         g.setStroke(new BasicStroke(LANE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
         g.setColor(getStateColor());
         g.drawLine(x1, y1, x2, y2);
 
+        // 2. A sáv szegélyeinek (vékony szürke vonalak) megrajzolása
         g.setStroke(new BasicStroke(1));
         g.setColor(new Color(170, 175, 180));
-        boolean vertical = Math.abs(y2 - y1) > Math.abs(x2 - x1);
-        if (vertical) {
-            int left = Math.min(x1, x2) - LANE_WIDTH / 2;
-            int right = Math.max(x1, x2) + LANE_WIDTH / 2;
-            int top = Math.min(y1, y2);
-            int bot = Math.max(y1, y2);
-            g.drawLine(left, top, left, bot);
-            g.drawLine(right, top, right, bot);
-        } else {
-            int top = Math.min(y1, y2) - LANE_WIDTH / 2;
-            int bot = Math.max(y1, y2) + LANE_WIDTH / 2;
-            int left = Math.min(x1, x2);
-            int right = Math.max(x1, x2);
-            g.drawLine(left, top, right, top);
-            g.drawLine(left, bot, right, bot);
+        
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        double len = Math.sqrt(dx * dx + dy * dy);
+        
+        if (len > 0) {
+            // Merőleges normálvektor kiszámítása az eltoláshoz
+            double nx = -dy / len;
+            double ny = dx / len;
+            int ox = (int) Math.round(nx * LANE_WIDTH / 2.0);
+            int oy = (int) Math.round(ny * LANE_WIDTH / 2.0);
+
+            // A két párhuzamos szegélyvonal megrajzolása
+            g.drawLine(x1 + ox, y1 + oy, x2 + ox, y2 + oy);
+            g.drawLine(x1 - ox, y1 - oy, x2 - ox, y2 - oy);
         }
 
+        // 3. Extrák (zúzalék és repedések) megrajzolása
         if (lane.isRocky()) {
             g.setColor(new Color(120, 80, 30, 180));
             drawDots(g);
@@ -101,11 +104,6 @@ public class LaneView implements IDrawable {
         return Color.GRAY;
     }
 
-    /**
-     * Visszaadja az idx-edik entitás pozícióját a sávon, total darab entitás esetén.
-     * Az eltolás a sáv irányára merőleges, így vízszintes sávnál függőlegesen,
-     * függőleges sávnál vízszintesen rendeződnek egymás mellé.
-     */
     public Point getEntityPosition(int idx, int total) {
         int cx = getCenterX();
         int cy = getCenterY();

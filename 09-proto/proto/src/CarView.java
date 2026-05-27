@@ -2,7 +2,6 @@ import java.awt.*;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class CarView extends VehicleView {
 
@@ -33,6 +32,9 @@ public class CarView extends VehicleView {
 
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.translate(ix, iy);
+        
+        // JAVÍTÁS: Mivel a kép alapból jobbra néz, a beépített szögkalkuláció
+        // pont tökéletes hozzá. Nincs szükség se + se - 90 fokos elforgatásra.
         g2d.rotate(angle);
 
         if (carImage != null) {

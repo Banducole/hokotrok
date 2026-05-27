@@ -47,7 +47,7 @@ public class HUDPanel extends JPanel {
             g2d.setColor(new Color(45, 50, 58));
             g2d.fillRoundRect(cx, y, cardWidth, cardHeight, 8, 8);
 
-            String name = p.getName() != null ? p.getName() : "Jatekos" + (i + 1);
+            String name = p.getName() != null ? p.getName() : "Játékos " + (i + 1);
             String type = (p instanceof CleanerPlayer) ? " (Tak.)" : " (Busz.)";
 
             g2d.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -56,18 +56,18 @@ public class HUDPanel extends JPanel {
 
             if (p instanceof CleanerPlayer) {
                 CleanerPlayer cp = (CleanerPlayer) p;
-                String info = "Penz: " + cp.getBalance();
+                String info = "Pénz: " + cp.getBalance();
 
                 if (i == currentIdx && controller != null) {
                     SnowPlow sel = controller.getSelectedPlow();
                     if (sel != null && sel.getOwner() == cp) {
                         CleanerHead head = sel.getHead();
                         if (head instanceof SaltHead) {
-                            info += " | So: " + head.fuelLevel();
+                            info += " | Só: " + head.fuelLevel();
                         } else if (head instanceof DragonHead) {
                             info += " | Kerozin: " + head.fuelLevel();
                         } else if (head instanceof RockHead) {
-                            info += " | Zuzalek: " + head.fuelLevel();
+                            info += " | Zúzalék: " + head.fuelLevel();
                         }
                     }
                 }
@@ -78,20 +78,21 @@ public class HUDPanel extends JPanel {
 
             } else if (p instanceof BusDriver) {
                 Bus bus = ((BusDriver) p).getBus();
-                String status = null;
+                
+                String status = "Teljesített körök: " + bus.getCompletedRounds();
+                
                 if (bus.isBlocked()) {
-                    status = "Kimarad egy korbol - Karambol";
+                    status += " | Karambol (kimarad)";
                 } else {
                     Lane busLane = bus.getCurrentLane();
                     if (busLane != null && busLane.getState() instanceof ThickSnowState) {
-                        status = "Elakadt a vastag hoban";
+                        status += " | Elakadt";
                     }
                 }
-                if (status != null) {
-                    g2d.setFont(new Font("SansSerif", Font.ITALIC, 11));
-                    g2d.setColor(new Color(255, 160, 60));
-                    g2d.drawString(status, cx + 10, y + 40);
-                }
+                
+                g2d.setFont(new Font("SansSerif", Font.ITALIC, 11));
+                g2d.setColor(new Color(255, 180, 60));
+                g2d.drawString(status, cx + 10, y + 40);
             }
         }
     }
